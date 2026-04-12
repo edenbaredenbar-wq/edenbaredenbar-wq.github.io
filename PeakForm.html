@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PeakForm — Gear & Grooming for Men Who Train</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Instrument+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --ink: #1a1714;
+  --paper: #f7f4ef;
+  --warm: #ede9e1;
+  --accent: #c84b2f;
+  --accent2: #2d6a4f;
+  --muted: #7a756e;
+  --border: #ddd9d0;
+  --card: #ffffff;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: 'Instrument Sans', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem; height: 60px;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+.nav-logo sup { font-size: 0.5rem; color: var(--accent); vertical-align: super; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--ink); }
+.nav-tag { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); background: rgba(200,75,47,0.08); border: 1px solid rgba(200,75,47,0.2); padding: 0.3rem 0.8rem; border-radius: 2px; }
+
+.hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 88vh; border-bottom: 1px solid var(--border); }
+.hero-left { border-right: 1px solid var(--border); padding: 5rem 4rem; display: flex; flex-direction: column; justify-content: flex-end; background: var(--ink); color: var(--paper); position: relative; overflow: hidden; }
+.hero-left::before { content: 'PEAK'; position: absolute; top: -2rem; left: -1rem; font-family: 'Playfair Display', serif; font-size: 18rem; font-weight: 700; color: rgba(255,255,255,0.025); line-height: 0.85; pointer-events: none; letter-spacing: -0.05em; }
+.hero-issue { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 2rem; text-transform: uppercase; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 4.5vw, 4rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+.hero h1 em { font-style: italic; color: rgba(247,244,239,0.45); }
+.hero-sub { font-size: 1rem; color: rgba(247,244,239,0.55); max-width: 360px; line-height: 1.7; margin-bottom: 2.5rem; }
+.hero-btn { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--accent); color: white; padding: 0.8rem 1.8rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 2px; width: fit-content; transition: background 0.2s; }
+.hero-btn:hover { background: #a83a20; }
+.hero-btn::after { content: '→'; }
+
+.hero-right { padding: 3rem; display: flex; flex-direction: column; }
+.hero-right-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.hero-picks { display: flex; flex-direction: column; flex: 1; }
+.hero-pick { display: grid; grid-template-columns: 40px 1fr auto; gap: 1rem; align-items: center; padding: 1.2rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: padding-left 0.2s; }
+.hero-pick:hover { padding-left: 0.4rem; }
+.hero-pick:hover .hp-name { color: var(--accent); }
+.hp-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+.hp-name { font-size: 0.92rem; font-weight: 500; line-height: 1.35; transition: color 0.2s; }
+.hp-cat { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
+.hp-commission { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent2); background: rgba(45,106,79,0.08); padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
+
+.strip { background: var(--ink); color: var(--paper); padding: 0.8rem 3rem; display: flex; gap: 3rem; overflow: hidden; border-bottom: 3px solid var(--accent); }
+.strip-item { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; opacity: 0.5; }
+.strip-item.hi { opacity: 1; color: #c8ff00; }
+
+.products-section { padding: 5rem 3rem; }
+.section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.5rem; border-bottom: 2px solid var(--ink); padding-bottom: 1rem; }
+.section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+.section-sub { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.view-all { font-size: 0.8rem; font-weight: 500; color: var(--accent); text-decoration: none; }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+.product-card { background: var(--card); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; }
+.product-card:hover { box-shadow: 0 8px 32px rgba(26,23,20,0.1); transform: translateY(-2px); }
+.product-img { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.product-badge { position: absolute; top: 12px; left: 12px; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; font-weight: 500; }
+.badge-red { background: var(--accent); color: white; }
+.badge-green { background: var(--accent2); color: white; }
+.badge-dark { background: var(--ink); color: var(--paper); }
+.product-body { padding: 1.2rem 1.3rem 1.3rem; }
+.product-cat { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.product-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+.product-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.1rem; }
+.product-footer { display: flex; align-items: center; justify-content: space-between; }
+.stars { color: #e8a020; font-size: 0.75rem; }
+.rating-num { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+.product-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--accent); padding-bottom: 1px; transition: color 0.2s; }
+.product-link:hover { color: var(--accent); }
+
+.editorial { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.editorial-left { padding: 4rem 3rem; border-right: 1px solid var(--border); }
+.editorial-right { padding: 4rem 3rem; background: var(--warm); }
+.editorial-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+.editorial-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1.2rem; }
+.editorial-body { font-size: 0.9rem; color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+.step-list { display: flex; flex-direction: column; gap: 1.2rem; }
+.step-item { display: flex; gap: 1rem; align-items: flex-start; }
+.step-n { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); min-width: 1.5rem; margin-top: 3px; }
+.step-text { font-size: 0.88rem; line-height: 1.6; }
+.step-text strong { font-weight: 600; }
+
+.articles-section { padding: 5rem 3rem; }
+.articles-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; margin-top: 2.5rem; }
+.article-featured { border: 1px solid var(--border); border-radius: 3px; overflow: hidden; text-decoration: none; color: inherit; display: block; transition: box-shadow 0.2s; }
+.article-featured:hover { box-shadow: 0 8px 32px rgba(26,23,20,0.1); }
+.article-featured-img { background: var(--ink); aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
+.article-featured-body { padding: 1.8rem; }
+.article-featured-cat { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+.article-featured-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 0.8rem; }
+.article-featured-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+.article-list-sidebar { display: flex; flex-direction: column; }
+.article-list-item { padding: 1.2rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; display: block; transition: padding-left 0.2s; }
+.article-list-item:hover { padding-left: 0.3rem; }
+.article-list-item:hover .ali-title { color: var(--accent); }
+.ali-cat { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+.ali-title { font-size: 0.9rem; font-weight: 500; line-height: 1.4; transition: color 0.2s; }
+.ali-meta { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 0.3rem; }
+
+.newsletter { background: var(--ink); color: var(--paper); padding: 5rem 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.nl-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+.nl-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+.nl-right p { font-size: 0.9rem; color: rgba(247,244,239,0.5); line-height: 1.7; margin-bottom: 1.5rem; }
+.nl-form { display: flex; border: 1px solid rgba(247,244,239,0.15); border-radius: 2px; overflow: hidden; }
+.nl-form input { flex: 1; background: rgba(255,255,255,0.05); border: none; padding: 0.85rem 1.1rem; color: var(--paper); font-family: 'Instrument Sans', sans-serif; font-size: 0.9rem; outline: none; }
+.nl-form input::placeholder { color: rgba(247,244,239,0.25); }
+.nl-form button { background: var(--accent); color: white; border: none; padding: 0.85rem 1.4rem; font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+.nl-form button:hover { background: #a83a20; }
+
+footer { background: var(--paper); border-top: 2px solid var(--ink); padding: 3rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
+.footer-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--ink); display: block; margin-bottom: 0.8rem; }
+.footer-about { font-size: 0.82rem; color: var(--muted); line-height: 1.7; max-width: 260px; margin-bottom: 1rem; }
+.footer-affiliate { font-size: 0.72rem; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 0.8rem; }
+.footer-col h4 { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-bottom: 1rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.footer-col a { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.footer-col a:hover { color: var(--ink); }
+.footer-bottom { grid-column: 1/-1; border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; }
+.footer-bottom p { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.d1{transition-delay:.05s}.d2{transition-delay:.12s}.d3{transition-delay:.19s}.d4{transition-delay:.26s}.d5{transition-delay:.33s}.d6{transition-delay:.4s}
+
+@media(max-width:900px){
+  nav{padding:0 1.2rem;}.nav-links{display:none;}
+  .hero{grid-template-columns:1fr;}.hero-right{display:none;}
+  .hero-left{padding:3rem 1.5rem;min-height:70vh;}
+  .products-grid{grid-template-columns:1fr;}
+  .editorial{grid-template-columns:1fr;}
+  .articles-grid{grid-template-columns:1fr;}
+  .newsletter{grid-template-columns:1fr;gap:2rem;}
+  footer{grid-template-columns:1fr;}
+  .products-section,.articles-section{padding:3rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">PeakForm<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#skincare">Skincare</a></li>
+    <li><a href="#articles">Reviews</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <span class="nav-tag">Amazon Picks</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-issue">// Vol. 01 — Performance Grooming</p>
+    <h1>Train hard.<br>Look like<br><em>you mean it.</em></h1>
+    <p class="hero-sub">Honest, obsessive reviews of the gear and grooming that actually holds up — picked by people who actually train.</p>
+    <a class="hero-btn" href="#products">See this month's picks</a>
+  </div>
+  <div class="hero-right">
+    <p class="hero-right-label">// This month's top picks</p>
+    <div class="hero-picks">
+      <a class="hero-pick" href="https://www.amazon.com/dp/B000GIPJ0M?tag=peakform2003-20" target="_blank" rel="noopener">
+        <span class="hp-num">01</span>
+        <div><div class="hp-name">ON Gold Standard Whey Protein</div><div class="hp-cat">Supplements</div></div>
+        <span class="hp-commission">8% comm.</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B075D9GFHJ?tag=peakform2003-20" target="_blank" rel="noopener">
+        <span class="hp-num">02</span>
+        <div><div class="hp-name">Theragun Mini Massage Gun</div><div class="hp-cat">Recovery</div></div>
+        <span class="hp-commission">4% comm.</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B01N1UKS1O?tag=peakform2003-20" target="_blank" rel="noopener">
+        <span class="hp-num">03</span>
+        <div><div class="hp-name">CeraVe Foaming Facial Cleanser</div><div class="hp-cat">Skincare</div></div>
+        <span class="hp-commission">6% comm.</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B07BRDLSQR?tag=peakform2003-20" target="_blank" rel="noopener">
+        <span class="hp-num">04</span>
+        <div><div class="hp-name">Bowflex SelectTech 552 Dumbbells</div><div class="hp-cat">Fitness Gear</div></div>
+        <span class="hp-commission">4% comm.</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B07THHQMHM?tag=peakform2003-20" target="_blank" rel="noopener">
+        <span class="hp-num">05</span>
+        <div><div class="hp-name">La Roche-Posay SPF 60 Face</div><div class="hp-cat">Skincare</div></div>
+        <span class="hp-commission">6% comm.</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B07MK8DQ7X?tag=peakform2003-20" target="_blank" rel="noopener">
+        <span class="hp-num">06</span>
+        <div><div class="hp-name">ON Micronized Creatine Powder</div><div class="hp-cat">Supplements</div></div>
+        <span class="hp-commission">8% comm.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <span class="strip-item hi">Supplements</span>
+  <span class="strip-item">Skincare for athletes</span>
+  <span class="strip-item">Home gym</span>
+  <span class="strip-item">Recovery tools</span>
+  <span class="strip-item">Running gear</span>
+  <span class="strip-item">Men's grooming</span>
+  <span class="strip-item">SPF & protection</span>
+</div>
+
+<!-- SUPPLEMENTS -->
+<section class="products-section" id="products">
+  <div class="section-header reveal">
+    <div><p class="section-sub">Category 01</p><h2 class="section-title">Supplements</h2></div>
+    <a class="view-all" href="#">View all →</a>
+  </div>
+  <div class="products-grid">
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:#1a1714;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#f7f4ef" stroke-width="0.8" opacity="0.1"><rect x="18" y="8" width="34" height="54" rx="4"/><path d="M26 22h18M26 32h18M26 42h12"/></svg>
+        <span class="product-badge badge-red">Best Overall</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Protein Powder</p>
+        <h3 class="product-name">Optimum Nutrition Gold Standard Whey</h3>
+        <p class="product-desc">24g protein per serving, mixes clean with zero clumping. 20+ flavors. The benchmark every competitor is measured against — and they rarely match it.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.7 · 85,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B000GIPJ0M?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:#0d1f16;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#f7f4ef" stroke-width="0.8" opacity="0.1"><circle cx="35" cy="35" r="22"/><path d="M35 18v17l12 7"/></svg>
+        <span class="product-badge badge-green">Top Seller</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Creatine</p>
+        <h3 class="product-name">ON Micronized Creatine Monohydrate</h3>
+        <p class="product-desc">Pure creatine monohydrate, zero fillers. 5g per serving, unflavored — stack it with anything. One of the most research-backed supplements in existence.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.6 · 50,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B07MK8DQ7X?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:#1c1108;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#f7f4ef" stroke-width="0.8" opacity="0.1"><path d="M18 55 L35 15 L52 55z"/><path d="M26 40h18"/></svg>
+        <span class="product-badge badge-dark">Editor's Pick</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Pre-Workout</p>
+        <h3 class="product-name">Cellucor C4 Original Pre-Workout</h3>
+        <p class="product-desc">150mg caffeine, beta-alanine, arginine AKG. Clean energy without the crash. 60 servings. The pre-workout that's been dominating Amazon for years — for good reason.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★☆</div><div class="rating-num">4.5 · 40,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B00BJ6BPWA?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKINCARE -->
+<section class="products-section" id="skincare" style="padding-top:1rem;">
+  <div class="section-header reveal">
+    <div><p class="section-sub">Category 02</p><h2 class="section-title">Skincare for Athletes</h2></div>
+    <a class="view-all" href="#">View all →</a>
+  </div>
+  <div class="products-grid">
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:#e8e0d4;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#1a1714" stroke-width="0.8" opacity="0.12"><rect x="24" y="12" width="22" height="46" rx="8"/><path d="M30 12v-4a5 5 0 0 1 10 0v4"/></svg>
+        <span class="product-badge badge-red">Derm Approved</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Face Wash</p>
+        <h3 class="product-name">CeraVe Foaming Facial Cleanser</h3>
+        <p class="product-desc">Ceramides, niacinamide, hyaluronic acid. Removes sweat and oil without stripping your skin barrier. Fragrance-free, non-comedogenic. The post-workout essential.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.7 · 95,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B01N1UKS1O?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:#d4e8dd;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#1a1714" stroke-width="0.8" opacity="0.12"><circle cx="35" cy="35" r="20"/><path d="M35 20v15l10 5"/></svg>
+        <span class="product-badge badge-green">Best SPF</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Sun Protection</p>
+        <h3 class="product-name">La Roche-Posay Anthelios SPF 60</h3>
+        <p class="product-desc">Lightweight, invisible finish. Won't clog pores or cause breakouts. Water resistant for 80 min. Essential for any runner or outdoor athlete — sun damage is cumulative.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.6 · 22,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B07THHQMHM?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:#e8e4d0;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#1a1714" stroke-width="0.8" opacity="0.12"><rect x="22" y="18" width="26" height="36" rx="4"/><path d="M29 30h12M29 38h8"/></svg>
+        <span class="product-badge badge-dark">Editor's Pick</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Moisturizer</p>
+        <h3 class="product-name">Neutrogena Hydro Boost Water Gel</h3>
+        <p class="product-desc">Hyaluronic acid gel that absorbs instantly — no grease, no residue. Perfect for after training. Works for oily and dry skin. Punches well above its price point.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.5 · 60,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B00NR1YQHM?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FITNESS & RECOVERY -->
+<section class="products-section" style="padding-top:1rem;">
+  <div class="section-header reveal">
+    <div><p class="section-sub">Category 03</p><h2 class="section-title">Fitness & Recovery</h2></div>
+    <a class="view-all" href="#">View all →</a>
+  </div>
+  <div class="products-grid">
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:#141414;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#f7f4ef" stroke-width="0.8" opacity="0.1"><path d="M10 35h8M52 35h8M18 35h34M18 26v18M52 26v18M6 30v10M64 30v10"/></svg>
+        <span class="product-badge badge-red">Home Gym</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Adjustable Dumbbells</p>
+        <h3 class="product-name">Bowflex SelectTech 552 Dumbbells</h3>
+        <p class="product-desc">Replaces 15 sets of weights in one compact unit. 5–52.5 lbs per dumbbell. Dial adjusts in seconds. The smartest investment for any serious home gym.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.8 · 15,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B07BRDLSQR?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:#0f1a14;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#f7f4ef" stroke-width="0.8" opacity="0.1"><circle cx="35" cy="35" r="18"/><path d="M35 18v17l11 11"/></svg>
+        <span class="product-badge badge-green">Top Rated</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Massage Gun</p>
+        <h3 class="product-name">Theragun Mini Percussive Massager</h3>
+        <p class="product-desc">Compact enough for your bag, powerful enough to actually work. Quieter than most. Cuts post-workout soreness noticeably in under 2 minutes. A real recovery tool.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★☆</div><div class="rating-num">4.4 · 18,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B075D9GFHJ?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:#1a1208;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#f7f4ef" stroke-width="0.8" opacity="0.1"><path d="M18 35 Q35 18 52 35 Q35 52 18 35z"/><circle cx="35" cy="35" r="5"/></svg>
+        <span class="product-badge badge-dark">Best Value</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Resistance Bands</p>
+        <h3 class="product-name">Fit Simplify Resistance Loop Bands</h3>
+        <p class="product-desc">Set of 5 varying resistance levels. Carry bag included. Perfect for warm-ups, activation, and travel workouts. One of the all-time bestsellers on Amazon — with 200k+ reviews to prove it.</p>
+        <div class="product-footer">
+          <div><div class="stars">★★★★★</div><div class="rating-num">4.7 · 200,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B01AVDVHTI?tag=peakform2003-20" target="_blank" rel="noopener">Amazon →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDITORIAL -->
+<section class="editorial" id="about">
+  <div class="editorial-left reveal">
+    <p class="editorial-label">// Our standard</p>
+    <h2 class="editorial-title">We only recommend what we'd actually buy.</h2>
+    <p class="editorial-body">There's too much noise in the fitness and grooming space. Sponsored posts, paid rankings, affiliate farms that recommend anything with a high commission. PeakForm isn't that.</p>
+    <p class="editorial-body">Every pick goes through a real research process — ingredients, reviews, competitive testing, and value for money. If something underdelivers, we say so. If a $20 product beats a $100 one, we say that too.</p>
+  </div>
+  <div class="editorial-right reveal">
+    <p class="editorial-label">// How we pick</p>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;letter-spacing:-0.01em;">Four steps, every time</h3>
+    <div class="step-list">
+      <div class="step-item"><span class="step-n">01</span><p class="step-text"><strong>Market scan</strong> — We find the top 30–50 products in each category and filter by real customer review volume and recency, not paid placement.</p></div>
+      <div class="step-item"><span class="step-n">02</span><p class="step-text"><strong>Ingredient check</strong> — For supplements and skincare, every active ingredient is verified against clinical evidence. No proprietary blends hiding bad ratios.</p></div>
+      <div class="step-item"><span class="step-n">03</span><p class="step-text"><strong>Value analysis</strong> — Cost per gram, cost per serving, cost per year. The best product isn't always the cheapest — but it has to justify its price clearly.</p></div>
+      <div class="step-item"><span class="step-n">04</span><p class="step-text"><strong>Final ranking</strong> — We score on performance, value, availability, and longevity. The top pick earns its place or it doesn't get one.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="articles-section" id="articles">
+  <div class="section-header reveal">
+    <div><p class="section-sub">Latest</p><h2 class="section-title">Reviews & Guides</h2></div>
+    <a class="view-all" href="#">All articles →</a>
+  </div>
+  <div class="articles-grid reveal">
+    <a class="article-featured" href="#">
+      <div class="article-featured-img">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="0.8" opacity="0.1"><rect x="25" y="15" width="50" height="70" rx="3"/><path d="M35 32h30M35 44h30M35 56h20"/></svg>
+      </div>
+      <div class="article-featured-body">
+        <p class="article-featured-cat">Supplements · 9 min read</p>
+        <h3 class="article-featured-title">The Best Pre-Workout Supplements of 2025, Ranked by Actual Performance</h3>
+        <p class="article-featured-desc">We went through 18 pre-workouts, checked every label, and ranked them on what matters: energy quality, ingredient dosing, and how you feel the next morning. No sponsored picks.</p>
+      </div>
+    </a>
+    <div class="article-list-sidebar">
+      <a class="article-list-item" href="#">
+        <p class="ali-cat">Skincare · 5 min</p>
+        <p class="ali-title">The Only Face Wash Routine You Need After Training</p>
+        <p class="ali-meta">CeraVe vs. Neutrogena vs. La Roche-Posay</p>
+      </a>
+      <a class="article-list-item" href="#">
+        <p class="ali-cat">Home Gym · 10 min</p>
+        <p class="ali-title">Build a Serious Home Gym for Under $300</p>
+        <p class="ali-meta">Everything you need, nothing you don't</p>
+      </a>
+      <a class="article-list-item" href="#">
+        <p class="ali-cat">Supplements · 7 min</p>
+        <p class="ali-title">Creatine HCL vs Monohydrate — What's Actually Worth Buying?</p>
+        <p class="ali-meta">The answer is simpler than you think</p>
+      </a>
+      <a class="article-list-item" href="#">
+        <p class="ali-cat">Skincare · 6 min</p>
+        <p class="ali-title">SPF for Men Who Train Outdoors — What Actually Works</p>
+        <p class="ali-meta">Tested across 500km of outdoor running</p>
+      </a>
+      <a class="article-list-item" href="#">
+        <p class="ali-cat">Recovery · 8 min</p>
+        <p class="ali-title">Massage Guns Ranked: 7 Models Tested at Every Price Point</p>
+        <p class="ali-meta">From $29 to $399 — what's actually worth it</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="reveal">
+    <p class="nl-label">// Stay sharp</p>
+    <h2 class="nl-title">New picks and<br>reviews, weekly.</h2>
+  </div>
+  <div class="reveal">
+    <p>No noise. Just the best new products, honest takes, and gear worth buying — straight to your inbox.</p>
+    <div class="nl-form">
+      <input type="email" placeholder="your@email.com">
+      <button>Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a class="footer-logo" href="#">PeakForm™</a>
+    <p class="footer-about">Independent gear and grooming reviews for men who take training seriously. No sponsored content. No paid rankings. Just honest picks.</p>
+    <p class="footer-affiliate">PeakForm is a participant in the Amazon Associates Program and earns from qualifying purchases at no extra cost to you.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Categories</h4>
+    <ul>
+      <li><a href="#">Supplements</a></li>
+      <li><a href="#">Skincare</a></li>
+      <li><a href="#">Fitness Gear</a></li>
+      <li><a href="#">Recovery</a></li>
+      <li><a href="#">Running</a></li>
+      <li><a href="#">Grooming</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Site</h4>
+    <ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Affiliate Disclosure</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 PeakForm. All rights reserved.</p>
+    <p>Built for athletes, by athletes.</p>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
