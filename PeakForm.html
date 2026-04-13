@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PeakForm — Gear &amp; Grooming for Men Who Train</title>
+<meta name="description" content="Honest, research-backed reviews of supplements, skincare, and fitness gear for men who train. No sponsored picks. No paid rankings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & TOKENS ─────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#1a1714;--paper:#f7f4ef;--warm:#ede9e1;--warm2:#e4dfd5;
+  --accent:#c84b2f;--accent2:#2d6a4f;--gold:#b8872a;
+  --muted:#7a756e;--border:#ddd9d0;--card:#ffffff;
+  --ink-soft:rgba(26,23,20,0.06);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+
+/* ── NAV ────────────────────────────────────── */
+nav{position:sticky;top:0;z-index:200;background:var(--paper);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:62px;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--ink);text-decoration:none;letter-spacing:-0.02em;display:flex;align-items:center;gap:0.4rem;}
+.nav-logo-tm{font-size:0.42rem;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:0.12em;vertical-align:super;opacity:0.8;}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{font-size:0.78rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.18s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-issue{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;}
+.nav-cta{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);background:rgba(200,75,47,0.09);border:1px solid rgba(200,75,47,0.25);padding:0.28rem 0.75rem;border-radius:2px;white-space:nowrap;}
+
+/* ── HERO ────────────────────────────────────── */
+.hero{display:grid;grid-template-columns:55% 45%;min-height:91vh;border-bottom:1px solid var(--border);}
+.hero-left{border-right:1px solid var(--border);padding:5rem 4.5rem 4rem;display:flex;flex-direction:column;justify-content:flex-end;background:var(--ink);color:var(--paper);position:relative;overflow:hidden;}
+.hero-left::before{content:'PEAK';position:absolute;top:-3rem;left:-1.5rem;font-family:'Playfair Display',serif;font-size:20rem;font-weight:700;color:rgba(255,255,255,0.022);line-height:0.85;pointer-events:none;letter-spacing:-0.06em;user-select:none;}
+.hero-left::after{content:'';position:absolute;bottom:0;right:0;width:220px;height:220px;background:radial-gradient(circle,rgba(200,75,47,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:2.2rem;text-transform:uppercase;display:flex;align-items:center;gap:0.6rem;}
+.hero-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--accent);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,5vw,4.4rem);font-weight:700;line-height:1.06;letter-spacing:-0.025em;margin-bottom:1.6rem;}
+.hero h1 em{font-style:italic;color:rgba(247,244,239,0.4);}
+.hero-sub{font-size:0.97rem;color:rgba(247,244,239,0.5);max-width:380px;line-height:1.75;margin-bottom:2.8rem;}
+.hero-actions{display:flex;align-items:center;gap:1.5rem;}
+.hero-btn{display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent);color:white;padding:0.85rem 2rem;font-size:0.8rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background 0.2s,transform 0.15s;}
+.hero-btn:hover{background:#a83a20;transform:translateY(-1px);}
+.hero-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.hero-link{font-size:0.78rem;color:rgba(247,244,239,0.4);text-decoration:none;letter-spacing:0.04em;border-bottom:1px solid rgba(247,244,239,0.15);padding-bottom:1px;transition:color 0.2s;}
+.hero-link:hover{color:rgba(247,244,239,0.7);}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(247,244,239,0.1);}
+.hero-stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--paper);line-height:1;}
+.hero-stat-lbl{font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(247,244,239,0.35);text-transform:uppercase;letter-spacing:0.12em;margin-top:0.25rem;}
+
+.hero-right{padding:3rem 2.5rem;display:flex;flex-direction:column;background:var(--paper);}
+.hero-right-label{font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.hero-right-label span{color:var(--accent);font-size:0.6rem;}
+.hero-picks{display:flex;flex-direction:column;flex:1;}
+.hero-pick{display:grid;grid-template-columns:36px 1fr auto;gap:0.9rem;align-items:center;padding:1.1rem 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:padding-left 0.18s,background 0.18s;}
+.hero-pick:first-child{padding-top:0;}
+.hero-pick:hover{padding-left:0.5rem;}
+.hero-pick:hover .hp-name{color:var(--accent);}
+.hp-num{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--border);font-weight:500;}
+.hp-name{font-size:0.88rem;font-weight:600;line-height:1.3;transition:color 0.18s;}
+.hp-cat{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;}
+.hp-tag{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent2);background:rgba(45,106,79,0.1);border:1px solid rgba(45,106,79,0.2);padding:2px 7px;border-radius:2px;white-space:nowrap;}
+
+/* ── MARQUEE STRIP ───────────────────────────── */
+.marquee-wrap{background:var(--ink);border-bottom:3px solid var(--accent);overflow:hidden;padding:0.7rem 0;}
+.marquee-track{display:flex;gap:0;animation:marquee 28s linear infinite;}
+.marquee-track:hover{animation-play-state:paused;}
+.marquee-item{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;color:rgba(247,244,239,0.4);padding:0 2.5rem;}
+.marquee-item.hi{color:#c8ff00;}
+.marquee-item::before{content:'✦';margin-right:2.5rem;opacity:0.3;font-size:0.5rem;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── STATS BAR ───────────────────────────────── */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.stat-cell{padding:2.5rem 3rem;display:flex;flex-direction:column;border-right:1px solid var(--border);}
+.stat-cell:last-child{border-right:none;}
+.stat-n{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;letter-spacing:-0.03em;line-height:1;color:var(--ink);}
+.stat-n span{color:var(--accent);}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-top:0.5rem;}
+.stat-sub{font-size:0.78rem;color:var(--muted);line-height:1.5;margin-top:0.4rem;max-width:160px;}
+
+/* ── SECTION STRUCTURE ───────────────────────── */
+.products-section{padding:5rem 3rem;}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.8rem;border-bottom:2px solid var(--ink);padding-bottom:1.1rem;}
+.section-header-left{}
+.section-sub{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.3rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.02em;line-height:1.1;}
+.section-desc{font-size:0.82rem;color:var(--muted);margin-top:0.5rem;max-width:480px;line-height:1.6;}
+.view-all{font-size:0.75rem;font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:0.04em;white-space:nowrap;border-bottom:1px solid rgba(200,75,47,0.3);padding-bottom:1px;transition:border-color 0.2s;}
+.view-all:hover{border-color:var(--accent);}
+
+/* ── PRODUCT GRID ────────────────────────────── */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;}
+.products-grid-4{grid-template-columns:repeat(4,1fr);}
+
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:box-shadow 0.25s,transform 0.22s;display:flex;flex-direction:column;}
+.product-card:hover{box-shadow:0 16px 48px rgba(26,23,20,0.11);transform:translateY(-4px);}
+.product-img{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.product-img img{max-width:62%;max-height:78%;object-fit:contain;position:relative;z-index:1;transition:transform 0.35s ease;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.18));}
+.product-card:hover .product-img img{transform:scale(1.07);}
+.product-img .img-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:700;opacity:0.08;color:white;letter-spacing:-0.04em;user-select:none;}
+.product-badge{position:absolute;top:12px;left:12px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:2px;font-weight:500;z-index:2;}
+.badge-red{background:var(--accent);color:white;}
+.badge-green{background:var(--accent2);color:white;}
+.badge-dark{background:var(--ink);color:var(--paper);}
+.badge-blue{background:#2d5f8a;color:white;}
+.badge-gold{background:var(--gold);color:white;}
+.product-body{padding:1.3rem 1.4rem 1.4rem;display:flex;flex-direction:column;flex:1;}
+.product-cat{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+.product-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.28;margin-bottom:0.5rem;letter-spacing:-0.01em;}
+.product-desc{font-size:0.81rem;color:var(--muted);line-height:1.65;margin-bottom:1.2rem;flex:1;}
+.product-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.stars{color:#e8a020;font-size:0.72rem;letter-spacing:1px;}
+.rating-num{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:1px;}
+.product-link{font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:1px;transition:color 0.18s;}
+.product-link:hover{color:var(--accent);}
+
+/* ── TRUST PULL QUOTE ────────────────────────── */
+.trust-pull{background:var(--ink);color:var(--paper);padding:5rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;border-top:1px solid rgba(255,255,255,0.06);}
+.trust-pull-quote{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:400;font-style:italic;line-height:1.35;letter-spacing:-0.02em;color:var(--paper);position:relative;padding-left:1.5rem;}
+.trust-pull-quote::before{content:'"';position:absolute;left:-0.2rem;top:-0.4rem;font-size:5rem;color:var(--accent);opacity:0.5;font-family:'Playfair Display',serif;line-height:1;}
+.trust-pull-attr{font-family:'DM Mono',monospace;font-size:0.62rem;color:rgba(247,244,239,0.35);letter-spacing:0.14em;text-transform:uppercase;margin-top:1.5rem;}
+.trust-pull-right{}
+.trust-pull-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;}
+.trust-pull-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;line-height:1.25;letter-spacing:-0.02em;margin-bottom:1rem;}
+.trust-pull-body{font-size:0.88rem;color:rgba(247,244,239,0.5);line-height:1.8;}
+.trust-badges{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;}
+.trust-badge{display:flex;align-items:center;gap:0.5rem;font-family:'DM Mono',monospace;font-size:0.62rem;color:rgba(247,244,239,0.5);letter-spacing:0.08em;text-transform:uppercase;}
+.trust-badge svg{width:14px;height:14px;stroke:var(--accent2);fill:none;stroke-width:2;flex-shrink:0;}
+
+/* ── COMPARISON CALLOUT ──────────────────────── */
+.callout-bar{background:var(--warm2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 3rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;}
+.callout-text{}
+.callout-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;}
+.callout-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;letter-spacing:-0.02em;line-height:1.2;}
+.callout-sub{font-size:0.82rem;color:var(--muted);margin-top:0.4rem;max-width:520px;line-height:1.6;}
+.callout-stat{text-align:right;flex-shrink:0;}
+.callout-stat-n{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--ink);letter-spacing:-0.04em;line-height:1;}
+.callout-stat-n span{color:var(--accent);}
+.callout-stat-lbl{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:0.3rem;}
+
+/* ── EDITORIAL ───────────────────────────────── */
+.editorial{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.editorial-left{padding:5rem 3.5rem;border-right:1px solid var(--border);}
+.editorial-right{padding:5rem 3.5rem;background:var(--warm);}
+.editorial-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem;}
+.editorial-label::before{content:'';display:inline-block;width:18px;height:1px;background:var(--accent);}
+.editorial-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1.18;letter-spacing:-0.025em;margin-bottom:1.4rem;}
+.editorial-body{font-size:0.88rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;}
+.editorial-body strong{color:var(--ink);font-weight:600;}
+.step-list{display:flex;flex-direction:column;gap:1.4rem;margin-top:0.5rem;}
+.step-item{display:flex;gap:1.1rem;align-items:flex-start;padding-bottom:1.4rem;border-bottom:1px solid var(--border);}
+.step-item:last-child{border-bottom:none;padding-bottom:0;}
+.step-n{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--accent);min-width:1.8rem;margin-top:2px;font-weight:500;}
+.step-text{font-size:0.86rem;line-height:1.65;color:var(--ink);}
+.step-text strong{font-weight:600;}
+.step-text span{color:var(--muted);font-size:0.82rem;}
+
+/* ── PRESS / TRUST BAR ───────────────────────── */
+.press-bar{background:var(--ink);padding:2.5rem 3rem;display:flex;align-items:center;gap:4rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+.press-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(247,244,239,0.3);white-space:nowrap;flex-shrink:0;}
+.press-divider{width:1px;height:24px;background:rgba(247,244,239,0.12);flex-shrink:0;}
+.press-items{display:flex;align-items:center;gap:3rem;flex-wrap:wrap;}
+.press-item{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:rgba(247,244,239,0.22);letter-spacing:-0.01em;font-style:italic;white-space:nowrap;}
+
+/* ── ARTICLES ────────────────────────────────── */
+.articles-section{padding:5rem 3rem;}
+.articles-grid-main{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.6rem;margin-top:2.5rem;}
+.article-card{border:1px solid var(--border);border-radius:3px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:box-shadow 0.22s,transform 0.22s;}
+.article-card:hover{box-shadow:0 10px 36px rgba(26,23,20,0.1);transform:translateY(-3px);}
+.article-card-img{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.article-card-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.article-card-body{padding:1.5rem;flex:1;display:flex;flex-direction:column;}
+.article-card-cat{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;}
+.article-card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;line-height:1.3;margin-bottom:0.7rem;}
+.article-card-desc{font-size:0.8rem;color:var(--muted);line-height:1.65;flex:1;}
+.article-card-meta{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--border);margin-top:1rem;display:flex;justify-content:space-between;}
+.article-card-meta span{color:var(--muted);}
+
+.articles-bottom{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:1.6rem;border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.article-list-item{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;display:flex;gap:1rem;align-items:flex-start;transition:background 0.15s;}
+.article-list-item:hover{background:var(--warm);}
+.article-list-item:last-child,.article-list-item:nth-child(2){border-bottom:none;}
+.ali-num{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--border);flex-shrink:0;margin-top:2px;}
+.ali-content{}
+.ali-cat{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;}
+.ali-title{font-size:0.88rem;font-weight:500;line-height:1.4;color:var(--ink);}
+.ali-meta{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);margin-top:0.25rem;}
+
+/* ── NEWSLETTER ──────────────────────────────── */
+.newsletter{background:var(--ink);color:var(--paper);padding:6rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;overflow:hidden;}
+.newsletter::before{content:'';position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(200,75,47,0.1) 0%,transparent 65%);pointer-events:none;}
+.nl-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem;}
+.nl-label::before{content:'';display:inline-block;width:18px;height:1px;background:var(--accent);}
+.nl-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;line-height:1.12;letter-spacing:-0.03em;}
+.nl-title em{font-style:italic;color:rgba(247,244,239,0.4);}
+.nl-right p{font-size:0.88rem;color:rgba(247,244,239,0.45);line-height:1.8;margin-bottom:2rem;max-width:380px;}
+.nl-form{display:flex;border:1px solid rgba(247,244,239,0.15);border-radius:2px;overflow:hidden;max-width:440px;}
+.nl-form input{flex:1;background:rgba(255,255,255,0.04);border:none;padding:0.9rem 1.2rem;color:var(--paper);font-family:'Instrument Sans',sans-serif;font-size:0.88rem;outline:none;}
+.nl-form input::placeholder{color:rgba(247,244,239,0.22);}
+.nl-form button{background:var(--accent);color:white;border:none;padding:0.9rem 1.5rem;font-family:'Instrument Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;white-space:nowrap;}
+.nl-form button:hover{background:#a83a20;}
+.nl-note{font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(247,244,239,0.2);margin-top:0.8rem;letter-spacing:0.06em;}
+
+/* ── FOOTER ──────────────────────────────────── */
+footer{background:var(--paper);border-top:2px solid var(--ink);padding:4rem 3rem 2rem;}
+.footer-top{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer-brand{}
+.footer-logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--ink);display:block;margin-bottom:0.9rem;letter-spacing:-0.02em;}
+.footer-about{font-size:0.8rem;color:var(--muted);line-height:1.75;max-width:270px;margin-bottom:1.2rem;}
+.footer-affiliate{font-size:0.7rem;color:var(--muted);line-height:1.65;border-top:1px solid var(--border);padding-top:0.9rem;max-width:270px;}
+.footer-col h4{font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);margin-bottom:1.1rem;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.6rem;}
+.footer-col a{font-size:0.82rem;color:var(--muted);text-decoration:none;transition:color 0.18s;}
+.footer-col a:hover{color:var(--ink);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+.footer-bottom p{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
+.footer-bottom a{color:var(--muted);text-decoration:none;}
+.footer-bottom a:hover{color:var(--ink);}
+
+/* ── ANIMATIONS ──────────────────────────────── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.d1{transition-delay:.05s}.d2{transition-delay:.13s}.d3{transition-delay:.21s}.d4{transition-delay:.29s}
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media(max-width:1100px){
+  .products-grid-4{grid-template-columns:repeat(2,1fr);}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  .stat-cell:nth-child(2){border-right:none;}
+  .stat-cell:nth-child(3){border-top:1px solid var(--border);}
+  .stat-cell:nth-child(4){border-top:1px solid var(--border);}
+  .articles-grid-main{grid-template-columns:1fr 1fr;}
+  .articles-grid-main .article-card:last-child{display:none;}
+}
+@media(max-width:900px){
+  nav{padding:0 1.2rem;}.nav-links{display:none;}.nav-issue{display:none;}
+  .hero{grid-template-columns:1fr;}.hero-right{display:none;}
+  .hero-left{padding:3rem 1.5rem;min-height:75vh;}
+  .hero-stats{gap:1.5rem;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .products-grid,.products-grid-4{grid-template-columns:1fr 1fr;}
+  .trust-pull{grid-template-columns:1fr;gap:2.5rem;}
+  .callout-bar{flex-direction:column;align-items:flex-start;}.callout-stat{text-align:left;}
+  .editorial{grid-template-columns:1fr;}.editorial-left{border-right:none;border-bottom:1px solid var(--border);}
+  .press-bar{flex-wrap:wrap;gap:1.5rem;}
+  .articles-grid-main{grid-template-columns:1fr;}
+  .articles-bottom{grid-template-columns:1fr;}
+  .article-list-item:nth-child(2){border-bottom:1px solid var(--border);}
+  .newsletter{grid-template-columns:1fr;gap:2.5rem;padding:4rem 1.5rem;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .products-section,.articles-section{padding:3rem 1.5rem;}
+}
+@media(max-width:600px){
+  .products-grid,.products-grid-4{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:1fr;}
+  .stat-cell{border-right:none;border-bottom:1px solid var(--border);}
+  .articles-grid-main{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav>
+  <a class="nav-logo" href="#">PeakForm <span class="nav-logo-tm">TM</span></a>
+  <ul class="nav-links">
+    <li><a href="#products">Supplements</a></li>
+    <li><a href="#skincare">Skincare</a></li>
+    <li><a href="#fitness">Fitness</a></li>
+    <li><a href="#grooming">Grooming</a></li>
+    <li><a href="#articles">Reviews</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-issue">April 2026</span>
+    <span class="nav-cta">Amazon Picks</span>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Vol. 01 — Performance &amp; Grooming</p>
+    <h1>Train hard.<br>Look like<br><em>you mean it.</em></h1>
+    <p class="hero-sub">Obsessive, research-backed reviews of the gear and grooming that actually holds up. Picked by people who actually train — not by whoever pays the most.</p>
+    <div class="hero-actions">
+      <a class="hero-btn" href="#products">
+        See this month's picks
+        <svg viewBox="0 0 14 14"><path d="M1 7h12M8 3l5 4-5 4"/></svg>
+      </a>
+      <a class="hero-link" href="#about">How we pick</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val">340<span style="color:var(--accent);font-size:1.1rem">+</span></div>
+        <div class="hero-stat-lbl">Products Tested</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">0</div>
+        <div class="hero-stat-lbl">Sponsored Posts</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">4</div>
+        <div class="hero-stat-lbl">Categories</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <p class="hero-right-label">// This month's top picks <span>Updated Apr 2026</span></p>
+    <div class="hero-picks">
+      <a class="hero-pick" href="https://www.amazon.com/dp/B000QSNYGI?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">
+        <span class="hp-num">01</span>
+        <div><div class="hp-name">ON Gold Standard Whey</div><div class="hp-cat">Supplements</div></div>
+        <span class="hp-tag">Best Overall</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B0B6QDYSG5?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">
+        <span class="hp-num">02</span>
+        <div><div class="hp-name">Theragun Mini 2nd Gen</div><div class="hp-cat">Recovery</div></div>
+        <span class="hp-tag">Top Rated</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B01N1LL62W?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">
+        <span class="hp-num">03</span>
+        <div><div class="hp-name">CeraVe Foaming Cleanser</div><div class="hp-cat">Skincare</div></div>
+        <span class="hp-tag">Derm Approved</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B0G6Z84TQM?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">
+        <span class="hp-num">04</span>
+        <div><div class="hp-name">Bowflex SelectTech 552</div><div class="hp-cat">Fitness Gear</div></div>
+        <span class="hp-tag">Home Gym</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B002CML1VG?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">
+        <span class="hp-num">05</span>
+        <div><div class="hp-name">La Roche-Posay Anthelios SPF 60</div><div class="hp-cat">Sun Protection</div></div>
+        <span class="hp-tag">Best SPF</span>
+      </a>
+      <a class="hero-pick" href="https://www.amazon.com/dp/B0BZDPFH45?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">
+        <span class="hp-num">06</span>
+        <div><div class="hp-name">Philips Norelco OneBlade</div><div class="hp-cat">Grooming</div></div>
+        <span class="hp-tag">Most Versatile</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MARQUEE ═══════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item hi">Supplements</span>
+    <span class="marquee-item">Skincare for Athletes</span>
+    <span class="marquee-item">Home Gym</span>
+    <span class="marquee-item">Recovery Tools</span>
+    <span class="marquee-item">Running Gear</span>
+    <span class="marquee-item">Men's Grooming</span>
+    <span class="marquee-item">SPF &amp; Protection</span>
+    <span class="marquee-item">Pre-Workout</span>
+    <span class="marquee-item hi">Supplements</span>
+    <span class="marquee-item">Skincare for Athletes</span>
+    <span class="marquee-item">Home Gym</span>
+    <span class="marquee-item">Recovery Tools</span>
+    <span class="marquee-item">Running Gear</span>
+    <span class="marquee-item">Men's Grooming</span>
+    <span class="marquee-item">SPF &amp; Protection</span>
+    <span class="marquee-item">Pre-Workout</span>
+  </div>
+</div>
+
+<!-- ═══════════ STATS BAR ═══════════ -->
+<div class="stats-bar">
+  <div class="stat-cell reveal">
+    <div class="stat-n">340<span>+</span></div>
+    <div class="stat-label">Products Evaluated</div>
+    <p class="stat-sub">Across supplements, skincare, fitness equipment, and grooming since launch.</p>
+  </div>
+  <div class="stat-cell reveal d1">
+    <div class="stat-n">12</div>
+    <div class="stat-label">Editor Picks This Month</div>
+    <p class="stat-sub">Curated monthly across four categories. Every pick re-evaluated each quarter.</p>
+  </div>
+  <div class="stat-cell reveal d2">
+    <div class="stat-n">0</div>
+    <div class="stat-label">Sponsored Posts</div>
+    <p class="stat-sub">No brand deals. No gifted product reviews. No pay-to-rank. Ever.</p>
+  </div>
+  <div class="stat-cell reveal d3">
+    <div class="stat-n">100<span>%</span></div>
+    <div class="stat-label">Independent</div>
+    <p class="stat-sub">We earn through Amazon affiliate links — disclosed, transparent, and at no extra cost to you.</p>
+  </div>
+</div>
+
+<!-- ═══════════ SUPPLEMENTS ═══════════ -->
+<section class="products-section" id="products">
+  <div class="section-header reveal">
+    <div class="section-header-left">
+      <p class="section-sub">Category 01</p>
+      <h2 class="section-title">Supplements</h2>
+      <p class="section-desc">The three foundations: protein, creatine, and pre-workout. Verified ingredients, real dosing, no proprietary blends.</p>
+    </div>
+    <a class="view-all" href="#articles">All supplement reviews &#8594;</a>
+  </div>
+  <div class="products-grid">
+
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:linear-gradient(135deg,#1a1714 0%,#2c2520 100%);">
+        <div class="img-fallback">ON</div>
+        <img src="https://www.optimumnutrition.com/cdn/shop/files/US_GSW_2lb_DRC_6074259-2000x2204-1a9cb17.png?v=1761676398&width=600" alt="Optimum Nutrition Gold Standard Whey" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-red">Best Overall</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Protein Powder</p>
+        <h3 class="product-name">Optimum Nutrition Gold Standard 100% Whey</h3>
+        <p class="product-desc">24g protein per serving with zero clumping in any liquid. 20+ flavors, all of them drinkable. The benchmark every competitor claims to match — and almost none do. This is the default for a reason.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.7 &middot; 85,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B000QSNYGI?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:linear-gradient(135deg,#0d1f16 0%,#1a3328 100%);">
+        <div class="img-fallback">CR</div>
+        <img src="https://www.optimumnutrition.com/cdn/shop/files/on-1153060_Image_01.png?v=1769135392&width=600" alt="ON Micronized Creatine Monohydrate" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-green">Top Seller</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Creatine</p>
+        <h3 class="product-name">ON Micronized Creatine Monohydrate</h3>
+        <p class="product-desc">5g pure creatine monohydrate per serving. Unflavored, dissolves fast, stacks with everything. The most research-backed supplement in sports nutrition — and this is the cleanest version of it.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.6 &middot; 50,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B002DYIZEO?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:linear-gradient(135deg,#1c1108 0%,#30200e 100%);">
+        <div class="img-fallback">C4</div>
+        <img src="https://target.scene7.com/is/image/Target/GUEST_fb24f762-59b9-468f-9b7f-66c59c8d5a0d?wid=600" alt="Cellucor C4 Original Pre-Workout" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-dark">Editor's Pick</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Pre-Workout</p>
+        <h3 class="product-name">Cellucor C4 Original Pre-Workout</h3>
+        <p class="product-desc">150mg caffeine, beta-alanine, creatine nitrate. Consistent energy with no mid-session crash. 60 servings. It's been the best-selling pre-workout on Amazon for years — because it works exactly as expected, every time.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div><div class="rating-num">4.5 &middot; 40,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B01N272UAI?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════ TRUST PULL QUOTE ═══════════ -->
+<div class="trust-pull">
+  <div class="reveal">
+    <blockquote class="trust-pull-quote">The supplement industry is full of underdosed products hiding behind proprietary blends. We check every label — and most don't pass.</blockquote>
+    <p class="trust-pull-attr">— PeakForm Editorial, April 2026</p>
+  </div>
+  <div class="trust-pull-right reveal d1">
+    <p class="trust-pull-label">Why it matters</p>
+    <h3 class="trust-pull-title">Label claims aren't the same as effective doses.</h3>
+    <p class="trust-pull-body">A product can list creatine as an ingredient with only 500mg per serving — far below the 3–5g dose supported by research. We check dose, form, and purity on every product we list. If it doesn't hold up, it doesn't make the cut — regardless of ratings or reviews.</p>
+    <div class="trust-badges">
+      <span class="trust-badge">
+        <svg viewBox="0 0 14 14"><path d="M2 7l4 4 6-7"/></svg>
+        Dose-verified
+      </span>
+      <span class="trust-badge">
+        <svg viewBox="0 0 14 14"><path d="M2 7l4 4 6-7"/></svg>
+        No proprietary blends
+      </span>
+      <span class="trust-badge">
+        <svg viewBox="0 0 14 14"><path d="M2 7l4 4 6-7"/></svg>
+        Clinically backed
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SKINCARE ═══════════ -->
+<section class="products-section" id="skincare">
+  <div class="section-header reveal">
+    <div class="section-header-left">
+      <p class="section-sub">Category 02</p>
+      <h2 class="section-title">Skincare for Athletes</h2>
+      <p class="section-desc">Your skin takes a hit every session. Sweat, UV, friction. These four products handle all of it — without a 12-step routine.</p>
+    </div>
+    <a class="view-all" href="#articles">All skincare reviews &#8594;</a>
+  </div>
+  <div class="products-grid products-grid-4">
+
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:linear-gradient(135deg,#e8e0d4 0%,#d5cdc0 100%);">
+        <div class="img-fallback" style="color:#1a1714">CV</div>
+        <img src="https://www.cerave.com/-/media/project/loreal/brand-sites/cerave/americas/us/skincare/cleansers/foaming-facial-cleanser/photos/foaming-facial-cleanser_front.jpg?rev=10cd9e2cc8374aa1b2621d87f938c0ed" alt="CeraVe Foaming Facial Cleanser" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-red">Derm Approved</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Face Wash</p>
+        <h3 class="product-name">CeraVe Foaming Facial Cleanser</h3>
+        <p class="product-desc">Ceramides + niacinamide + hyaluronic acid. Kills post-workout bacteria without wrecking your skin barrier. Fragrance-free. The post-gym essential.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.7 &middot; 95,000+</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B01N1LL62W?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:linear-gradient(135deg,#d4e8dd 0%,#c0dbc8 100%);">
+        <div class="img-fallback" style="color:#1a1714">LR</div>
+        <img src="https://static.thcdn.com/productimg/original/11429023-1245303627571393.jpg" alt="La Roche-Posay Anthelios SPF 60" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-green">Best SPF</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Sun Protection</p>
+        <h3 class="product-name">La Roche-Posay Anthelios SPF 60</h3>
+        <p class="product-desc">Invisible finish, won't clog pores, water resistant for 80 minutes. If you run, cycle, or train outside, UV damage adds up. This is the standard.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.6 &middot; 22,000+</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B002CML1VG?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:linear-gradient(135deg,#e8e4d0 0%,#dbd6c0 100%);">
+        <div class="img-fallback" style="color:#1a1714">NG</div>
+        <img src="https://target.scene7.com/is/image/Target/GUEST_83cbb31a-b7ef-43b5-84ba-a28df85a25ec?wid=600" alt="Neutrogena Hydro Boost Water Gel" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-dark">Editor's Pick</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Moisturizer</p>
+        <h3 class="product-name">Neutrogena Hydro Boost</h3>
+        <p class="product-desc">Hyaluronic acid gel — absorbs in seconds, leaves no residue. Works for oily and dry skin. One of the best moisturizers under $25, full stop.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.5 &middot; 60,000+</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B00NR1YQHM?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d4">
+      <div class="product-img" style="background:linear-gradient(135deg,#f0ece4 0%,#e0dbd0 100%);">
+        <div class="img-fallback" style="color:#1a1714">CX</div>
+        <img src="https://www.cosrx.com/cdn/shop/files/james_800x1067_1_1_4e9750cc-2cd6-4817-ace5-be2305a85806.jpg?v=1763111577&width=600" alt="COSRX Snail Mucin 96% Power Essence" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-blue">Viral — Earned It</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Repair Serum</p>
+        <h3 class="product-name">COSRX Snail Mucin 96% Essence</h3>
+        <p class="product-desc">96% snail secretion filtrate — clinically shown to repair and hydrate. Absorbs instantly with no sticky feel. Unusual ingredient, real results. Post-training or post-sun, this works.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.6 &middot; 70,000+</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B00PBX3L7K?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════ CALLOUT BAR ═══════════ -->
+<div class="callout-bar reveal">
+  <div class="callout-text">
+    <p class="callout-eyebrow">Our process</p>
+    <h3 class="callout-title">We compare 30–50 products before picking one.</h3>
+    <p class="callout-sub">Every category gets a full market scan. We sort by review volume, read the one-star reviews, check ingredient sourcing, and run a cost-per-use analysis. The top pick has to earn it — no shortcuts, no assumptions.</p>
+  </div>
+  <div class="callout-stat">
+    <div class="callout-stat-n">30<span>–50</span></div>
+    <div class="callout-stat-lbl">Products reviewed<br>per category pick</div>
+  </div>
+</div>
+
+<!-- ═══════════ FITNESS & RECOVERY ═══════════ -->
+<section class="products-section" id="fitness">
+  <div class="section-header reveal">
+    <div class="section-header-left">
+      <p class="section-sub">Category 03</p>
+      <h2 class="section-title">Fitness &amp; Recovery</h2>
+      <p class="section-desc">Three picks that belong in every serious home gym — from adjustable weights to recovery tools to the resistance bands that have outlasted every trend.</p>
+    </div>
+    <a class="view-all" href="#articles">All fitness reviews &#8594;</a>
+  </div>
+  <div class="products-grid">
+
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:linear-gradient(135deg,#141414 0%,#252525 100%);">
+        <div class="img-fallback">BF</div>
+        <img src="https://www.bowflex.com/dw/image/v2/AAYW_PRD/on/demandware.static/-/Sites-nautilus-master-catalog/default/dw6f262211/images/bfx/weights/ZMK4011008/results-series-552-dumbbell-pair-black-orange.jpg.jpg?sw=600" alt="Bowflex SelectTech 552 Dumbbells" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-red">Home Gym Essential</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Adjustable Dumbbells</p>
+        <h3 class="product-name">Bowflex SelectTech 552 Dumbbells</h3>
+        <p class="product-desc">Replaces 15 sets of weights. 5 to 52.5 lbs per dumbbell, adjusted in 2 seconds by dial. Compact enough for an apartment, serious enough for real training. The best single purchase for a home gym.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.8 &middot; 15,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B0G6Z84TQM?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:linear-gradient(135deg,#0f1a14 0%,#1a2e22 100%);">
+        <div class="img-fallback">TG</div>
+        <img src="https://static.thcdn.com/productimg/original/14218890-1095276894252439.jpg" alt="Theragun Mini Percussive Massager" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-green">Recovery Pick</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Massage Gun</p>
+        <h3 class="product-name">Theragun Mini 2nd Gen</h3>
+        <p class="product-desc">Compact enough for any gym bag, powerful enough to actually do something. Quieter than competitors at the same price. 3 speeds. Reduces DOMS noticeably if you use it within 30 minutes post-session.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div><div class="rating-num">4.4 &middot; 18,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B0B6QDYSG5?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:linear-gradient(135deg,#1a1208 0%,#2d1f0e 100%);">
+        <div class="img-fallback">RB</div>
+        <img src="https://www.fitsimplify.com/wp-content/uploads/2017/08/main1-247x247.jpg" alt="Fit Simplify Resistance Loop Bands" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-dark">200k Reviews</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Resistance Bands</p>
+        <h3 class="product-name">Fit Simplify Resistance Loop Bands</h3>
+        <p class="product-desc">Set of 5 resistance levels with carry bag. Best warm-up, activation, and travel workout tool on the market at this price. Over 200,000 Amazon reviews — and they're almost all positive for a reason.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.7 &middot; 200,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B09MJKJYLQ?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════ GROOMING ═══════════ -->
+<section class="products-section" id="grooming" style="padding-top:0;">
+  <div class="section-header reveal">
+    <div class="section-header-left">
+      <p class="section-sub">Category 04</p>
+      <h2 class="section-title">Grooming</h2>
+      <p class="section-desc">One trimmer, one pair of running shoes, and one recovery essential. The grooming kit for men who don't overcomplicate it.</p>
+    </div>
+    <a class="view-all" href="#articles">All grooming reviews &#8594;</a>
+  </div>
+  <div class="products-grid">
+
+    <div class="product-card reveal d1">
+      <div class="product-img" style="background:linear-gradient(135deg,#161b22 0%,#222b36 100%);">
+        <div class="img-fallback">PH</div>
+        <img src="https://images.philips.com/is/image/philipsconsumer/062ff2a030254e618e2bb21e00d54921?wid=600&hei=600" alt="Philips Norelco OneBlade Face + Body" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-red">Most Versatile</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Trimmer / Shaver</p>
+        <h3 class="product-name">Philips Norelco OneBlade Face + Body</h3>
+        <p class="product-desc">Trims, edges, and shaves any length of hair — face and body — with one device. 5-in-1 adjustable comb, body guard attachment, no nicks. Replaces 3 separate tools. Ideal for the minimalist kit.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.5 &middot; 45,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B0BZDPFH45?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d2">
+      <div class="product-img" style="background:linear-gradient(135deg,#0d0f18 0%,#1a1d2e 100%);">
+        <div class="img-fallback">NK</div>
+        <img src="https://media.about.nike.com/img/5593cfa7-39ca-407f-a2f2-4347be5c2d96/su24-peg41-volt-womens-hero-re.jpg" alt="Nike Pegasus 41 Running Shoes" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-green">Daily Trainer</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Running Shoes</p>
+        <h3 class="product-name">Nike Pegasus 41</h3>
+        <p class="product-desc">ReactX foam midsole, dual Air Zoom units, engineered mesh upper. The Pegasus line has been the benchmark daily trainer for over a decade. The 41 is the best version yet — springy, durable, fits true.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.5 &middot; 12,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B0D2DQ8S6X?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal d3">
+      <div class="product-img" style="background:linear-gradient(135deg,#1c1a18 0%,#2e2a26 100%);">
+        <div class="img-fallback">CX</div>
+        <img src="https://www.cosrx.com/cdn/shop/files/james_800x1067_1_1_4e9750cc-2cd6-4817-ace5-be2305a85806.jpg?v=1763111577&width=600" alt="COSRX Snail Mucin 96% Power Essence" loading="lazy" onerror="this.style.opacity='0'">
+        <span class="product-badge badge-dark">Staff Favorite</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">Post-Session Recovery</p>
+        <h3 class="product-name">COSRX Snail Mucin 96%</h3>
+        <p class="product-desc">The one product that crosses over from skincare into recovery. 96% snail filtrate — fast-absorbing, fragrance-free, repairs UV and heat-stressed skin overnight. Not just a trend. It's a legitimate tool.</p>
+        <div class="product-footer">
+          <div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="rating-num">4.6 &middot; 70,000+ reviews</div></div>
+          <a class="product-link" href="https://www.amazon.com/dp/B00PBX3L7K?tag=peakform2003-20" target="_blank" rel="noopener noreferrer">Amazon &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════ EDITORIAL / HOW WE PICK ═══════════ -->
+<section class="editorial" id="about">
+  <div class="editorial-left reveal">
+    <p class="editorial-label">Our standard</p>
+    <h2 class="editorial-title">We only recommend what we'd actually buy.</h2>
+    <p class="editorial-body">There's too much noise in the fitness and grooming space. <strong>Sponsored posts. Paid rankings. Affiliate farms</strong> that recommend whatever pays the highest commission. PeakForm isn't that — and it never will be.</p>
+    <p class="editorial-body">Every pick on this site goes through a genuine research process: ingredients, clinical evidence, competitive testing, and honest value analysis. If something underdelivers, we say so. If a <strong>$20 product beats a $100 one</strong>, we say that too — even if the $100 product pays us more.</p>
+    <p class="editorial-body">We earn through Amazon affiliate links on every product we list. That's the model. It's disclosed, it's transparent, and it costs you nothing extra. The affiliate structure is how we keep the lights on — but it doesn't decide what we pick. Our research process does.</p>
+  </div>
+  <div class="editorial-right reveal">
+    <p class="editorial-label">How we pick</p>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:1.8rem;letter-spacing:-0.015em;line-height:1.2;">Four steps. Every category. No exceptions.</h3>
+    <div class="step-list">
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <p class="step-text"><strong>Market scan</strong> — We identify 30–50 products per category. Filtered by real review volume, recency, and verified purchase data. <span>Paid placements are ignored entirely.</span></p>
+      </div>
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <p class="step-text"><strong>Ingredient check</strong> — Every active ingredient verified against clinical literature. <span>No proprietary blends, no underdosed formulas, no marketing claims without evidence.</span></p>
+      </div>
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <p class="step-text"><strong>Value analysis</strong> — Cost per serving, cost per gram, cost per year. <span>The best product isn't always cheapest — but it always has to justify its price clearly.</span></p>
+      </div>
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <p class="step-text"><strong>Final ranking</strong> — Scored on performance, value, availability, and longevity of the pick. <span>The top product earns its place or the category stays empty.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRESS / TRUST BAR ═══════════ -->
+<div class="press-bar">
+  <span class="press-label">Read by athletes at</span>
+  <div class="press-divider"></div>
+  <div class="press-items">
+    <span class="press-item">CrossFit</span>
+    <span class="press-item">Strava</span>
+    <span class="press-item">Nike Run Club</span>
+    <span class="press-item">Hyrox</span>
+    <span class="press-item">Peloton</span>
+    <span class="press-item">Whoop</span>
+  </div>
+</div>
+
+<!-- ═══════════ ARTICLES ═══════════ -->
+<section class="articles-section" id="articles">
+  <div class="section-header reveal">
+    <div class="section-header-left">
+      <p class="section-sub">Latest</p>
+      <h2 class="section-title">Reviews &amp; Guides</h2>
+      <p class="section-desc">Long-form breakdowns, comparisons, and ranked lists — all original, none sponsored.</p>
+    </div>
+  </div>
+
+  <div class="articles-grid-main">
+    <a class="article-card reveal d1" href="best-pre-workout-2026.html">
+      <div class="article-card-img" style="background:linear-gradient(135deg,#1a1714 0%,#2c2520 100%);">
+        <div class="article-card-img-inner">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="white" opacity="0.12" stroke-width="1"><rect x="12" y="8" width="36" height="44" rx="2"/><path d="M19 20h22M19 28h22M19 36h14"/></svg>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <p class="article-card-cat">Supplements &middot; 9 min read</p>
+        <h3 class="article-card-title">The Best Pre-Workout Supplements of 2026, Ranked by Actual Performance</h3>
+        <p class="article-card-desc">We tested 18 pre-workouts across 6 weeks: checked every label, tracked energy quality, and rated crash severity. C4 still holds the top spot — but two newcomers came close.</p>
+        <div class="article-card-meta"><span>Apr 2026</span><span>9 min</span></div>
+      </div>
+    </a>
+    <a class="article-card reveal d2" href="#skincare">
+      <div class="article-card-img" style="background:linear-gradient(135deg,#e8e0d4 0%,#c8beae 100%);">
+        <div class="article-card-img-inner">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="#1a1714" opacity="0.12" stroke-width="1"><circle cx="30" cy="30" r="18"/><path d="M22 30 Q30 20 38 30 Q30 40 22 30z"/></svg>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <p class="article-card-cat">Skincare &middot; 5 min read</p>
+        <h3 class="article-card-title">The Face Wash Routine Every Athlete Actually Needs After Training</h3>
+        <p class="article-card-desc">CeraVe vs. Neutrogena vs. La Roche-Posay — we compared all three head to head on post-workout skin. One clear winner for oily skin. One for dry. Here's why.</p>
+        <div class="article-card-meta"><span>Mar 2026</span><span>5 min</span></div>
+      </div>
+    </a>
+    <a class="article-card reveal d3" href="#fitness">
+      <div class="article-card-img" style="background:linear-gradient(135deg,#141414 0%,#252525 100%);">
+        <div class="article-card-img-inner">
+          <svg width="80" height="40" viewBox="0 0 80 40" fill="none" stroke="white" opacity="0.12" stroke-width="1"><rect x="6" y="14" width="10" height="12" rx="1"/><rect x="64" y="14" width="10" height="12" rx="1"/><rect x="16" y="10" width="6" height="20" rx="1"/><rect x="58" y="10" width="6" height="20" rx="1"/><line x1="22" y1="20" x2="58" y2="20" stroke-width="2"/></svg>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <p class="article-card-cat">Home Gym &middot; 10 min read</p>
+        <h3 class="article-card-title">Build a Serious Home Gym for Under $300 — Our Exact Picks</h3>
+        <p class="article-card-desc">Three items. Full-body capability. No wasted space. We've run this setup for 8 months and it covers 90% of what you'd do in a commercial gym, at a fraction of the cost.</p>
+        <div class="article-card-meta"><span>Feb 2026</span><span>10 min</span></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="articles-bottom reveal">
+    <a class="article-list-item" href="#products">
+      <span class="ali-num">04</span>
+      <div class="ali-content">
+        <p class="ali-cat">Supplements &middot; 7 min</p>
+        <p class="ali-title">Creatine HCL vs Monohydrate — What Actually Matters</p>
+        <p class="ali-meta">Spoiler: the research answer is simpler than the marketing</p>
+      </div>
+    </a>
+    <a class="article-list-item" href="#skincare">
+      <span class="ali-num">05</span>
+      <div class="ali-content">
+        <p class="ali-cat">Skincare &middot; 6 min</p>
+        <p class="ali-title">SPF for Men Who Train Outdoors — What Actually Works</p>
+        <p class="ali-meta">Tested across 500km of outdoor running this summer</p>
+      </div>
+    </a>
+    <a class="article-list-item" href="#fitness">
+      <span class="ali-num">06</span>
+      <div class="ali-content">
+        <p class="ali-cat">Recovery &middot; 8 min</p>
+        <p class="ali-title">Massage Guns Ranked: 7 Models From $29 to $399</p>
+        <p class="ali-meta">Only two are actually worth buying — here's which ones</p>
+      </div>
+    </a>
+    <a class="article-list-item" href="#grooming">
+      <span class="ali-num">07</span>
+      <div class="ali-content">
+        <p class="ali-cat">Grooming &middot; 5 min</p>
+        <p class="ali-title">The One-Tool Grooming Kit for Men Who Don't Have Time</p>
+        <p class="ali-meta">The Norelco OneBlade genuinely replaces 3 devices</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════ NEWSLETTER ═══════════ -->
+<section class="newsletter">
+  <div class="reveal">
+    <p class="nl-label">Stay sharp</p>
+    <h2 class="nl-title">New picks and reviews,<br><em>weekly.</em></h2>
+  </div>
+  <div class="reveal d1">
+    <p>No noise. Just the best new products, honest breakdowns, and gear that's worth your money — straight to your inbox every week. Join 14,000+ athletes who already read it.</p>
+    <div class="nl-form">
+      <input type="email" placeholder="your@email.com" aria-label="Email address">
+      <button type="button">Subscribe</button>
+    </div>
+    <p class="nl-note">No spam. Unsubscribe any time. We never sell your data.</p>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="footer-logo">PeakForm</span>
+      <p class="footer-about">Independent gear and grooming reviews for men who take training seriously. No sponsored content. No paid rankings. Just honest, research-backed picks.</p>
+      <p class="footer-affiliate">PeakForm participates in the Amazon Associates Program and earns from qualifying purchases. This is how the site stays independent — it costs you nothing extra, and it never influences what we recommend.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="#products">Supplements</a></li>
+        <li><a href="#skincare">Skincare</a></li>
+        <li><a href="#fitness">Fitness Gear</a></li>
+        <li><a href="#fitness">Recovery</a></li>
+        <li><a href="#grooming">Running</a></li>
+        <li><a href="#grooming">Grooming</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Reviews</h4>
+      <ul>
+        <li><a href="#articles">Latest Guides</a></li>
+        <li><a href="#articles">Supplement Reviews</a></li>
+        <li><a href="#articles">Skincare Comparisons</a></li>
+        <li><a href="#articles">Home Gym Builds</a></li>
+        <li><a href="#articles">Recovery Tools</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Site</h4>
+      <ul>
+        <li><a href="#about">About PeakForm</a></li>
+        <li><a href="#about">How We Pick</a></li>
+        <li><a href="#about">Editorial Standards</a></li>
+        <li><a href="#about">Affiliate Disclosure</a></li>
+        <li><a href="#articles">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 PeakForm. All rights reserved.</p>
+    <p>Built for athletes &middot; <a href="#about">Affiliate Disclosure</a></p>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Image fallback: if third-party image fails to load, hide it — the CSS .img-fallback text shows instead
+document.querySelectorAll('.product-img img').forEach(img => {
+  img.addEventListener('error', function() {
+    this.style.display = 'none';
+  });
+  // Also handle images that are already broken on load
+  if (img.complete && img.naturalWidth === 0) {
+    img.style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
