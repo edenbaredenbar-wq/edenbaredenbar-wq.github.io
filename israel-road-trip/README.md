@@ -4,6 +4,7 @@ A projector game for one 35-minute class (ages 16–18). Teams race a vehicle fr
 
 - The whole game is one file, `index.html`. It has no backend and no build step, works **offline**, and doesn't save anything between sessions.
 - The UI is in English. Hebrew appears as flavor only (place names, event cards, a few fun words), always next to the English.
+- **No prior knowledge needed.** Almost every question is multiple choice with obviously silly wrong answers, or can be solved with common sense. Students learn the real facts from the arrival banners and the reveals.
 
 ---
 
@@ -55,7 +56,7 @@ Every key also has a big on-screen button.
   | 🥜 במבה בוסט (Bamba boost) | Your next correct answer counts double |
 
 - **Final Sprint** starts when **5 minutes are left** or **when a team reaches Eilat** (that team also gets +20).
-  - There are 5 lightning questions, and every team gets the same question.
+  - There are 5 lightning questions with 3 choices each, and every team gets the same question. They're based on facts from the trip.
   - Teams raise their hands to buzz in, and you press the number of the team that was first.
   - A correct answer is worth +20. A team that answers wrong is locked out, and the other teams can buzz again.
 - **Most points wins.** The end screen shows a podium, confetti, and a recap of the stops each team visited.
@@ -65,7 +66,7 @@ Every key also has a big on-screen button.
 
 | Type | What happens |
 |---|---|
-| 🧩 **Guess the Place** | Emoji clues. The team names the place or thing. |
+| 🧩 **Guess the Place** | Emoji clues plus a question, with 3 choices to pick from. |
 | 🤔 **Israeli or Not?** | A true/false statement about Israeli food, culture, slang or history. |
 | 🎭 **Charades** | Secret card, see below. One teammate acts it out and the team guesses. |
 | ✏️ **Draw It** | Secret card. One teammate draws on paper (no letters!) and the team guesses. |
@@ -100,7 +101,10 @@ Save the file and refresh the browser. That's all.
 ### Challenge formats (copy and paste one of these)
 
 ```js
-{ type: "emoji", clue: "🐠🪸🤿", answer: "Snorkeling at Eilat’s Coral Beach" },
+// answer must match one of the choices exactly. Leave out choices for an open question.
+{ type: "emoji", clue: "🐠🪸🤿", question: "What do people do in Eilat?",
+  choices: ["Snorkel with colorful fish", "Ski down a mountain", "Bake bread"],
+  answer: "Snorkel with colorful fish", note: "Optional fact shown on reveal." },
 
 { type: "israeliOrNot", statement: "Israelis drive on the left.", answer: false,
   explain: "Israelis drive on the right." },
@@ -113,13 +117,22 @@ Save the file and refresh the browser. That's all.
 { type: "order", question: "Put these cities from NORTH to SOUTH:",
   items: ["Nahariya", "Haifa", "Netanya", "Ashdod"] },
 
-// answer is the index of the right option: 0 = A, 1 = B, 2 = C, 3 = D
+// answer is the position of the right option in YOUR list: 0 = first, 1 = second…
 { type: "quiz", question: "Which sea is Eilat on?",
-  options: ["The Mediterranean", "The Dead Sea", "The Red Sea", "The Black Sea"],
-  answer: 2, note: "Optional extra fact shown on reveal." },
+  options: ["The Red Sea", "The Snow Sea", "The Chocolate Sea", "The Dead Sea"],
+  answer: 0, note: "Optional extra fact shown on reveal." },
+```
+
+Final Sprint questions look like this:
+
+```js
+{ question: "Which Israeli snack is peanut-flavored?", options: ["Bamba", "Pizza", "Popcorn"], answer: "Bamba" },
 ```
 
 ### Tips
+
+- **Answer order doesn't matter:** quiz options, emoji choices and Final Sprint options are shuffled on screen, so you can always write the right answer first.
+- **Keeping it easy:** make one answer right and the others clearly silly ("A chocolate lake", "Spider-Man"). Students still get the real fact from the reveal.
 
 - **Challenges per stop:** add as many as you like. The game rotates challenge types, avoids repeats, and only recycles a stop's challenges once they've all been used.
 - **Which stop's challenges are used:** a challenge belongs to the stop the team is **heading to**. Tel Aviv's challenges are used as Falafel-stop bonus questions while a team is still in Tel Aviv.
