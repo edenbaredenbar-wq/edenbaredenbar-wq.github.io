@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מסע בישראל · Israel Road Trip Race</title>
+
+<script>
+/* =====================================================================
+   ✏️  GAME CONTENT — EDIT ME!
+   ---------------------------------------------------------------------
+   Everything the class sees lives in this one object: settings, the
+   10 stops (in route order), their challenges, the event cards and the
+   Final Sprint questions. See README.md for examples of every type.
+
+   Challenge types:
+     emoji        { type, clue, question, choices: [3 options], answer: "the right choice", note }
+                  (choices are optional; without them it's an open question)
+     israeliOrNot { type, statement, answer: true|false, explain }
+     charades     { type, prompt }                    (hidden card)
+     draw         { type, prompt }                    (hidden card)
+     order        { type, question, items: [4 items IN THE CORRECT ORDER] }
+                  (the game shuffles them on screen)
+     quiz         { type, question, options: [A,B,C,D], answer: 0-3, note }
+
+   Choices/options are SHUFFLED on screen, so you can always write the
+   right answer first. Plausible wrong options = medium; silly ones = easy.
+
+   Final Sprint: { question, options: [...], answer }
+
+   Tip: use ‘curly quotes’ or \" inside strings if you need quotes.
+   ===================================================================== */
+const GAME_CONTENT = {
+
+  settings: {
+    gameMinutes: 35,              // master clock (can also be changed on the setup screen)
+    challengeSeconds: 30,         // countdown for each challenge
+    stealSeconds: 20,             // countdown for a steal attempt
+    sprintSeconds: 20,            // countdown for each Final Sprint question
+    peekSeconds: 5,               // how long the secret charades/drawing card is shown
+    eventChance: 0.25,            // chance of an Event Card after each turn (0–1)
+    finalSprintAtMinutesLeft: 5,  // Final Sprint starts when this much time is left
+    finalSprintQuestions: 5,      // how many lightning questions
+    points: { correct: 10, steal: 5, bonus: 20, sprint: 20, eilatBonus: 20 }
+  },
+
+  /* ---------- THE ROUTE (in order). lat/lon place the stop on the map. ---------- */
+  stops: [
+    {
+      en: "Tel Aviv", he: "תל אביב", icon: "🏙️", lat: 32.08, lon: 34.78, label: "left", labelDx: 18,
+      fact: "Tel Aviv’s ‘White City’ has about 4,000 Bauhaus-style buildings — it’s a UNESCO World Heritage Site!",
+      challenges: [
+        { type: "emoji", clue: "🏙️⚪🏛️", question: "What is Tel Aviv’s nickname?", choices: ["The White City", "The Golden City", "The Blue City"], answer: "The White City", note: "Named for its thousands of white Bauhaus buildings. (Jerusalem is the ‘Golden City’!)" },
+        { type: "emoji", clue: "🏓🏖️", question: "What’s the classic Israeli beach game?", choices: ["Matkot (paddle ball)", "Beach volleyball", "Frisbee"], answer: "Matkot (paddle ball)", note: "Listen for the ‘tak-tak-tak’ all along Israeli beaches." },
+        { type: "israeliOrNot", statement: "Tel Aviv is older than the State of Israel.", answer: true, explain: "Tel Aviv was founded in 1909; Israel became a country in 1948." },
+        { type: "israeliOrNot", statement: "Tel Aviv is Israel’s biggest city by population.", answer: false, explain: "Jerusalem has about twice as many people." },
+        { type: "quiz", question: "In 1948, Israel’s Declaration of Independence was read out in which city?", options: ["Tel Aviv", "Jerusalem", "Haifa", "Beer Sheva"], answer: 0, note: "The building on Rothschild Boulevard is now called Independence Hall." },
+        { type: "quiz", question: "Falafel balls are mainly made from…", options: ["Chickpeas", "Potatoes", "Lentils", "Rice"], answer: 0, note: "Ground chickpeas, herbs and spices, deep-fried." },
+        { type: "charades", prompt: "Playing matkot on the beach" },
+        { type: "draw", prompt: "A lifeguard tower on the beach" },
+        { type: "order", question: "Put these in order of TIME — oldest first:", items: ["Jaffa’s ancient port", "Tel Aviv is founded", "Israel becomes a country", "The first iPhone"] }
+      ]
+    },
+    {
+      en: "Caesarea", he: "קיסריה", icon: "🏛️", lat: 32.50, lon: 34.89, label: "left",
+      fact: "King Herod built Caesarea’s harbor over 2,000 years ago — using concrete that hardened underwater!",
+      challenges: [
+        { type: "emoji", clue: "🏛️🎭🎤", question: "What in Caesarea still hosts concerts today?", choices: ["A Roman theater", "A medieval castle", "A modern stadium"], answer: "A Roman theater", note: "It’s about 2,000 years old." },
+        { type: "emoji", clue: "👑⚓🌊", question: "Which king built Caesarea’s harbor?", choices: ["King Herod", "King David", "King Solomon"], answer: "King Herod" },
+        { type: "israeliOrNot", statement: "Caesarea was named after a Roman emperor.", answer: true, explain: "Herod named it after Caesar Augustus." },
+        { type: "israeliOrNot", statement: "Bamba, Israel’s most famous snack, is chocolate-flavored.", answer: false, explain: "Bamba is peanut-flavored puffed corn." },
+        { type: "quiz", question: "Which empire ruled Caesarea when it was built?", options: ["The Romans", "The Vikings", "The Ottomans", "The British"], answer: 0, note: "Herod was a king who ruled under Rome." },
+        { type: "quiz", question: "What did Caesarea’s long stone aqueduct carry?", options: ["Fresh water", "Olive oil", "Wine", "Salt"], answer: 0, note: "You can still see its arches on the beach." },
+        { type: "charades", prompt: "Racing a Roman chariot" },
+        { type: "draw", prompt: "The arches of an old aqueduct" },
+        { type: "order", question: "Who ruled the land? Put them in order — oldest first:", items: ["The Romans", "The Crusaders", "The Ottoman Empire", "The State of Israel"] }
+      ]
+    },
+    {
+      en: "Haifa", he: "חיפה", icon: "🌸", lat: 32.79, lon: 34.99, label: "left",
+      fact: "Haifa’s Bahá’í Gardens climb Mount Carmel in 19 terraces — another UNESCO World Heritage Site.",
+      challenges: [
+        { type: "emoji", clue: "🌸🪜⛰️", question: "What are Haifa’s famous gardens known for?", choices: ["19 terraces up a mountain", "A giant hedge maze", "Flowers that bloom only at night"], answer: "19 terraces up a mountain" },
+        { type: "emoji", clue: "🚢⚓🏗️", question: "Haifa has one of Israel’s biggest…", choices: ["Ports", "Airports", "Train stations"], answer: "Ports", note: "Ships from all over the world dock in Haifa." },
+        { type: "israeliOrNot", statement: "Haifa is built on the slopes of Mount Carmel.", answer: true, explain: "The city climbs from the beach all the way up the mountain." },
+        { type: "israeliOrNot", statement: "Haifa is in the Negev desert.", answer: false, explain: "Haifa is in the north, on the Mediterranean coast." },
+        { type: "quiz", question: "Haifa’s Technion is a world-famous university for…", options: ["Science and engineering", "Music", "Law", "Fashion"], answer: 0, note: "Technion graduates helped build Israel’s ‘Start-up Nation’." },
+        { type: "quiz", question: "Which of these cities is farthest NORTH?", options: ["Haifa", "Tel Aviv", "Jerusalem", "Beer Sheva"], answer: 0, note: "Check the map!" },
+        { type: "charades", prompt: "Climbing a very long staircase" },
+        { type: "draw", prompt: "A ship with a big anchor" },
+        { type: "order", question: "Put these cities from NORTH to SOUTH:", items: ["Haifa", "Tel Aviv", "Beer Sheva", "Eilat"] }
+      ]
+    },
+    {
+      en: "Tzfat", he: "צפת", icon: "🎨", lat: 32.96, lon: 35.50, label: "top", labelDx: 6,
+      fact: "Tzfat sits about 900 m up in the Galilee mountains and has been a center of Kabbalah (Jewish mysticism) since the 1500s.",
+      challenges: [
+        { type: "emoji", clue: "🎨🚪🔵", question: "Tzfat is known as a city of…", choices: ["Artists and blue doors", "Skyscrapers", "Beaches"], answer: "Artists and blue doors", note: "Blue is said to remind people of the sky." },
+        { type: "emoji", clue: "🧀⛰️", question: "Which food is named after Tzfat?", choices: ["A white cheese", "A bread", "A pastry"], answer: "A white cheese", note: "It’s called Tzfatit." },
+        { type: "israeliOrNot", statement: "Tzfat is one of the highest cities in Israel.", answer: true, explain: "It’s about 900 m above sea level." },
+        { type: "israeliOrNot", statement: "Israelis eat sufganiyot (jam doughnuts) on Passover.", answer: false, explain: "Sufganiyot are a Hanukkah treat — fried in oil." },
+        { type: "quiz", question: "Since the 1500s, Tzfat has been a center of…", options: ["Kabbalah (Jewish mysticism)", "Wine making", "Shipbuilding", "Fashion design"], answer: 0 },
+        { type: "quiz", question: "Why is Tzfat much colder than Tel Aviv in winter?", options: ["It’s high up in the mountains", "It’s next to the sea", "It’s further south", "It’s in the desert"], answer: 0, note: "It sometimes even snows in Tzfat!" },
+        { type: "charades", prompt: "An artist painting a masterpiece" },
+        { type: "draw", prompt: "A painter’s easel with a painting on it" },
+        { type: "order", question: "Put these from HIGHEST to LOWEST:", items: ["Mount Hermon", "Tzfat", "Tel Aviv beach", "The Dead Sea"] }
+      ]
+    },
+    {
+      en: "Tiberias", he: "טבריה", icon: "🐟", lat: 32.79, lon: 35.53, label: "right", labelDx: 26,
+      fact: "Tiberias sits on the Sea of Galilee (the Kinneret), Israel’s largest freshwater lake — about 210 m below sea level.",
+      challenges: [
+        { type: "emoji", clue: "🐟🍋🍽️", question: "What’s the famous fish dish of Tiberias?", choices: ["St. Peter’s fish", "Salmon", "Tuna"], answer: "St. Peter’s fish", note: "It’s a type of tilapia from the lake." },
+        { type: "emoji", clue: "♨️🛁", question: "What natural feature does Tiberias have?", choices: ["Hot springs", "Geysers", "Glaciers"], answer: "Hot springs", note: "People have bathed in them since Roman times." },
+        { type: "israeliOrNot", statement: "The Sea of Galilee is actually a freshwater lake.", answer: true, explain: "It’s about 21 km long — and not salty." },
+        { type: "israeliOrNot", statement: "The Sea of Galilee is above sea level.", answer: false, explain: "Its surface is about 210 m BELOW sea level." },
+        { type: "quiz", question: "What’s the Hebrew name of the Sea of Galilee?", options: ["The Kinneret", "The Yarden", "Yam Suf", "The Negev"], answer: 0, note: "Yarden = the Jordan River, Yam Suf = the Red Sea, the Negev = the desert." },
+        { type: "quiz", question: "Which river flows through the Sea of Galilee?", options: ["The Jordan River", "The Nile", "The Euphrates", "The Tigris"], answer: 0, note: "It continues south to the Dead Sea." },
+        { type: "charades", prompt: "Fishing from a boat" },
+        { type: "draw", prompt: "A fishing boat on a lake" },
+        { type: "order", question: "Put these bodies of water from NORTH to SOUTH:", items: ["Hula Lake", "Sea of Galilee", "Dead Sea", "Red Sea"] }
+      ]
+    },
+    {
+      en: "Jerusalem", he: "ירושלים", icon: "🏰", lat: 31.77, lon: 35.21, label: "right",
+      fact: "Jerusalem’s Old City is smaller than 1 km², yet it holds four quarters: Jewish, Christian, Muslim and Armenian.",
+      challenges: [
+        { type: "emoji", clue: "🧱🙏📝", question: "Which famous Jerusalem site is this?", choices: ["The Western Wall", "The Tower of David", "The Knesset"], answer: "The Western Wall", note: "Visitors tuck paper notes into its cracks." },
+        { type: "emoji", clue: "🥯🌿", question: "What’s this Jerusalem street snack?", choices: ["A sesame bagel with za’atar", "A pretzel with mustard", "A croissant with jam"], answer: "A sesame bagel with za’atar" },
+        { type: "israeliOrNot", statement: "Jerusalem’s Old City walls are about 500 years old.", answer: true, explain: "The Ottoman sultan Suleiman built them around 1535–1541." },
+        { type: "israeliOrNot", statement: "Hummus was invented in Israel in the 1950s.", answer: false, explain: "People across the Middle East have eaten hummus for centuries." },
+        { type: "quiz", question: "How many quarters is Jerusalem’s Old City traditionally divided into?", options: ["4", "2", "6", "10"], answer: 0, note: "Jewish, Christian, Muslim and Armenian." },
+        { type: "quiz", question: "Jerusalem’s buildings are famous for being made of…", options: ["Light-colored stone", "Red brick", "Wood", "Glass"], answer: 0, note: "By law, new buildings must be covered in ‘Jerusalem stone’." },
+        { type: "charades", prompt: "A tourist lost in narrow alleys with a map" },
+        { type: "draw", prompt: "An old city gate in a stone wall" },
+        { type: "order", question: "Put these in order of TIME — oldest first:", items: ["King David’s Jerusalem", "The Romans destroy the Second Temple", "Suleiman builds the Old City walls", "Israel becomes a country"] }
+      ]
+    },
+    {
+      en: "Masada", he: "מצדה", icon: "⛰️", lat: 31.316, lon: 35.354, label: "left", labelDy: -22,
+      fact: "Masada is a desert fortress on a cliff above the Dead Sea. King Herod built palaces on top — hike the Snake Path or ride the cable car!",
+      challenges: [
+        { type: "emoji", clue: "🐍🥾⛰️🌅", question: "What’s the famous trail up Masada called?", choices: ["The Snake Path", "The Sunrise Trail", "The King’s Road"], answer: "The Snake Path", note: "It zig-zags up the cliff like a snake." },
+        { type: "emoji", clue: "🚡🏜️", question: "Besides hiking, how can you get to the top of Masada?", choices: ["Cable car", "Train", "Elevator"], answer: "Cable car" },
+        { type: "israeliOrNot", statement: "Masada is a UNESCO World Heritage Site.", answer: true, explain: "It joined the list in 2001." },
+        { type: "israeliOrNot", statement: "Masada overlooks the Mediterranean Sea.", answer: false, explain: "It overlooks the Dead Sea." },
+        { type: "quiz", question: "Which king built palaces on top of Masada?", options: ["King Herod", "King David", "King Saul", "King Solomon"], answer: 0, note: "Herod’s Northern Palace hangs right on the cliff edge." },
+        { type: "quiz", question: "Why do hikers start climbing Masada before dawn?", options: ["To see the sunrise and beat the heat", "The trail closes at 8 a.m.", "The cable car only runs at night", "Tickets are cheaper"], answer: 0 },
+        { type: "charades", prompt: "Hiking up a steep trail in the heat" },
+        { type: "draw", prompt: "A flat-topped mountain in the desert" },
+        { type: "order", question: "Put these in order of TIME — oldest first:", items: ["Herod builds palaces on Masada", "The Romans besiege Masada", "Archaeologists dig up Masada", "Masada becomes a UNESCO site"] }
+      ]
+    },
+    {
+      en: "Dead Sea", he: "ים המלח", icon: "🧂", lat: 31.15, lon: 35.37, label: "right", labelDx: 26,
+      fact: "The Dead Sea shore is the lowest place on land on Earth — about 430 m below sea level — and it’s so salty you float!",
+      challenges: [
+        { type: "emoji", clue: "🧂🌊🛟", question: "Why do people float in the Dead Sea?", choices: ["The water is super salty", "The water is very warm", "The water is very shallow"], answer: "The water is super salty" },
+        { type: "emoji", clue: "🟤🧖✨", question: "What’s the famous Dead Sea souvenir?", choices: ["Mud and salt skin products", "Seashells", "Coral jewelry"], answer: "Mud and salt skin products" },
+        { type: "israeliOrNot", statement: "Fish live in the Dead Sea.", answer: false, explain: "It’s far too salty — only tiny microbes survive." },
+        { type: "israeliOrNot", statement: "The Dead Sea is shrinking — its level drops about a meter every year.", answer: true, explain: "More water evaporates than flows in from the Jordan River." },
+        { type: "quiz", question: "About how far below sea level is the Dead Sea shore?", options: ["About 430 m", "About 40 m", "About 4,000 m", "It’s at sea level"], answer: 0, note: "The lowest place on land on Earth." },
+        { type: "quiz", question: "About how much saltier is the Dead Sea than the ocean?", options: ["About 10 times", "About 2 times", "About 100 times", "The same"], answer: 0, note: "About a third of the water is salt." },
+        { type: "charades", prompt: "Floating in the water while reading a newspaper" },
+        { type: "draw", prompt: "A person covered in mud" },
+        { type: "order", question: "Put these from LOWEST to HIGHEST:", items: ["Dead Sea shore", "Sea of Galilee", "Tel Aviv beach", "Jerusalem"] }
+      ]
+    },
+    {
+      en: "Beer Sheva", he: "באר שבע", icon: "🐪", lat: 31.25, lon: 34.79, label: "left",
+      fact: "Beer Sheva is the ‘Capital of the Negev’ — and the Negev desert covers more than half of Israel’s land!",
+      challenges: [
+        { type: "emoji", clue: "🐪🏜️🏙️", question: "Beer Sheva is the biggest city in which desert?", choices: ["The Negev", "The Sinai", "The Sahara"], answer: "The Negev" },
+        { type: "emoji", clue: "📱🗺️🚗", question: "Which navigation app was invented in Israel?", choices: ["Waze", "Google Maps", "Uber"], answer: "Waze", note: "Google bought it in 2013." },
+        { type: "israeliOrNot", statement: "The Negev desert covers more than half of Israel’s land.", answer: true, explain: "About 60% of the country is Negev." },
+        { type: "israeliOrNot", statement: "Beer Sheva is on the Mediterranean coast.", answer: false, explain: "It’s inland, in the northern Negev." },
+        { type: "quiz", question: "Which prime minister moved to a kibbutz in the Negev? (Israel’s main airport is named after him!)", options: ["David Ben-Gurion", "Golda Meir", "Yitzhak Rabin", "Menachem Begin"], answer: 0, note: "He lived at Kibbutz Sde Boker and dreamed of making the desert bloom." },
+        { type: "quiz", question: "What makes farming in the Negev hard?", options: ["Very little rain", "Too much snow", "Too many rivers", "Volcanoes"], answer: 0, note: "Israelis developed drip irrigation to farm with very little water." },
+        { type: "charades", prompt: "Riding a stubborn camel" },
+        { type: "draw", prompt: "A camel in the desert" },
+        { type: "order", question: "Put these places from NORTH to SOUTH:", items: ["Tel Aviv", "Beer Sheva", "Mitzpe Ramon", "Eilat"] }
+      ]
+    },
+    {
+      en: "Eilat", he: "אילת", icon: "🐠", lat: 29.56, lon: 34.95, label: "right",
+      fact: "Eilat is Israel’s southernmost city, on the Red Sea — coral reefs, dolphins and VAT-free shopping!",
+      challenges: [
+        { type: "emoji", clue: "🐠🪸🤿", question: "What is Eilat’s Coral Beach famous for?", choices: ["Snorkeling on coral reefs", "Surfing big waves", "Whale watching"], answer: "Snorkeling on coral reefs" },
+        { type: "emoji", clue: "🛍️💸", question: "Why do Israelis love shopping in Eilat?", choices: ["There’s no VAT (sales tax)", "Stores never close", "Everything is imported from Egypt"], answer: "There’s no VAT (sales tax)" },
+        { type: "israeliOrNot", statement: "From Eilat you can see Egypt, Jordan and Saudi Arabia.", answer: true, explain: "Four countries meet around the Gulf of Eilat." },
+        { type: "israeliOrNot", statement: "Eilat is on the Mediterranean Sea.", answer: false, explain: "Eilat is on the Red Sea." },
+        { type: "quiz", question: "Which country’s city is right across the water from Eilat?", options: ["Jordan", "Greece", "Italy", "Turkey"], answer: 0, note: "The Jordanian city of Aqaba is just next door." },
+        { type: "quiz", question: "Timna Park, near Eilat, is famous for…", options: ["Ancient copper mines", "A dinosaur museum", "Waterfalls", "Ski slopes"], answer: 0, note: "People mined copper there thousands of years ago." },
+        { type: "charades", prompt: "Snorkeling and spotting a shark" },
+        { type: "draw", prompt: "A coral reef with fish" },
+        { type: "order", question: "Put these sea animals from SMALLEST to BIGGEST:", items: ["Clownfish", "Sea turtle", "Dolphin", "Whale shark"] }
+      ]
+    }
+  ],
+
+  /* ---------- EVENT CARDS (keep the ids — they control what happens) ---------- */
+  events: [
+    { id: "jam",       he: "פקק באיילון!",       en: "Ayalon traffic jam!",        color: "#FF8A8A", text: "is stuck in traffic on the Ayalon highway — LOSE your next turn!" },
+    { id: "falafel",   he: "עצירה לפלאפל",       en: "Falafel stop!",              color: "#FFC46B", text: "pulls over for falafel — answer a BONUS question for DOUBLE points!" },
+    { id: "camel",     he: "גמל חוסם את הכביש",  en: "A camel blocks the road!",   color: "#F2D98C", text: "gets stuck behind a camel — SWAP places with the team behind you!" },
+    { id: "hitchhike", he: "טרמפ!",              en: "Hitchhike!",                 color: "#7EE0C3", text: "catches a ride — JUMP ahead one stop!" },
+    { id: "bamba",     he: "במבה בוסט",          en: "Bamba boost!",               color: "#FFE066", text: "munches Bamba — your NEXT correct answer counts DOUBLE!" }
+  ],
+
+  /* ---------- FINAL SPRINT (lightning round — same question for everyone) ---------- */
+  finalSprint: [
+    { question: "Which body of water is so salty that you float?", options: ["The Dead Sea", "The Red Sea", "The Sea of Galilee"], answer: "The Dead Sea" },
+    { question: "Which city has 19 terraces of gardens on Mount Carmel?", options: ["Haifa", "Tzfat", "Jerusalem"], answer: "Haifa" },
+    { question: "Which king built palaces at BOTH Masada and Caesarea?", options: ["King Herod", "King David", "King Solomon"], answer: "King Herod" },
+    { question: "Israel’s famous peanut-flavored snack is called…", options: ["Bamba", "Bissli", "Krembo"], answer: "Bamba" },
+    { question: "What is Israel’s southernmost city?", options: ["Eilat", "Beer Sheva", "Mitzpe Ramon"], answer: "Eilat" },
+    { question: "Which city is known for artists, blue doors and Kabbalah?", options: ["Tzfat", "Tiberias", "Haifa"], answer: "Tzfat" },
+    { question: "What’s another name for the Sea of Galilee?", options: ["The Kinneret", "The Jordan", "Yam Suf"], answer: "The Kinneret" },
+    { question: "Which city is nicknamed ‘the White City’?", options: ["Tel Aviv", "Jerusalem", "Haifa"], answer: "Tel Aviv" },
+    { question: "Which desert covers more than half of Israel?", options: ["The Negev", "The Sinai", "The Sahara"], answer: "The Negev" },
+    { question: "On which holiday do Israelis eat sufganiyot (jam doughnuts)?", options: ["Hanukkah", "Passover", "Purim"], answer: "Hanukkah" },
+    { question: "Which navigation app was invented in Israel?", options: ["Waze", "Google Maps", "Uber"], answer: "Waze" },
+    { question: "In which city is the Western Wall?", options: ["Jerusalem", "Tel Aviv", "Tiberias"], answer: "Jerusalem" },
+    { question: "What’s the name of the zig-zag trail up Masada?", options: ["The Snake Path", "The Camel Path", "The Sunrise Path"], answer: "The Snake Path" },
+    { question: "Which two days make up the Israeli weekend?", options: ["Friday and Saturday", "Saturday and Sunday", "Thursday and Friday"], answer: "Friday and Saturday" }
+  ]
+};
+</script>
+
+<style>
+:root{
+  --bg:#FFF3DC; --ink:#14213D; --ink2:#44506B; --paper:#FFFFFF; --cream:#FFFAF0;
+  --sun:#FFB703; --sun2:#FFD166; --coral:#FB5607; --pink:#FF006E; --violet:#8338EC;
+  --good:#3DDC97; --bad:#FF6B7F; --blue:#3A86FF;
+  --r:22px; --sh:0 6px 0 var(--ink);
+  --font:"Nunito","Rubik","Varela Round","Segoe UI Rounded","Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --hefont:"Rubik","Arial Hebrew","Segoe UI","Noto Sans Hebrew","David",Arial,sans-serif;
+  --emoji:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Twemoji Mozilla",sans-serif;
+  --top:4.6rem;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:clamp(13px, calc(.7vw + .7vh), 22px)}
+html,body{height:100%}
+body{
+  font-family:var(--font); color:var(--ink); overflow:hidden; user-select:none; -webkit-user-select:none;
+  background:
+    radial-gradient(circle at 12% 8%, #FFE2A8 0, transparent 38%),
+    radial-gradient(circle at 92% 95%, #FFD0C0 0, transparent 40%),
+    radial-gradient(rgba(20,33,61,.07) 1.5px, transparent 1.7px) 0 0/22px 22px,
+    var(--bg);
+}
+button{font-family:inherit;color:inherit;cursor:pointer}
+input{font-family:inherit;user-select:text;-webkit-user-select:text}
+.hidden{display:none!important}
+.he{font-family:var(--hefont);font-weight:800;unicode-bidi:isolate}
+.em{font-family:var(--emoji);font-weight:400}
+kbd{font:900 .72em/1 var(--font);background:rgba(20,33,61,.14);border:2px solid rgba(20,33,61,.25);padding:.12em .42em;border-radius:8px;white-space:nowrap}
+.label{font-size:.85rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+
+/* ---------- buttons ---------- */
+.btn{font:900 1.45rem var(--font);padding:.75rem 1.4rem;border:3px solid var(--ink);border-radius:18px;background:#fff;color:var(--ink);
+  box-shadow:0 5px 0 var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:.55rem;transition:transform .08s,box-shadow .08s,filter .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--ink)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.4;cursor:default;transform:none;box-shadow:0 5px 0 var(--ink)}
+.btn.ok{background:var(--good);font-size:1.9rem;padding:.85rem 1.8rem}
+.btn.no{background:var(--bad);font-size:1.9rem;padding:.85rem 1.8rem}
+.btn.go{background:var(--sun)}
+.btn.primary{background:var(--sun);font-size:1.8rem;padding:.9rem 2rem}
+.btn.ghost{background:#fff}
+
+/* ---------- setup ---------- */
+#setup{height:100vh;overflow:auto;padding:1.4rem 2rem 2rem}
+.hero{display:flex;align-items:center;gap:2rem;margin-bottom:1.2rem}
+.heroTitle .he{display:block;font-size:4.6rem;line-height:1;color:var(--ink);text-shadow:4px 4px 0 var(--sun)}
+.heroTitle .sub{font-size:1.3rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin-top:.4rem}
+.heroTitle h1{font-size:2.6rem;font-weight:900;line-height:1.05}
+.heroRoad{flex:1;height:6.5rem;position:relative;overflow:hidden;border:3px solid var(--ink);border-radius:999px;background:#3D4A66;box-shadow:var(--sh)}
+.heroRoad::before{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;background:repeating-linear-gradient(90deg,#FFD166 0 36px,transparent 36px 70px);animation:roadMove 1.2s linear infinite}
+@keyframes roadMove{to{background-position:-70px 0}}
+.heroRoad span{position:absolute;top:50%;font-size:3.2rem;font-family:var(--emoji);animation:heroDrive var(--dur) linear var(--del) infinite both;transform:translate(110vw,-50%)}
+@keyframes heroDrive{from{transform:translate(70vw,-55%)}50%{transform:translate(30vw,-45%)}to{transform:translate(-12vw,-55%)}}
+.setupGrid{display:grid;grid-template-columns:1.05fr 1fr;gap:1.4rem}
+.card{background:#fff;border:3px solid var(--ink);border-radius:var(--r);box-shadow:var(--sh);padding:1.3rem 1.5rem}
+.card h2{font-size:1.5rem;font-weight:900;margin:.2rem 0 .7rem;display:flex;align-items:center;gap:.6rem}
+.card h2 .n{display:inline-grid;place-items:center;width:2.1rem;height:2.1rem;border-radius:50%;background:var(--ink);color:#fff;font-size:1.1rem}
+.counts{display:flex;gap:.6rem;margin-bottom:1rem}
+.cnt{font:900 1.7rem var(--font);width:3.8rem;height:3.8rem;border-radius:16px;border:3px solid var(--ink);background:#fff;box-shadow:0 4px 0 var(--ink)}
+.cnt.on{background:var(--sun);transform:translateY(-2px)}
+.trows{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1rem}
+.trow{display:flex;align-items:center;gap:.6rem;background:var(--cs);border:3px solid var(--c);border-radius:16px;padding:.4rem .5rem;animation:pop .3s both}
+.vbtn{font-size:2rem;width:3.3rem;height:3.3rem;flex:none;border-radius:50%;border:3px solid var(--ink);background:var(--c);font-family:var(--emoji);box-shadow:0 3px 0 var(--ink)}
+.vbtn:hover{transform:rotate(-8deg) scale(1.05)}
+.trow input{flex:1;min-width:0;font-size:1.35rem;font-weight:800;border:0;background:transparent;color:var(--ink);padding:.3rem;outline:none;border-bottom:3px dashed rgba(20,33,61,.3)}
+.trow input:focus{border-bottom-color:var(--ink)}
+.clockSet{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.clockSet .val{font-size:2.2rem;font-weight:900;min-width:6ch;text-align:center;font-variant-numeric:tabular-nums}
+.clockSet .btn{padding:.3rem 1rem;font-size:1.6rem}
+.startBtn{width:100%;font-size:2.1rem;padding:1rem}
+.rules ul{list-style:none;display:grid;gap:.55rem}
+.rules li{display:flex;gap:.7rem;align-items:flex-start;font-size:1.18rem;font-weight:700;line-height:1.35}
+.rules li .i{font-size:1.6rem;font-family:var(--emoji);width:2.2rem;flex:none;text-align:center}
+.typeChips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .2rem}
+.typeChip{font-size:.95rem;font-weight:900;padding:.25rem .6rem;border-radius:999px;border:2px solid var(--ink);background:var(--tc);color:#fff}
+.hint{font-size:.95rem;color:var(--ink2);font-weight:700;margin-top:.8rem}
+
+/* ---------- top bar ---------- */
+#topbar{height:var(--top);display:flex;align-items:center;gap:1rem;padding:0 1rem}
+.brand{display:flex;align-items:center;gap:.7rem;min-width:0}
+.brand .logo{font-size:2.3rem;font-family:var(--emoji)}
+.brand .he{font-size:1.9rem;line-height:1}
+.brand small{display:block;font-size:.8rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
+.clock{margin:0 auto;display:flex;align-items:center;gap:.5rem;font-size:2.3rem;font-weight:900;font-variant-numeric:tabular-nums;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:.05rem 1.2rem;box-shadow:0 4px 0 var(--ink);transition:background .3s}
+.clock.warn{background:var(--sun2)}
+.clock.danger{background:var(--bad);animation:throb 1s infinite}
+.clock.paused{opacity:.6}
+.tbtns{display:flex;gap:.5rem}
+.tbtn{font:900 1rem var(--font);padding:.5rem .75rem;border:3px solid var(--ink);border-radius:14px;background:#fff;box-shadow:0 4px 0 var(--ink);display:flex;align-items:center;gap:.35rem;white-space:nowrap}
+.tbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.tbtn:disabled{opacity:.35;cursor:default}
+.tbtn.armed{background:var(--bad);animation:throb .6s infinite}
+.tbtn.sprintBtn{background:var(--sun2)}
+
+/* ---------- board ---------- */
+#board{--bh:calc(100vh - var(--top) - 1rem - 6px);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.12fr);gap:1rem;padding:0 1rem;height:calc(100vh - var(--top))}
+.panel{background:#fff;border:3px solid var(--ink);border-radius:var(--r);box-shadow:var(--sh);padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.9rem;min-height:0;height:var(--bh);overflow:hidden}
+#mapWrap{height:var(--bh);width:calc(var(--bh) * 0.5306);position:relative;border:3px solid var(--ink);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);background:#EDE0C8}
+#map{width:100%;height:100%;display:block}
+
+/* turn panel */
+.tp-team{display:flex;align-items:center;gap:1rem;padding:.9rem;border-radius:18px;background:var(--cs);border:3px solid var(--c)}
+.bigveh{font-size:3.3rem;width:5rem;height:5rem;flex:none;border-radius:50%;background:var(--c);display:grid;place-items:center;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);font-family:var(--emoji);animation:bob 1.6s ease-in-out infinite}
+.tp-name{font-size:2rem;font-weight:900;line-height:1.1;overflow-wrap:anywhere}
+.tp-sub{font-size:1.05rem;font-weight:800;color:var(--ink2);margin-top:.2rem}
+.tp-next{padding:.2rem .2rem}
+.tp-stop{font-size:1.9rem;font-weight:900;line-height:1.2;margin-top:.25rem}
+.tp-stop .he{font-size:1.5rem;color:var(--ink2);margin-left:.3rem}
+.tp-steps{font-size:1.05rem;font-weight:800;color:var(--ink2);margin-top:.25rem}
+.drawBtn{width:100%;font-size:1.8rem;padding:1rem;background:var(--sun)}
+.drawBtn .em{font-size:2rem}
+.tp-fact{margin-top:auto;background:var(--cream);border:3px dashed #E2D3B5;border-radius:18px;padding:.9rem 1rem}
+.tp-fact p{font-size:1.2rem;line-height:1.4;font-weight:700;margin-top:.35rem}
+.tp-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{font-size:.95rem;font-weight:900;padding:.2rem .6rem;border-radius:999px;border:2px solid var(--ink);background:var(--sun2);white-space:nowrap}
+.chip.red{background:var(--bad)}
+.upnext{display:flex;flex-direction:column;gap:.45rem}
+.un{display:flex;align-items:center;gap:.6rem;font-size:1.2rem;font-weight:800}
+.un .unv{display:grid;place-items:center;width:2.3rem;height:2.3rem;border-radius:50%;background:var(--c);border:2px solid var(--ink);font-family:var(--emoji);font-size:1.25rem}
+.sprintNote{font-size:1.6rem;font-weight:900;text-align:center;padding:1.2rem;border-radius:18px;background:#14213D;color:#FFD166}
+
+/* score panel */
+.scoreHead{display:flex;align-items:center;justify-content:space-between}
+.scoreHead h3{font-size:1.6rem;font-weight:900}
+#scoreList{display:flex;flex-direction:column;gap:.55rem;min-height:0}
+.srow{position:relative;display:grid;grid-template-columns:1.8rem 3.3rem minmax(0,1fr) auto;align-items:center;gap:.7rem;padding:.55rem .8rem;border-radius:16px;border:3px solid transparent;background:#FAF4E8;transition:background .3s}
+.srow.cur{border-color:var(--ink);background:var(--cs);box-shadow:0 4px 0 var(--ink)}
+.srow.cur::before{content:"▶";position:absolute;left:-1.05rem;top:50%;transform:translateY(-50%);font-size:1.1rem;color:var(--ink);animation:nudge 1s infinite}
+.rank{font-size:1.3rem;font-weight:900;text-align:center;color:var(--ink2)}
+.sveh{font-size:1.9rem;width:3.1rem;height:3.1rem;border-radius:50%;background:var(--c);display:grid;place-items:center;border:3px solid var(--ink);font-family:var(--emoji)}
+.sname{font-size:1.35rem;font-weight:900;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sstop{font-size:.95rem;font-weight:800;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sstop .he{font-weight:700}
+.prog{height:.55rem;background:#E9DFCB;border-radius:9px;overflow:hidden;margin-top:.3rem}
+.prog i{display:block;height:100%;background:var(--c);border-radius:9px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.srow .chips{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.25rem}
+.srow .chip{font-size:.8rem;padding:.1rem .45rem}
+.sscore{font-size:2.4rem;font-weight:900;min-width:2.5ch;text-align:right;font-variant-numeric:tabular-nums}
+.srow.bump .sscore{animation:bump .7s}
+.floater{position:absolute;right:.8rem;top:-.4rem;font-size:1.5rem;font-weight:900;color:#0A8F5E;animation:floatUp 1.4s forwards;pointer-events:none}
+.legend{margin-top:auto;font-size:.95rem;font-weight:800;color:var(--ink2);display:flex;flex-wrap:wrap;gap:.4rem 1rem}
+
+/* ---------- map (svg) ---------- */
+.lbl-en{font:900 23px var(--font);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+.lbl-he{font:800 19px var(--hefont);fill:#3B4763;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.deco{font:900 16px var(--font);fill:rgba(20,33,61,.45);letter-spacing:.12em}
+.deco-he{font:800 16px var(--hefont);fill:rgba(20,33,61,.4)}
+.stop .dot{fill:#fff;stroke:var(--ink);stroke-width:3.5}
+.stop.reached .dot{fill:#FFD166}
+.stop .sicon{font-size:17px;font-family:var(--emoji);text-anchor:middle;dominant-baseline:central}
+.stop .pulse{fill:none;stroke:var(--tc,#FB5607);stroke-width:5;opacity:0;transform-box:fill-box;transform-origin:center}
+.stop.target .pulse{animation:ring 1.3s ease-out infinite}
+.stop.target .dot{stroke:var(--tc,#FB5607);stroke-width:5}
+.veh .body{stroke:#fff;stroke-width:4}
+.veh .vemoji{font-size:23px;font-family:var(--emoji);text-anchor:middle;dominant-baseline:central}
+.veh .halo{fill:none;stroke:var(--ink);stroke-width:4;opacity:0;transform-box:fill-box;transform-origin:center}
+.veh.cur .halo{animation:ring 1.2s ease-out infinite}
+.veh.cur .body{stroke:var(--ink)}
+
+/* arrival banner */
+#arrival{position:fixed;left:50%;bottom:1.6rem;z-index:40;width:min(92vw,64rem);transform:translate(-50%,160%);transition:transform .5s cubic-bezier(.2,.9,.3,1.2);
+  background:#fff;border:4px solid var(--ink);border-radius:24px;box-shadow:0 8px 0 var(--ink);padding:1rem 1.4rem;display:flex;gap:1.1rem;align-items:center;cursor:pointer}
+#arrival.show{transform:translate(-50%,0)}
+#arrival .aicon{font-size:3.6rem;font-family:var(--emoji);flex:none;animation:bob 1.4s infinite}
+#arrival .atitle{font-size:1.7rem;font-weight:900;line-height:1.2}
+#arrival .afact{font-size:max(22px,1.45rem);font-weight:700;line-height:1.35;margin-top:.2rem}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(20,33,61,.58);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:fade .25s both;padding:1rem}
+.overlay.wait{visibility:hidden}
+.modal{position:relative;display:flex;flex-direction:column;width:min(95vw,90rem);max-height:94vh;overflow:hidden;background:#fff;border:4px solid var(--ink);border-radius:30px;box-shadow:0 10px 0 var(--ink);padding:1.4rem 2rem 1.5rem;animation:pop .45s cubic-bezier(.2,.9,.3,1.25) both}
+.mhead{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.badge{background:var(--tc);color:#fff;font-weight:900;font-size:1.45rem;padding:.45rem 1rem;border-radius:14px;border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);text-shadow:0 2px 0 rgba(0,0,0,.25);white-space:nowrap}
+.badge .em{margin-right:.3rem}
+.who{font-size:1.45rem;font-weight:800;flex:1;min-width:14rem;line-height:1.3}
+.who .he{font-size:1.25rem;color:var(--ink2)}
+.vchip{display:inline-grid;place-items:center;width:2.3em;height:2.3em;border-radius:50%;background:var(--c);border:3px solid var(--ink);font-family:var(--emoji);vertical-align:middle;font-size:.85em;line-height:1}
+.pts{font-size:1.5rem;font-weight:900;background:var(--sun2);border:3px solid var(--ink);border-radius:14px;padding:.3rem .8rem;white-space:nowrap}
+.timer{width:6.6rem;height:6.6rem;position:relative;flex:none}
+.timer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.timer .track{fill:#fff;stroke:#EDE3CF;stroke-width:10}
+.timer .bar{fill:none;stroke:#2BB673;stroke-width:10;stroke-linecap:round;transition:stroke .3s}
+.timer.mid .bar{stroke:var(--sun)}
+.timer.low .bar{stroke:#EF233C}
+.timer.low{animation:throb .5s infinite}
+.timer .num{position:absolute;inset:0;display:grid;place-items:center;font-size:2.4rem;font-weight:900;font-variant-numeric:tabular-nums}
+.timer.idle .num{font-size:1.1rem;text-align:center;line-height:1.1}
+.timeup{display:none;position:absolute;top:1rem;left:50%;transform:translateX(-50%) rotate(-4deg);background:#EF233C;color:#fff;font-size:2.2rem;font-weight:900;padding:.3rem 1.2rem;border:4px solid var(--ink);border-radius:16px;z-index:3;box-shadow:0 5px 0 var(--ink);white-space:nowrap}
+.expired .timeup{display:block;animation:stamp .45s both}
+.mbody{padding:1.1rem .5rem 1.2rem;text-align:center;overflow:auto;min-height:0;flex:0 1 auto}
+.prompt{font-size:max(30px,2.5rem);font-weight:900;line-height:1.2}
+.emojiClue{font-size:max(80px,6rem);letter-spacing:.12em;line-height:1.15;font-family:var(--emoji);animation:wobble 2.4s ease-in-out infinite}
+.statement{font-size:max(30px,2.6rem);font-weight:900;line-height:1.25;max-width:60rem;margin:0 auto}
+.statement::before{content:"“";color:var(--coral)} .statement::after{content:"”";color:var(--coral)}
+.tf{display:flex;gap:1.4rem;justify-content:center;margin-top:1.4rem}
+.tfb{font-size:max(30px,2.1rem);font-weight:900;padding:.6rem 1.8rem;border-radius:18px;border:3px solid var(--ink);background:#fff;box-shadow:0 4px 0 var(--ink);transition:all .4s}
+.revealed .tfb.yes{background:var(--good);transform:scale(1.12) rotate(-2deg)}
+.revealed .tfb:not(.yes){opacity:.25}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.3rem;text-align:left}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.1rem;text-align:left}
+.modal.sprint .opt{color:var(--ink)}
+.emojiClue+.prompt{margin-top:.2rem}
+.opt{position:relative;font-size:max(28px,1.9rem);font-weight:800;padding:.75rem 1rem;border:3px solid var(--ink);border-radius:18px;display:flex;gap:.9rem;align-items:center;background:var(--cream);line-height:1.2;transition:all .4s}
+.L{flex:none;width:2.7rem;height:2.7rem;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:1.55rem;font-weight:900}
+.revealed .opt.ok{background:var(--good);transform:scale(1.03)}
+.revealed .quizOpts .opt:not(.ok){opacity:.3}
+.rankB{display:none;position:absolute;right:-.7rem;top:-.7rem;width:2.8rem;height:2.8rem;border-radius:50%;background:var(--coral);color:#fff;border:3px solid var(--ink);font-size:1.5rem;font-weight:900;place-items:center}
+.revealed .rankB{display:grid;animation:stamp .4s both}
+.answer{display:none;margin:1.3rem auto 0;max-width:70rem;font-size:max(28px,1.8rem);font-weight:800;background:#E6FBF2;border:3px dashed #1FA774;border-radius:18px;padding:.8rem 1.2rem;line-height:1.3}
+.revealed .answer{display:block;animation:pop .4s both}
+.secret{margin:0 auto;max-width:50rem;border:4px solid var(--ink);border-radius:24px;padding:2rem;background:repeating-linear-gradient(45deg,#FFE3EF 0 22px,#FFD1E4 22px 44px);box-shadow:0 6px 0 var(--ink)}
+.secret .big{font-size:max(34px,3rem);font-weight:900}
+.secret .small{font-size:max(22px,1.5rem);font-weight:800;color:var(--ink2);margin-top:.5rem}
+.stealNote{font-size:max(28px,2rem);font-weight:900;margin-top:1rem}
+.mfoot{display:flex;gap:.8rem .9rem;align-items:center;flex-wrap:wrap;justify-content:flex-end;border-top:3px dashed #E8DCC4;padding-top:1.1rem;flex:none}
+.btns{display:flex;gap:.9rem;align-items:center;flex:none;margin-left:auto}
+.how{flex:1 1 17rem;font-size:1.2rem;font-weight:800;color:var(--ink2);line-height:1.35}
+.modal .startB{display:none;background:var(--sun)}
+.modal.idle .startB{display:inline-flex;animation:throb 1s infinite}
+.mode-steal{border-color:#7B2CBF;box-shadow:0 10px 0 #7B2CBF}
+.stealRibbon{background:repeating-linear-gradient(45deg,#7B2CBF 0 18px,#9D4EDD 18px 36px);color:#fff;font-size:1.6rem;font-weight:900;text-align:center;padding:.45rem;border-radius:14px;margin-bottom:.9rem;border:3px solid var(--ink)}
+.bonusRibbon{background:repeating-linear-gradient(45deg,#F4A261 0 18px,#F6B77E 18px 36px);color:var(--ink);font-size:1.6rem;font-weight:900;text-align:center;padding:.45rem;border-radius:14px;margin-bottom:.9rem;border:3px solid var(--ink)}
+
+/* result */
+.modal.result{text-align:center;max-width:72rem}
+.stamp{font-size:7rem;line-height:1;font-family:var(--emoji);animation:stamp .5s both}
+.rtitle{font-size:3.2rem;font-weight:900;margin-top:.3rem}
+.rtitle .he{margin-right:.5rem}
+.rline{font-size:max(28px,2rem);font-weight:800;margin-top:.6rem;line-height:1.35}
+.ranswer{font-size:max(26px,1.6rem);font-weight:700;margin:1.1rem auto 0;background:var(--cream);border:3px dashed #E2D3B5;border-radius:18px;padding:.8rem 1.2rem;max-width:62rem;line-height:1.35}
+.result .mfoot{justify-content:center;border:0;margin-top:1.2rem}
+.result.good{background:linear-gradient(180deg,#E9FFF5,#fff 45%)}
+.result.bad{background:linear-gradient(180deg,#FFECEF,#fff 45%)}
+.result.steal{background:linear-gradient(180deg,#F1E6FF,#fff 45%)}
+
+/* event */
+.modal.event{text-align:center;max-width:64rem;background:var(--ec);animation:flipIn .7s cubic-bezier(.2,.9,.3,1.2) both}
+.evTag{display:inline-block;background:var(--ink);color:#fff;font-weight:900;letter-spacing:.2em;padding:.3rem .9rem;border-radius:999px;font-size:1rem}
+.evHe{font-size:max(44px,4rem);line-height:1.1;margin-top:.5rem}
+.evEn{font-size:max(30px,2.2rem);font-weight:900}
+.evEffect{font-size:max(28px,1.8rem);font-weight:800;margin-top:.7rem;line-height:1.35}
+.stage{position:relative;height:13rem;margin:1rem 0 .4rem;border:3px solid var(--ink);border-radius:22px;overflow:hidden;background:linear-gradient(#BDE7FF 0 62%,#E9D3A6 62%)}
+.stage .e{position:absolute;font-family:var(--emoji);line-height:1}
+.stage .road{position:absolute;left:0;right:0;bottom:0;height:38%;background:#4A5570}
+.stage .road::after{content:"";position:absolute;left:0;right:0;top:50%;height:5px;background:repeating-linear-gradient(90deg,#FFD166 0 30px,transparent 30px 60px)}
+.jam .car{bottom:14%;font-size:4.2rem;left:calc(4% + var(--k) * 18%);animation:carIn .9s cubic-bezier(.2,.9,.3,1.1) calc(var(--k) * .12s) both, jiggle .22s ease-in-out calc(1.2s + var(--k) * .05s) infinite alternate}
+.jam .honk{top:10%;left:50%;font-size:2.4rem;font-weight:900;font-family:var(--font);transform:translateX(-50%);animation:stamp .4s 1.1s both, throb .6s 1.5s infinite}
+.falafel .pita{left:50%;bottom:8%;font-size:6.5rem;transform:translateX(-50%);animation:bounceY .8s ease-in-out infinite alternate}
+.falafel .ball{top:-20%;left:var(--x);font-size:2.6rem;animation:rain 1.6s linear var(--d) infinite}
+.camel .cam{bottom:6%;font-size:7rem;animation:camelWalk 2.2s ease-out both, bob 1s 2.2s ease-in-out infinite}
+.camel .car{bottom:10%;left:6%;font-size:4rem;animation:brake .5s 1.4s both}
+.camel .huh{bottom:52%;left:9%;font-size:2.4rem;font-weight:900;font-family:var(--font);animation:stamp .4s 1.7s both}
+.hitch .thumb{left:14%;bottom:12%;font-size:6rem;transform-origin:bottom center;animation:wag .5s ease-in-out infinite alternate}
+.hitch .ride{bottom:10%;font-size:4.5rem;animation:zoom 2.2s cubic-bezier(.6,0,.4,1) .3s infinite}
+.bamba .bag{left:50%;top:50%;font-size:6.5rem;transform:translate(-50%,-50%);animation:boost 1s ease-in-out infinite}
+.bamba .nut{left:50%;top:50%;font-size:2.2rem;animation:burst 1.4s cubic-bezier(.2,.8,.2,1) var(--d) infinite}
+.bamba .boostTxt{left:50%;top:6%;transform:translateX(-50%);font-family:var(--font);font-weight:900;font-size:2.4rem;color:var(--coral);animation:throb .5s infinite}
+
+/* eilat + sprint + end */
+.modal.eilat{text-align:center;max-width:66rem;background:linear-gradient(180deg,#8FD3F7 0,#BDE7FF 45%,#FFE6A7 100%)}
+.eilatStage{font-size:6rem;font-family:var(--emoji);letter-spacing:.2em;animation:bob 1.2s infinite}
+.bigTitle{font-size:max(40px,3.6rem);font-weight:900;line-height:1.1}
+.subTitle{font-size:max(28px,1.9rem);font-weight:800;margin-top:.6rem;line-height:1.35}
+.modal.sprint{background:radial-gradient(circle at 50% 0,#3A0CA3 0,#14213D 70%);color:#fff;border-color:#FFD166;box-shadow:0 10px 0 #FFD166}
+.modal.sprint .how,.modal.sprint .label{color:#C9D3F2}
+.modal.sprint .prompt{color:#fff}
+.bolt{font-size:6rem;font-family:var(--emoji);display:inline-block;animation:shake .5s infinite}
+.sprintRules{list-style:none;display:grid;gap:.7rem;max-width:56rem;margin:1.2rem auto 0;text-align:left}
+.sprintRules li{font-size:max(26px,1.6rem);font-weight:800;display:flex;gap:.8rem}
+.buzzers{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:1.4rem}
+.buzz{font:900 1.35rem var(--font);display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-radius:18px;border:3px solid #fff;background:var(--c);color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.45);transition:all .2s}
+.buzz .em{font-size:1.8rem}
+.buzz.on{transform:scale(1.14);box-shadow:0 0 0 6px #FFD166,0 5px 0 rgba(0,0,0,.45);animation:throb .7s infinite}
+.buzz.locked{opacity:.25;filter:grayscale(1);cursor:not-allowed}
+.buzzState{font-size:max(28px,2rem);font-weight:900;margin-top:1.1rem;color:#FFD166;min-height:1.3em}
+.modal.sprint .mfoot{border-top-color:rgba(255,255,255,.2)}
+.modal.sprint .btn:disabled{opacity:.3}
+.sprintAnswer{font-size:max(34px,2.8rem);font-weight:900;color:#FFD166;margin-top:.6rem}
+.miniStand{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:1.3rem}
+.miniStand span{font-size:1.3rem;font-weight:900;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:.3rem .9rem}
+
+.modal.end{width:min(97vw,110rem);max-height:96vh;overflow:auto;display:block;text-align:center;background:linear-gradient(180deg,#FFF6E0,#fff 40%)}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:1.2rem;margin:.8rem 0 0}
+.pod{width:min(22vw,17rem);display:flex;flex-direction:column;align-items:center}
+.pod .pveh{font-size:3.4rem;width:5.4rem;height:5.4rem;border-radius:50%;background:var(--c);border:4px solid var(--ink);display:grid;place-items:center;font-family:var(--emoji);box-shadow:0 5px 0 var(--ink);animation:bob 1.5s infinite}
+.pod .pname{font-size:1.6rem;font-weight:900;margin-top:.5rem;line-height:1.15;overflow-wrap:anywhere}
+.pod .pscore{font-size:1.35rem;font-weight:900;color:var(--ink2)}
+.pod .block{width:100%;margin-top:.5rem;border:4px solid var(--ink);border-bottom:0;border-radius:18px 18px 0 0;background:var(--c);display:grid;place-items:start center;padding-top:.3rem;font-size:2.6rem;font-weight:900;color:#fff;text-shadow:0 3px 0 var(--ink);animation:rise .9s cubic-bezier(.2,.9,.3,1.1) both}
+.pod.p1 .block{height:7rem;animation-delay:.6s}.pod.p2 .block{height:5rem;animation-delay:.3s}.pod.p3 .block{height:3.6rem}
+.pod.p1 .pveh{width:6.8rem;height:6.8rem;font-size:4.4rem}
+.podBase{height:.6rem;background:var(--ink);border-radius:6px;max-width:60rem;margin:0 auto 1.2rem}
+.recap{display:grid;grid-template-columns:repeat(auto-fit,minmax(24rem,1fr));gap:.8rem;text-align:left}
+.rc{border:3px solid var(--ink);border-radius:18px;padding:.7rem .9rem;background:#fff}
+.rc .rch{display:flex;align-items:center;gap:.6rem;font-size:1.3rem;font-weight:900}
+.rc .rch .sc{margin-left:auto;font-size:1.6rem}
+.rc .stats{font-size:1rem;font-weight:800;color:var(--ink2);margin:.2rem 0 .4rem}
+.schips{display:flex;flex-wrap:wrap;gap:.3rem}
+.schip{font-size:.85rem;font-weight:800;padding:.15rem .5rem;border-radius:999px;border:2px solid #D8CCB4;color:#A89A80;background:#FAF6EE}
+.schip.on{border-color:var(--ink);background:var(--cs);color:var(--ink)}
+
+/* peek / pause / help */
+.layer{position:fixed;inset:0;z-index:90;display:grid;place-items:center;text-align:center;padding:2rem}
+#peekLayer{background:#14213D;color:#fff}
+.peekEyes{font-size:9rem;font-family:var(--emoji);animation:bob 1s infinite}
+.peekTitle{font-size:max(40px,3.4rem);font-weight:900;line-height:1.15}
+.peekCount{font-size:9rem;font-weight:900;color:#FFD166;animation:stamp .4s both}
+.peekCard{background:#fff;color:var(--ink);border:5px solid #FFD166;border-radius:30px;padding:2.2rem 3rem;max-width:80rem}
+.peekCard .prompt{font-size:max(44px,4rem)}
+.peekBar{height:.9rem;background:#EDE3CF;border-radius:9px;overflow:hidden;margin-top:1.5rem}
+.peekBar i{display:block;height:100%;background:var(--coral);animation:drain var(--t) linear both}
+#pauseLayer{background:rgba(20,33,61,.93);color:#fff;z-index:95}
+#pauseLayer .he{font-size:6rem;color:#FFD166}
+#helpLayer{background:rgba(20,33,61,.8);z-index:96}
+.helpCard{background:#fff;border:4px solid var(--ink);border-radius:28px;box-shadow:0 10px 0 var(--ink);padding:1.6rem 2.2rem;text-align:left;max-width:60rem}
+.helpCard h2{font-size:2rem;margin-bottom:.8rem}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:.55rem 1.2rem;font-size:1.3rem;font-weight:800;align-items:center}
+.keys kbd{font-size:1.1rem;justify-self:start}
+#toasts{position:fixed;top:5.4rem;left:50%;transform:translateX(-50%);z-index:120;display:flex;flex-direction:column;gap:.6rem;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#fff;font-size:1.45rem;font-weight:900;padding:.7rem 1.4rem;border-radius:16px;border:3px solid #FFD166;box-shadow:0 6px 0 rgba(0,0,0,.3);animation:toastIn .35s cubic-bezier(.2,.9,.3,1.3) both;max-width:80vw;text-align:center}
+.toast.out{animation:toastOut .3s both}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:130}
+
+/* ---------- keyframes ---------- */
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(24px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes flipIn{from{opacity:0;transform:perspective(1400px) rotateY(95deg) scale(.7)}to{opacity:1;transform:none}}
+@keyframes stamp{0%{opacity:0;transform:scale(2.4) rotate(-12deg)}60%{opacity:1;transform:scale(.9) rotate(3deg)}100%{opacity:1;transform:scale(1)}}
+@keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes wobble{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg) scale(1.03)}}
+@keyframes nudge{0%,100%{transform:translate(0,-50%)}50%{transform:translate(4px,-50%)}}
+@keyframes ring{from{transform:scale(1);opacity:.9}to{transform:scale(2.3);opacity:0}}
+@keyframes bump{0%{transform:scale(1)}30%{transform:scale(1.45);color:#0A8F5E}100%{transform:scale(1)}}
+@keyframes floatUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-2.2rem)}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-20px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-14px)}}
+@keyframes carIn{from{transform:translateX(120vw)}to{transform:none}}
+@keyframes jiggle{from{transform:translateX(-2px) rotate(-1deg)}to{transform:translateX(2px) rotate(1deg)}}
+@keyframes bounceY{from{transform:translateX(-50%) translateY(0) rotate(-6deg)}to{transform:translateX(-50%) translateY(-18px) rotate(6deg)}}
+@keyframes rain{from{transform:translateY(0) rotate(0)}to{transform:translateY(17rem) rotate(360deg)}}
+@keyframes camelWalk{from{left:105%}to{left:48%}}
+@keyframes brake{0%{transform:translateX(0)}30%{transform:translateX(18px) rotate(-6deg)}60%{transform:translateX(-4px) rotate(2deg)}100%{transform:none}}
+@keyframes wag{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+@keyframes zoom{0%{left:110%}40%{left:30%}60%{left:30%}100%{left:-30%}}
+@keyframes boost{0%,100%{transform:translate(-50%,-50%) scale(1) rotate(-6deg)}50%{transform:translate(-50%,-50%) scale(1.25) rotate(6deg)}}
+@keyframes burst{from{transform:translate(-50%,-50%) rotate(var(--a)) translateY(0) scale(.4);opacity:1}to{transform:translate(-50%,-50%) rotate(var(--a)) translateY(-11rem) scale(1.1);opacity:0}}
+@keyframes rise{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+@keyframes shake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.1)}}
+@keyframes drain{from{width:100%}to{width:0}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+@media (max-aspect-ratio:4/3){#board{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.tp-name{font-size:1.6rem}.sname{white-space:normal}.sstop{display:none}}
+@media (max-width:1180px){.drawBtn kbd{display:none}.drawBtn{font-size:1.6rem}}
+</style>
+</head>
+<body>
+
+<!-- ============ SETUP SCREEN ============ -->
+<section id="setup">
+  <div class="hero">
+    <div class="heroTitle">
+      <span class="he" dir="rtl" lang="he">מסע בישראל</span>
+      <div class="sub">Masa B’Yisrael</div>
+      <h1>Israel Road Trip Race</h1>
+    </div>
+    <div class="heroRoad" aria-hidden="true">
+      <span style="--dur:9s;--del:0s">🚐</span><span style="--dur:11s;--del:-3s">🐪</span><span style="--dur:8s;--del:-5s">🛵</span>
+      <span style="--dur:12s;--del:-8s">🚌</span><span style="--dur:10s;--del:-1.5s">🚲</span><span style="--dur:9.5s;--del:-6.5s">🛻</span>
+    </div>
+  </div>
+  <div class="setupGrid">
+    <div class="card">
+      <h2><span class="n">1</span> How many teams?</h2>
+      <div class="counts" id="counts"></div>
+      <h2><span class="n">2</span> Team names <span class="label" style="margin-left:auto">click a vehicle to swap it</span></h2>
+      <div class="trows" id="trows"></div>
+      <h2><span class="n">3</span> Class clock</h2>
+      <div class="clockSet">
+        <button class="btn" data-act="minDown" aria-label="Less time">−</button>
+        <div class="val" id="minVal">35 min</div>
+        <button class="btn" data-act="minUp" aria-label="More time">+</button>
+        <span class="hint" style="margin:0">Final Sprint starts with <b id="sprintAtTxt">5</b> min left.</span>
+      </div>
+      <button class="btn go startBtn" data-act="start">🚀 <span class="he" dir="rtl" lang="he">יאללה!</span> Yalla — start the trip!</button>
+    </div>
+    <div class="card rules">
+      <h2>🗺️ How to play</h2>
+      <ul>
+        <li><span class="i">🏙️</span><span>Everyone starts in <b>Tel Aviv</b>. First to <b>Eilat</b> 🐠 triggers the Final Sprint!</span></li>
+        <li><span class="i">🎲</span><span>On your turn, draw a challenge for your next stop. You have <b id="secTxt">30</b> seconds.</span></li>
+        <li><span class="i">✅</span><span><b>Correct</b> = +10 points and your vehicle drives on.</span></li>
+        <li><span class="i">🦹</span><span><b>Wrong</b> = you stay, and the next team can <b>steal</b> for +5.</span></li>
+        <li><span class="i">🎴</span><span>After a turn, an <b>Event Card</b> might appear: traffic jams, falafel, camels, hitchhikes, Bamba…</span></li>
+        <li><span class="i">⚡</span><span><b>Final Sprint:</b> buzz in first for +20. <b>Most points wins!</b></span></li>
+      </ul>
+      <div class="typeChips" id="typeChips"></div>
+      <p class="hint">Teacher keys: <kbd>Space</kbd> next · <kbd>C</kbd> correct · <kbd>W</kbd> wrong · <kbd>R</kbd> reveal/peek · <kbd>P</kbd> pause · <kbd>U</kbd> undo · <kbd>F</kbd> fullscreen · <kbd>H</kbd> help</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GAME SCREEN ============ -->
+<section id="game" class="hidden">
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">🚐</span>
+      <div><span class="he" dir="rtl" lang="he">מסע בישראל</span><small>Israel Road Trip Race</small></div>
+    </div>
+    <div class="clock" id="clock"><span class="em">⏱️</span><span id="clockTxt">35:00</span></div>
+    <div class="tbtns">
+      <button class="tbtn" data-act="pause" title="Pause (P)">⏸️ Pause <kbd>P</kbd></button>
+      <button class="tbtn" data-act="undo" id="undoBtn" title="Undo last action (U)">↩️ Undo <kbd>U</kbd></button>
+      <button class="tbtn sprintBtn" data-act="sprintBtn" id="sprintBtn">⚡ Final Sprint</button>
+      <button class="tbtn" data-act="fullscreen" title="Fullscreen (F)">⛶</button>
+      <button class="tbtn" data-act="mute" id="muteBtn" title="Sound on/off (M)">🔊</button>
+      <button class="tbtn" data-act="help" title="Keyboard help (H)">⌨️</button>
+    </div>
+  </header>
+  <main id="board">
+    <aside class="panel" id="turnPanel"></aside>
+    <div id="mapWrap"><svg id="map" viewBox="50 10 520 980" preserveAspectRatio="xMidYMid meet" aria-label="Map of Israel with the route"></svg></div>
+    <aside class="panel" id="scorePanel">
+      <div class="scoreHead"><h3>🏆 Scoreboard</h3><span class="label">points</span></div>
+      <div id="scoreList"></div>
+      <div class="legend"><span>✅ +10 & drive</span><span>🦹 steal +5</span><span>🧆 bonus +20</span><span>⚡ sprint +20</span></div>
+    </aside>
+  </main>
+  <div id="overlay" class="overlay hidden"></div>
+</section>
+
+<div id="arrival"></div>
+<div id="peekLayer" class="layer hidden"></div>
+<div id="pauseLayer" class="layer hidden">
+  <div>
+    <div class="he" dir="rtl" lang="he">רגע!</div>
+    <div class="bigTitle">Rega — game paused</div>
+    <p class="subTitle">The clock and timer are frozen.</p>
+    <p style="margin-top:1.6rem"><button class="btn primary" data-act="pause">▶️ Resume <kbd>P</kbd></button></p>
+  </div>
+</div>
+<div id="helpLayer" class="layer hidden" data-act="help">
+  <div class="helpCard">
+    <h2>⌨️ Teacher controls</h2>
+    <div class="keys">
+      <kbd>Space</kbd><span>Next step: draw challenge · start timer · continue</span>
+      <kbd>C</kbd><span>✅ Correct</span>
+      <kbd>W</kbd><span>❌ Wrong (opens a steal for the next team)</span>
+      <kbd>R</kbd><span>Reveal answer · or “actor peek” for Charades / Draw It</span>
+      <kbd>T</kbd><span>Restart the countdown</span>
+      <kbd>1</kbd><span>… <kbd>6</kbd> Final Sprint: the team that buzzed first</span>
+      <kbd>N</kbd><span>Final Sprint: nobody got it → reveal and move on</span>
+      <kbd>P</kbd><span>Pause / resume everything</span>
+      <kbd>U</kbd><span>Undo last action (also Ctrl+Z)</span>
+      <kbd>F</kbd><span>Fullscreen</span>
+      <kbd>M</kbd><span>Sound on / off</span>
+      <kbd>H</kbd><span>Show / hide this help</span>
+    </div>
+  </div>
+</div>
+<div id="toasts"></div>
+<canvas id="fx"></canvas>
+
+<script>
+/* =====================================================================
+   GAME ENGINE — you shouldn't need to edit below this line.
+   ===================================================================== */
+(function () {
+'use strict';
+
+const C = GAME_CONTENT, SET = C.settings, PTS = SET.points, STOPS = C.stops, LAST = STOPS.length - 1;
+const VEHICLES = ['🚐', '🐪', '🛵', '🚌', '🚲', '🛻'];
+const COLORS = ['#FF6B6B', '#F5A300', '#9D6BFF', '#2E9BE6', '#1DBF84', '#FF5CAD'];
+const DEFAULT_NAMES = ['Team Falafel', 'Team Hummus', 'Team Sabra', 'Team Shakshuka', 'Team Bamba', 'Team Yalla'];
+const TYPE_META = {
+  emoji:        { icon: '🧩', label: 'Guess the Place', color: '#8338EC', how: 'Look at the emoji clues and pick the right answer!' },
+  israeliOrNot: { icon: '🤔', label: 'Israeli or Not?', color: '#FB5607', how: 'True or false? Talk it over, then give ONE answer.' },
+  charades:     { icon: '🎭', label: 'Charades', color: '#E0115F', how: 'One teammate acts it out: no words, no sounds! The team guesses.', hidden: true, waitStart: true },
+  draw:         { icon: '✏️', label: 'Draw It', color: '#0E9F6E', how: 'One teammate draws on paper (no letters or numbers!). The team guesses.', hidden: true, waitStart: true },
+  order:        { icon: '🔢', label: 'Put in Order', color: '#1F7AE0', how: 'Say the order as letters, for example “C, A, D, B”.' },
+  quiz:         { icon: '💡', label: 'Fun Fact Quiz', color: '#3A0CA3', how: 'Pick A, B, C or D.' }
+};
+const BONUS_TYPES = ['quiz', 'israeliOrNot', 'emoji', 'order'];
+const LETTERS = 'ABCDEFGH';
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+const heb = s => `<span class="he" dir="rtl" lang="he">${esc(s)}</span>`;
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const fmt = ms => { const s = Math.ceil(Math.max(0, ms) / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+const stopHTML = i => `<span class="em">${STOPS[i].icon}</span> <b>${esc(STOPS[i].en)}</b> ${heb(STOPS[i].he)}`;
+const vchip = t => `<span class="vchip" style="--c:${t.color}">${t.emoji}</span>`;
+const teamHTML = i => { const t = S.teams[i]; return `${vchip(t)} <b>${esc(t.name)}</b>`; };
+const chal = ch => STOPS[ch.stop].challenges[ch.idx];
+const ease = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+/* ---------- sound (generated, works offline) ---------- */
+let AC = null, muted = false;
+function tone(f, dur, type = 'sine', vol = .15, when = 0, slide) {
+  if (muted) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime + when;
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + .05);
+  } catch (e) { /* audio not available */ }
+}
+const sfx = {
+  tick: () => tone(1000, .06, 'square', .05),
+  draw: () => { tone(440, .1, 'triangle', .12); tone(660, .12, 'triangle', .12, .08); },
+  correct: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .22, 'triangle', .18, i * .09)),
+  wrong: () => { tone(220, .3, 'sawtooth', .09, 0, 150); tone(160, .45, 'sawtooth', .08, .18, 90); },
+  steal: () => [392, 330, 392, 523].forEach((f, i) => tone(f, .14, 'square', .07, i * .1)),
+  honk: () => { tone(415, .12, 'square', .06); tone(415, .16, 'square', .06, .17); },
+  event: () => [300, 450, 600, 900].forEach((f, i) => tone(f, .16, 'triangle', .13, i * .07)),
+  timeup: () => { tone(880, .25, 'square', .1); tone(660, .25, 'square', .1, .25); tone(440, .5, 'square', .1, .5); },
+  fanfare: () => [523, 523, 523, 698, 880, 784, 1047].forEach((f, i) => tone(f, i === 6 ? .6 : .16, 'triangle', .17, [0, .15, .3, .45, .75, .95, 1.1][i])),
+  buzz: () => tone(700, .18, 'square', .12, 0, 900),
+  chime: () => { tone(988, .25, 'sine', .12); tone(1319, .4, 'sine', .1, .12); },
+  undo: () => tone(500, .12, 'sine', .1, 0, 300)
+};
+
+/* ---------- state ---------- */
+let S = null;                 // the whole game state (plain data → easy undo)
+let undoStack = [];
+const ui = {                  // view-only state (not part of undo)
+  timer: { key: null }, ovKey: null, vis: [], announce: null, peek: null,
+  lastFact: null, lastScores: [], waitTO: null, armTO: null, armed: null, warned5: false, warned0: false,
+  arrivalTO: null
+};
+const setup = { n: 4, names: DEFAULT_NAMES.slice(), veh: [0, 1, 2, 3, 4, 5], minutes: SET.gameMinutes };
+
+function act(fn) {                    // every game-changing action goes through here
+  if (!S || S.paused) return;
+  undoStack.push(JSON.stringify(S));
+  if (undoStack.length > 300) undoStack.shift();
+  fn();
+  render();
+}
+function undo() {
+  if (!S || S.paused || !undoStack.length) return;
+  const snap = JSON.parse(undoStack.pop());
+  snap.clockMs = S.clockMs; snap.paused = false;
+  S = snap; ui.announce = null; closePeek(); ui.ovKey = '__force';
+  render(); sfx.undo(); toast('↩️ Undone');
+}
+
+/* ---------- setup screen ---------- */
+function renderSetup() {
+  $('#counts').innerHTML = [2, 3, 4, 5, 6].map(n => `<button class="cnt ${n === setup.n ? 'on' : ''}" data-count="${n}">${n}</button>`).join('');
+  $('#trows').innerHTML = Array.from({ length: setup.n }, (_, i) => {
+    const v = setup.veh[i];
+    return `<div class="trow" style="--c:${COLORS[v]};--cs:${COLORS[v]}26"><button class="vbtn" data-veh="${i}" title="Change vehicle">${VEHICLES[v]}</button><input data-name="${i}" maxlength="22" value="${esc(setup.names[i])}" aria-label="Team ${i + 1} name"></div>`;
+  }).join('');
+  $('#minVal').textContent = setup.minutes + ' min';
+  $('#sprintAtTxt').textContent = SET.finalSprintAtMinutesLeft;
+  $('#secTxt').textContent = SET.challengeSeconds;
+  $('#typeChips').innerHTML = Object.values(TYPE_META).map(m => `<span class="typeChip" style="--tc:${m.color}">${m.icon} ${m.label}</span>`).join('');
+}
+function cycleVehicle(i) {
+  const used = setup.veh.slice(0, setup.n).filter((_, k) => k !== i);
+  let v = setup.veh[i];
+  do { v = (v + 1) % VEHICLES.length; } while (used.includes(v));
+  // keep the vehicle list a permutation so later teams stay unique
+  const j = setup.veh.indexOf(v); setup.veh[j] = setup.veh[i]; setup.veh[i] = v;
+  renderSetup();
+}
+function startGame() {
+  const teams = Array.from({ length: setup.n }, (_, i) => {
+    const v = setup.veh[i];
+    return { name: (setup.names[i] || '').trim() || DEFAULT_NAMES[i], emoji: VEHICLES[v], color: COLORS[v],
+      pos: 0, maxPos: 0, score: 0, skip: false, bamba: false, stats: { correct: 0, steals: 0, sprint: 0, bonus: 0 } };
+  });
+  S = { phase: 'turn', teams, current: 0, clockMs: setup.minutes * 60000, paused: false,
+    used: {}, typeHistory: [], ch: null, result: null, event: null, sprint: null, sprintDone: false, eilatTeam: null, serial: 0 };
+  undoStack = [];
+  Object.assign(ui, { timer: { key: null }, ovKey: null, announce: null, lastScores: [], warned5: false, warned0: false, lastFact: { stop: 0, team: null } });
+  $('#setup').classList.add('hidden'); $('#game').classList.remove('hidden');
+  buildMap();
+  render();
+  showArrival(null, 0);
+  sfx.fanfare();
+  lastT = performance.now();
+}
+
+/* ---------- map ---------- */
+const proj = (lat, lon) => [300 + (lon - 35.05) * 198, 30 + (33.45 - lat) * 232];
+const ptsStr = arr => arr.map(([la, lo]) => proj(la, lo).map(v => v.toFixed(1)).join(',')).join(' ');
+const ISRAEL = [[33.09,35.10],[33.08,35.33],[33.10,35.50],[33.28,35.57],[33.27,35.63],[33.30,35.80],[33.05,35.87],[32.80,35.80],[32.70,35.62],[32.55,35.56],[32.20,35.55],[31.90,35.53],[31.77,35.55],[31.50,35.49],[31.25,35.45],[31.10,35.43],[30.90,35.35],[30.60,35.20],[30.30,35.14],[30.00,35.06],[29.70,35.02],[29.55,34.96],[29.49,34.90],[29.90,34.75],[30.40,34.56],[30.90,34.38],[31.32,34.22],[31.50,34.42],[31.67,34.55],[31.80,34.63],[32.08,34.76],[32.33,34.85],[32.50,34.89],[32.60,34.91],[32.83,34.96],[32.82,35.03],[32.93,35.07]];
+const MED = [[34.0,35.55],[33.45,35.27],[33.27,35.19],[33.09,35.10],[32.93,35.07],[32.82,35.03],[32.83,34.96],[32.60,34.91],[32.50,34.89],[32.33,34.85],[32.08,34.76],[31.80,34.63],[31.67,34.55],[31.50,34.42],[31.32,34.22],[31.12,33.85],[31.05,33.40],[31.00,32.60],[34.0,32.60]];
+const GULF = [[29.56,34.955],[29.52,35.01],[29.00,34.90],[28.50,34.82],[28.50,34.55],[29.00,34.66],[29.49,34.90]];
+const DEAD = [[31.77,35.47],[31.75,35.56],[31.50,35.58],[31.30,35.54],[31.20,35.47],[31.05,35.43],[31.05,35.38],[31.20,35.39],[31.35,35.40],[31.55,35.41],[31.70,35.45]];
+const JORDAN = [[32.71,35.57],[32.50,35.56],[32.30,35.55],[32.10,35.53],[31.90,35.54],[31.77,35.53]];
+let stopXY = [], segPts = [];
+
+function buildMap() {
+  const svg = $('#map');
+  stopXY = STOPS.map(s => proj(s.lat, s.lon));
+  const [gx, gy] = proj(32.82, 35.59);
+  let h = `
+  <defs>
+    <linearGradient id="seaG" x1="0" x2="1"><stop offset="0" stop-color="#5DB8EE"/><stop offset="1" stop-color="#9ADAF8"/></linearGradient>
+    <linearGradient id="landG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#BFE3A0"/><stop offset=".33" stop-color="#E4E9B0"/><stop offset=".5" stop-color="#F6E3B2"/><stop offset=".72" stop-color="#F8CF92"/><stop offset="1" stop-color="#F4B97A"/>
+    </linearGradient>
+    <pattern id="waves" width="40" height="22" patternUnits="userSpaceOnUse"><path d="M0 11 q10 -7 20 0 t20 0" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/></pattern>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="4" stdDeviation="0" flood-color="#14213D" flood-opacity=".9"/></filter>
+  </defs>
+  <rect x="0" y="0" width="700" height="1100" fill="#EADCC2"/>
+  <polygon points="${ptsStr(MED)}" fill="url(#seaG)"/><polygon points="${ptsStr(MED)}" fill="url(#waves)"/>
+  <polygon points="${ptsStr(GULF)}" fill="url(#seaG)"/>
+  <polygon points="${ptsStr(ISRAEL)}" fill="url(#landG)" stroke="#14213D" stroke-width="3.5" stroke-linejoin="round" filter="url(#soft)"/>
+  <polyline points="${ptsStr(JORDAN)}" fill="none" stroke="#3FA7E6" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="${gx}" cy="${gy}" rx="12" ry="22" transform="rotate(-8 ${gx} ${gy})" fill="#4FB0EC" stroke="#14213D" stroke-width="2.5"/>
+  <polygon points="${ptsStr(DEAD)}" fill="#6CC3EE" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+  <g class="decos">
+    <text class="deco" transform="translate(66 330) rotate(-90)" text-anchor="middle">MEDITERRANEAN SEA</text>
+    <text class="deco-he" transform="translate(86 330) rotate(-90)" text-anchor="middle">הים התיכון</text>
+    <text x="150" y="150" font-size="28" style="font-family:var(--emoji)">⛵</text>
+    <text x="150" y="470" font-size="24" style="font-family:var(--emoji)">🐬</text>
+    <text class="deco" x="262" y="720" text-anchor="middle">NEGEV</text>
+    <text class="deco-he" x="262" y="740" text-anchor="middle">הנגב</text>
+    <text x="232" y="800" font-size="24" style="font-family:var(--emoji)">🌵</text>
+    <text x="330" y="660" font-size="22" style="font-family:var(--emoji)">🏜️</text>
+    <text class="deco" x="200" y="975" text-anchor="middle">RED SEA</text>
+    <text class="deco-he" x="200" y="957" text-anchor="middle">ים סוף</text>
+    <g transform="translate(515 70)"><circle r="26" fill="#fff" stroke="#14213D" stroke-width="3"/><path d="M0 -18 L8 6 L0 1 L-8 6 Z" fill="#FB5607" stroke="#14213D" stroke-width="2"/><text y="20" text-anchor="middle" font-size="13" font-weight="900" fill="#14213D">N</text></g>
+  </g>
+  <g id="roads"></g><g id="stops"></g><g id="labels"></g><g id="vehicles"></g>`;
+  svg.innerHTML = h;
+
+  // road segments (gentle curves) — sampled so vehicles can drive along them
+  let roads = '';
+  for (let i = 0; i < LAST; i++) {
+    const [x1, y1] = stopXY[i], [x2, y2] = stopXY[i + 1];
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy);
+    const k = (i % 2 ? 1 : -1) * Math.min(.16, 26 / len + .06);
+    const cx = mx - dy * k, cy = my + dx * k;
+    const d = `M${x1.toFixed(1)} ${y1.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    roads += `<path d="${d}" fill="none" stroke="#14213D" stroke-width="13" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#4A5570" stroke-width="8" stroke-linecap="round"/><path class="seg" d="${d}" fill="none" stroke="#FFD166" stroke-width="2.5" stroke-dasharray="7 7"/>`;
+  }
+  $('#roads').innerHTML = roads;
+  segPts = [...document.querySelectorAll('#roads .seg')].map(p => {
+    const L = p.getTotalLength(), out = [];
+    for (let s = 0; s <= 48; s++) { const q = p.getPointAtLength(L * s / 48); out.push([q.x, q.y]); }
+    return out;
+  });
+
+  $('#stops').innerHTML = STOPS.map((s, i) => { const [x, y] = stopXY[i];
+    return `<g class="stop" id="stop-${i}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle class="pulse" r="17"/><circle class="dot" r="${i === LAST ? 19 : 16}"/><text class="sicon">${i === LAST ? '🏁' : s.icon}</text></g>`; }).join('');
+  $('#labels').innerHTML = STOPS.map((s, i) => { const [x, y] = stopXY[i];
+    const top = s.label === 'top', right = s.label === 'right';
+    const dx = top ? (s.labelDx || 0) : (right ? 1 : -1) * (26 + (s.labelDx || 0)), dy = top ? -44 + (s.labelDy || 0) : (s.labelDy || 0);
+    const anchor = top ? 'middle' : right ? 'start' : 'end';
+    return `<text class="lbl-en" x="${(x + dx).toFixed(1)}" y="${(y + dy - 1).toFixed(1)}" text-anchor="${anchor}">${esc(s.en)}</text>
+            <text class="lbl-he" x="${(x + dx).toFixed(1)}" y="${(y + dy + 20).toFixed(1)}" text-anchor="${anchor}">${esc(s.he)}</text>`; }).join('');
+
+  $('#vehicles').innerHTML = S.teams.map((t, i) => `<g class="veh" id="veh-${i}"><circle class="halo" r="22"/><circle class="body" r="19" fill="${t.color}"/><g class="flip"><text class="vemoji">${t.emoji}</text></g></g>`).join('');
+  ui.vis = S.teams.map((t, i) => ({ g: $('#veh-' + i), x: stopXY[0][0], y: stopXY[0][1], stop: 0, raf: 0, driving: false, flip: false }));
+  const offs = targetOffsets();
+  ui.vis.forEach((v, i) => setVeh(v, stopXY[0][0] + offs[i][0], stopXY[0][1] + offs[i][1]));
+}
+
+function clusterOffsets(n) {
+  if (n === 1) return [[0, 0]];
+  const r = n === 2 ? 21 : n <= 4 ? 26 : 30;
+  return Array.from({ length: n }, (_, k) => { const a = (n === 2 ? 0 : -Math.PI / 2) + k * 2 * Math.PI / n + (n === 2 ? Math.PI : 0); return [Math.cos(a) * r, Math.sin(a) * r]; });
+}
+function targetOffsets() {
+  const groups = {}, offs = [];
+  S.teams.forEach((t, i) => (groups[t.pos] = groups[t.pos] || []).push(i));
+  Object.values(groups).forEach(g => { const o = clusterOffsets(g.length); g.forEach((ti, k) => offs[ti] = o[k]); });
+  return offs;
+}
+function setVeh(v, x, y) { v.x = x; v.y = y; v.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`); }
+function setFlip(v, right) { if (v.flip === right) return; v.flip = right; v.g.querySelector('.flip').setAttribute('transform', right ? 'scale(-1 1)' : ''); }
+function routePts(a, b) {
+  const pts = [];
+  if (a < b) for (let s = a; s < b; s++) pts.push(...(s === a ? segPts[s] : segPts[s].slice(1)));
+  else for (let s = a - 1; s >= b; s--) { const seg = segPts[s].slice().reverse(); pts.push(...(s === a - 1 ? seg : seg.slice(1))); }
+  return pts;
+}
+function syncVehicles() {
+  if (!ui.vis.length) return;
+  const offs = targetOffsets();
+  S.teams.forEach((t, i) => {
+    const v = ui.vis[i];
+    if (v.stop !== t.pos) driveVehicle(i, v.stop, t.pos, offs[i]);
+    else if (!v.driving) {
+      const tx = stopXY[t.pos][0] + offs[i][0], ty = stopXY[t.pos][1] + offs[i][1];
+      if (Math.abs(v.x - tx) > .5 || Math.abs(v.y - ty) > .5) glideVehicle(v, tx, ty, 380);
+    }
+  });
+  // current team on top + highlighted
+  const cur = (S.phase === 'turn' || S.phase === 'challenge') ? (S.ch ? S.ch.team : S.current) : S.current;
+  ui.vis.forEach((v, i) => v.g.classList.toggle('cur', i === cur && !['sprintIntro', 'sprintQ', 'sprintResult', 'end'].includes(S.phase)));
+  if (ui.vis[cur]) $('#vehicles').appendChild(ui.vis[cur].g);
+}
+function glideVehicle(v, tx, ty, dur) {
+  cancelAnimationFrame(v.raf);
+  const sx = v.x, sy = v.y, t0 = performance.now();
+  const step = now => { const p = Math.max(0, Math.min(1, (now - t0) / dur)), e = ease(p); setVeh(v, sx + (tx - sx) * e, sy + (ty - sy) * e); if (p < 1) v.raf = requestAnimationFrame(step); };
+  v.raf = requestAnimationFrame(step);
+}
+function driveVehicle(i, from, to, endOff) {
+  const v = ui.vis[i];
+  cancelAnimationFrame(v.raf);
+  const pts = routePts(from, to);
+  const so = [v.x - stopXY[from][0], v.y - stopXY[from][1]];
+  const dur = Math.min(4200, 1000 + 750 * Math.abs(to - from));
+  v.stop = to; v.driving = true;
+  const t0 = performance.now(); sfx.honk();
+  const step = now => {
+    const p = Math.max(0, Math.min(1, (now - t0) / dur)), e = ease(p);
+    const fi = e * (pts.length - 1), k = Math.floor(fi), f = fi - k, A = pts[k], B = pts[Math.min(k + 1, pts.length - 1)];
+    const off = e < .5 ? [so[0] * (1 - 2 * e), so[1] * (1 - 2 * e)] : [endOff[0] * (2 * e - 1), endOff[1] * (2 * e - 1)];
+    const x = A[0] + (B[0] - A[0]) * f + off[0], y = A[1] + (B[1] - A[1]) * f + off[1];
+    if (Math.abs(B[0] - A[0]) > .4) setFlip(v, B[0] > A[0]);
+    setVeh(v, x, y);
+    if (p < 1) v.raf = requestAnimationFrame(step);
+    else { v.driving = false; onArrive(i, to); if (S) syncVehicles(); }
+  };
+  v.raf = requestAnimationFrame(step);
+}
+function onArrive(i, stop) {
+  if (ui.announce && ui.announce.team === i && ui.announce.stop === stop) { ui.announce = null; showArrival(i, stop); }
+}
+function showArrival(i, stop) {
+  const s = STOPS[stop], el = $('#arrival');
+  const title = i == null ? `🚦 All teams start in ${stopHTML(stop)}` : `📍 ${teamHTML(i)} arrived in ${stopHTML(stop)}!`;
+  el.innerHTML = `<div class="aicon">${s.icon}</div><div><div class="atitle">${title}</div><div class="afact">💡 ${esc(s.fact)}</div></div>`;
+  el.classList.add('show'); sfx.chime();
+  ui.lastFact = { stop, team: i };
+  clearTimeout(ui.arrivalTO); ui.arrivalTO = setTimeout(hideArrival, 8000);
+  renderTurnPanel();
+}
+function hideArrival() { $('#arrival').classList.remove('show'); }
+function updateMapMarks() {
+  const reached = Math.max(...S.teams.map(t => t.maxPos));
+  const cur = S.ch ? S.ch.team : S.current, t = S.teams[cur];
+  const target = (S.phase === 'turn' || (S.phase === 'challenge' && S.ch.mode === 'normal')) ? t.pos + 1 : -1;
+  STOPS.forEach((_, i) => { const g = $('#stop-' + i); g.classList.toggle('reached', i <= reached); g.classList.toggle('target', i === target); if (i === target) g.style.setProperty('--tc', t.color); });
+}
+
+/* ---------- rendering ---------- */
+function render() {
+  if (!S) return;
+  const covering = ['challenge', 'result', 'sprintIntro', 'sprintQ', 'sprintResult', 'end'].includes(S.phase);
+  if (!covering) syncVehicles();
+  else if (ui.vis.length) ui.vis.forEach(v => v.g.classList.remove('cur'));
+  updateMapMarks();
+  renderTurnPanel();
+  renderScores();
+  renderTopbar();
+  renderOverlay();
+}
+function renderTopbar() {
+  $('#undoBtn').disabled = !undoStack.length;
+  const inSprint = ['eilat', 'sprintIntro', 'sprintQ', 'sprintResult'].includes(S.phase);
+  const b = $('#sprintBtn');
+  b.classList.toggle('armed', ui.armed === 'sprint');
+  b.disabled = S.phase === 'end';
+  b.innerHTML = ui.armed === 'sprint' ? '⚠️ Click again to confirm' : (inSprint ? '🏁 End game' : '⚡ Final Sprint');
+}
+function renderTurnPanel() {
+  if (!S) return;
+  const el = $('#turnPanel');
+  const fact = ui.lastFact ? `<div class="tp-fact"><div class="label">💡 Latest discovery · ${esc(STOPS[ui.lastFact.stop].en)}</div><p>${esc(STOPS[ui.lastFact.stop].fact)}</p></div>` : '';
+  if (['sprintIntro', 'sprintQ', 'sprintResult', 'end'].includes(S.phase)) {
+    el.innerHTML = `<div class="label">Now</div><div class="sprintNote">⚡ FINAL SPRINT<br><span class="he" dir="rtl" lang="he">ספרינט אחרון</span></div>${fact}`;
+    return;
+  }
+  const ti = S.ch ? S.ch.team : S.current, t = S.teams[ti], next = Math.min(t.pos + 1, LAST), left = LAST - t.pos;
+  const chips = (t.bamba ? '<span class="chip">🥜 Bamba boost: next answer ×2</span>' : '') + (t.skip ? '<span class="chip red">🚗 Stuck: skips next turn</span>' : '');
+  el.innerHTML = `
+    <div class="label">Now driving</div>
+    <div class="tp-team" style="--c:${t.color};--cs:${t.color}2E">
+      <div class="bigveh">${t.emoji}</div>
+      <div><div class="tp-name">${esc(t.name)}</div><div class="tp-sub">in ${esc(STOPS[t.pos].en)} · ${t.score} pts</div></div>
+    </div>
+    ${chips ? `<div class="tp-chips">${chips}</div>` : ''}
+    <div class="tp-next"><div class="label">Next stop</div><div class="tp-stop">${stopHTML(next)}</div><div class="tp-steps">${left} stop${left === 1 ? '' : 's'} to Eilat 🏁</div></div>
+    <button class="btn drawBtn" data-act="draw" ${S.phase === 'turn' ? '' : 'disabled'}><span class="em">🎲</span> Draw challenge <kbd>Space</kbd></button>
+    ${upNextHTML(ti)}
+    ${fact}`;
+}
+function upNextHTML(ti) {
+  const n = S.teams.length, rows = [];
+  for (let k = 1; k < n && rows.length < 3; k++) {
+    const i = (ti + k) % n, t = S.teams[i];
+    rows.push(`<div class="un" style="--c:${t.color}"><span class="unv">${t.emoji}</span><b>${esc(t.name)}</b>${t.skip ? '<span class="chip red">🚗 skips</span>' : ''}</div>`);
+  }
+  return `<div class="upnext"><div class="label">Up next</div>${rows.join('')}</div>`;
+}
+function rankOrder() { return S.teams.map((t, i) => i).sort((a, b) => S.teams[b].score - S.teams[a].score || S.teams[b].pos - S.teams[a].pos || a - b); }
+function renderScores() {
+  const el = $('#scoreList'), prev = {};
+  el.querySelectorAll('.srow').forEach(r => prev[r.dataset.team] = r.getBoundingClientRect().top);
+  const order = rankOrder(), cur = S.ch ? S.ch.team : S.current, showCur = !['sprintIntro', 'sprintQ', 'sprintResult', 'end'].includes(S.phase);
+  el.innerHTML = order.map(i => {
+    const t = S.teams[i], rank = 1 + S.teams.filter(o => o.score > t.score).length;
+    const chips = (t.bamba ? '<span class="chip">🥜 ×2</span>' : '') + (t.skip ? '<span class="chip red">🚗 skip</span>' : '');
+    return `<div class="srow ${showCur && i === cur ? 'cur' : ''}" data-team="${i}" style="--c:${t.color};--cs:${t.color}33">
+      <div class="rank">${rank}</div><div class="sveh">${t.emoji}</div>
+      <div><div class="sname">${esc(t.name)}</div><div class="sstop">${STOPS[t.pos].icon} ${esc(STOPS[t.pos].en)} · ${heb(STOPS[t.pos].he)}</div>
+        <div class="prog"><i style="width:${(t.pos / LAST * 100).toFixed(1)}%"></i></div>${chips ? `<div class="chips">${chips}</div>` : ''}</div>
+      <div class="sscore">${t.score}</div></div>`;
+  }).join('');
+  el.querySelectorAll('.srow').forEach(r => {
+    const i = +r.dataset.team, p = prev[i];
+    if (p != null) { const d = p - r.getBoundingClientRect().top; if (Math.abs(d) > 1 && r.animate) r.animate([{ transform: `translateY(${d}px)` }, { transform: 'none' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' }); }
+    const before = ui.lastScores[i], now = S.teams[i].score;
+    if (before != null && now > before) {
+      r.classList.add('bump');
+      const f = document.createElement('div'); f.className = 'floater'; f.textContent = '+' + (now - before); r.appendChild(f);
+    }
+  });
+  ui.lastScores = S.teams.map(t => t.score);
+}
+
+/* ----- overlays ----- */
+function overlayKey() {
+  switch (S.phase) {
+    case 'challenge': return `ch|${S.serial}|${S.ch.mode}`;
+    case 'result': return `res|${undoStack.length}`;
+    case 'event': return `ev|${undoStack.length}`;
+    case 'eilat': return 'eilat';
+    case 'sprintIntro': return 'spi';
+    case 'sprintQ': return `spq|${S.serial}|${S.sprint.buzzed}|${S.sprint.locked.join(',')}`;
+    case 'sprintResult': return `spr|${S.serial}`;
+    case 'end': return 'end';
+    default: return null;
+  }
+}
+function renderOverlay() {
+  const key = overlayKey(), ov = $('#overlay');
+  if (key !== ui.ovKey) {
+    ui.ovKey = key; clearTimeout(ui.waitTO);
+    if (!key) { ov.className = 'overlay hidden'; ov.innerHTML = ''; }
+    else {
+      const driving = ui.vis.some(v => v.driving);
+      if ((S.phase === 'event' || S.phase === 'eilat') && driving) {
+        // let the vehicle finish driving (and the fact banner be read) before the card flips in
+        ov.innerHTML = ''; ov.className = 'overlay wait';
+        ui.waitTO = setTimeout(revealOverlay, ui.announce ? 3400 : 1900);
+      } else { ov.innerHTML = buildOverlay(); ov.className = 'overlay'; onOverlayShown(); }
+    }
+  }
+  if (S.phase === 'challenge') {
+    const m = ov.querySelector('.modal'); if (m) m.classList.toggle('revealed', !!S.ch.revealed);
+  }
+  syncTimer();
+}
+function isWaiting() { return $('#overlay').classList.contains('wait'); }
+function revealOverlay() { clearTimeout(ui.waitTO); if (!S || !isWaiting()) return; const ov = $('#overlay'); ov.innerHTML = buildOverlay(); ov.className = 'overlay'; onOverlayShown(); }
+function onOverlayShown() {
+  const p = S.phase;
+  if (p !== 'result' && p !== 'challenge') hideArrival();
+  if (p === 'challenge') sfx.draw();
+  else if (p === 'event') sfx.event();
+  else if (p === 'eilat') { sfx.fanfare(); confetti(160); }
+  else if (p === 'sprintIntro') sfx.fanfare();
+  else if (p === 'end') { sfx.fanfare(); confetti(320); setTimeout(() => confetti(200), 1300); }
+}
+
+function buildOverlay() {
+  switch (S.phase) {
+    case 'challenge': return challengeHTML();
+    case 'result': return resultHTML();
+    case 'event': return eventHTML();
+    case 'eilat': return eilatHTML();
+    case 'sprintIntro': return sprintIntroHTML();
+    case 'sprintQ': return sprintQHTML();
+    case 'sprintResult': return sprintResultHTML();
+    case 'end': return endHTML();
+  }
+  return '';
+}
+function pointsFor(team, base) { const t = S.teams[team]; return t.bamba ? `+${base * 2} <span class="em">🥜</span>×2` : `+${base}`; }
+function challengeHTML() {
+  const ch = S.ch, c = chal(ch), m = TYPE_META[c.type], t = S.teams[ch.team];
+  const hiddenCard = m.hidden && ch.mode === 'normal';
+  let who, ribbon = '', pts;
+  if (ch.mode === 'steal') {
+    ribbon = `<div class="stealRibbon">🦹 <span class="he" dir="rtl" lang="he">גניבה!</span> STEAL! ${esc(S.teams[ch.stealer].name)} gets ONE answer</div>`;
+    who = `${teamHTML(ch.stealer)} tries to steal from ${esc(t.name)}`; pts = pointsFor(ch.stealer, PTS.steal);
+  } else if (ch.mode === 'bonus') {
+    ribbon = `<div class="bonusRibbon">🧆 <span class="he" dir="rtl" lang="he">עצירה לפלאפל</span> FALAFEL BONUS: double points, no driving</div>`;
+    who = `${teamHTML(ch.team)} snacking in ${stopHTML(ch.stop)}`; pts = pointsFor(ch.team, PTS.bonus);
+  } else {
+    who = `${teamHTML(ch.team)} <span style="margin:0 .3rem">➜</span> ${stopHTML(ch.stop)}`; pts = pointsFor(ch.team, PTS.correct);
+  }
+  let body = '', how = m.how, canReveal = true;
+  switch (c.type) {
+    case 'emoji':
+      body = `<div class="emojiClue">${esc(c.clue)}</div><div class="prompt">${esc(c.question || 'What do these emoji show?')}</div>`
+        + (c.choices ? `<div class="grid3 quizOpts">${ch.order.map((o, k) => `<div class="opt ${c.choices[o] === c.answer ? 'ok' : ''}"><span class="L">${LETTERS[k]}</span>${esc(c.choices[o])}</div>`).join('')}</div>` : '')
+        + `<div class="answer">✔ ${esc(c.answer)}${c.note ? ` — ${esc(c.note)}` : ''}</div>`; break;
+    case 'israeliOrNot':
+      body = `<div class="statement">${esc(c.statement)}</div><div class="tf"><span class="tfb ${c.answer ? 'yes' : ''}">✔ TRUE</span><span class="tfb ${c.answer ? '' : 'yes'}">✘ FALSE</span></div><div class="answer">${c.answer ? '✔ TRUE' : '✘ FALSE'} — ${esc(c.explain)}</div>`; break;
+    case 'quiz':
+      body = `<div class="prompt">${esc(c.question)}</div><div class="grid2 quizOpts">${ch.order.map((o, k) => `<div class="opt ${o === c.answer ? 'ok' : ''}"><span class="L">${LETTERS[k]}</span>${esc(c.options[o])}</div>`).join('')}</div>${c.note ? `<div class="answer">💡 ${esc(c.note)}</div>` : ''}`; break;
+    case 'order':
+      body = `<div class="prompt">${esc(c.question)}</div><div class="grid2">${ch.order.map((it, k) => `<div class="opt"><span class="L">${LETTERS[k]}</span>${esc(c.items[it])}<span class="rankB">${it + 1}</span></div>`).join('')}</div>
+        <div class="answer">✔ Correct order: <b>${c.items.map((_, r) => LETTERS[ch.order.indexOf(r)]).join(' → ')}</b></div>`; break;
+    case 'charades': case 'draw':
+      canReveal = false;
+      body = hiddenCard
+        ? `<div class="secret"><div class="big">🙈 Secret ${c.type === 'draw' ? 'drawing' : 'charades'} card</div><div class="small">Send up ONE ${c.type === 'draw' ? 'artist' : 'actor'}. Press <kbd>R</kbd>: the class closes their eyes and only they see the card.</div></div>`
+        : `<div class="secret"><div class="big">${c.type === 'draw' ? '✏️ Look at the drawing!' : '🎭 You saw the acting!'}</div><div class="stealNote">What was it? One guess!</div></div>`;
+      break;
+  }
+  if (ch.mode === 'steal') how = `🦹 ${esc(S.teams[ch.stealer].name)}: one answer for +${PTS.steal}.`;
+  const revealBtn = hiddenCard ? `<button class="btn" data-act="reveal">👀 Actor peek <kbd>R</kbd></button>`
+    : canReveal ? `<button class="btn" data-act="reveal">👁️ Reveal <kbd>R</kbd></button>` : '';
+  return `<div class="modal challenge mode-${ch.mode}" style="--tc:${m.color}">
+    ${ribbon}
+    <div class="mhead">
+      <div class="badge"><span class="em">${m.icon}</span>${m.label}</div>
+      <div class="who">${who}</div>
+      <div class="pts">${pts}</div>
+      <div class="timer" id="timer"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="42"/><circle class="bar" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><div class="num">30</div></div>
+    </div>
+    <div class="timeup">⏰ <span class="he" dir="rtl" lang="he">נגמר הזמן!</span> Time’s up!</div>
+    <div class="mbody">${body}</div>
+    <div class="mfoot">
+      <div class="how">${how}</div><div class="btns">
+      <button class="btn startB" data-act="startTimer">▶️ Start ${ch.mode === 'steal' ? SET.stealSeconds : SET.challengeSeconds}s <kbd>Space</kbd></button>
+      ${revealBtn}
+      <button class="btn no" data-act="wrong">❌ Wrong <kbd>W</kbd></button>
+      <button class="btn ok" data-act="right">✅ Correct <kbd>C</kbd></button>
+    </div></div></div>`;
+}
+function answerHTML(c) {
+  switch (c.type) {
+    case 'emoji': return `✔ <b>${esc(c.answer)}</b>${c.note ? `<br>💡 ${esc(c.note)}` : ''}`;
+    case 'israeliOrNot': return `<b>${c.answer ? '✔ TRUE' : '✘ FALSE'}</b> — ${esc(c.explain)}`;
+    case 'quiz': return `✔ <b>${esc(c.options[c.answer])}</b>${c.note ? `<br>💡 ${esc(c.note)}` : ''}`;
+    case 'order': return `✔ <b>${c.items.map(esc).join(' → ')}</b>`;
+    case 'charades': case 'draw': return `🙈 The secret card was: <b>${esc(c.prompt)}</b>`;
+  }
+  return '';
+}
+function resultHTML() {
+  const r = S.result, c = STOPS[r.stop].challenges[r.idx];
+  const t = S.teams[r.team];
+  const dbl = r.doubled ? ' <span class="chip">🥜 Bamba ×2!</span>' : '';
+  let cls = 'good', stamp = '✅', title = `${heb('סבבה!')} Sababa!`, line = '';
+  switch (r.kind) {
+    case 'correct': line = `${teamHTML(r.team)} earns <b>+${r.pts}</b>${dbl} and drives on to ${stopHTML(r.moveTo)}!`; break;
+    case 'wrong': cls = 'bad'; stamp = '❌'; title = `${heb('אוף!')} Oof!`; line = `${teamHTML(r.team)} stays in ${stopHTML(t.pos)}. Better luck next turn!`; break;
+    case 'stealOk': cls = 'steal'; stamp = '🦹'; title = `${heb('גניבה!')} Stolen!`; line = `${teamHTML(r.stealer)} steals <b>+${r.pts}</b>${dbl}! ${esc(t.name)} stays in ${esc(STOPS[t.pos].en)}.`; break;
+    case 'stealFail': cls = 'bad'; stamp = '❌'; title = `${heb('אוף!')} Nobody got it`; line = `No steal this time. ${teamHTML(r.team)} stays in ${stopHTML(t.pos)}.`; break;
+    case 'bonusOk': stamp = '🧆'; title = `${heb('בתיאבון!')} B’te’avon!`; line = `${teamHTML(r.team)} earns a bonus <b>+${r.pts}</b>${dbl}!`; break;
+    case 'bonusFail': cls = 'bad'; stamp = '🥙'; title = `${heb('אוף!')} No bonus`; line = `No bonus points, but the falafel was delicious.`; break;
+  }
+  return `<div class="modal result ${cls}"><div class="stamp">${stamp}</div><div class="rtitle">${title}</div><div class="rline">${line}</div>
+    <div class="ranswer">${answerHTML(c)}</div>
+    <div class="mfoot"><button class="btn primary" data-act="continue">Continue ▶ <kbd>Space</kbd></button></div></div>`;
+}
+function eventStage(id) {
+  switch (id) {
+    case 'jam': return `<div class="stage jam"><div class="road"></div>${['🚗', '🚕', '🚙', '🚌', '🚚'].map((c, k) => `<span class="e car" style="--k:${k}">${c}</span>`).join('')}<span class="e honk">📢 BEEP BEEP!</span></div>`;
+    case 'falafel': return `<div class="stage falafel">${Array.from({ length: 9 }, (_, k) => `<span class="e ball" style="--x:${5 + k * 11}%;--d:${(k * .37) % 1.6}s">🧆</span>`).join('')}<span class="e pita">🥙</span></div>`;
+    case 'camel': return `<div class="stage camel"><div class="road"></div><span class="e car">🚗</span><span class="e huh">?!</span><span class="e cam">🐪</span></div>`;
+    case 'hitchhike': return `<div class="stage hitch"><div class="road"></div><span class="e thumb">👍</span><span class="e ride">🚙💨</span></div>`;
+    case 'bamba': return `<div class="stage bamba">${Array.from({ length: 12 }, (_, k) => `<span class="e nut" style="--a:${k * 30}deg;--d:${(k % 3) * .25}s">🥜</span>`).join('')}<span class="e bag">🥜</span><span class="e boostTxt">BOOST!</span></div>`;
+  }
+  return '';
+}
+function eventHTML() {
+  const e = S.event, def = C.events.find(x => x.id === e.id) || {}, t = S.teams[e.team];
+  let effect = `${teamHTML(e.team)} ${esc(def.text)}`;
+  if (e.id === 'camel') effect += `<br>${teamHTML(e.team)} ⇄ ${teamHTML(e.target)}`;
+  return `<div class="modal event" style="--ec:${def.color || '#FFD166'}">
+    <div class="evTag">🎴 EVENT CARD</div>
+    ${eventStage(e.id)}
+    <div class="evHe he" dir="rtl" lang="he">${esc(def.he)}</div>
+    <div class="evEn">${esc(def.en)}</div>
+    <div class="evEffect">${effect}</div>
+    <div class="mfoot" style="justify-content:center;border:0"><button class="btn primary" data-act="continue">${e.id === 'falafel' ? '🧆 Bonus question' : 'OK!'} <kbd>Space</kbd></button></div></div>`;
+}
+function eilatHTML() {
+  const i = S.eilatTeam;
+  return `<div class="modal eilat"><div class="eilatStage">🌴${S.teams[i].emoji}🏁🌴</div>
+    <div class="bigTitle">${heb('הגענו לאילת!')} We made it to Eilat!</div>
+    <div class="subTitle">${teamHTML(i)} reached Eilat first: <b>+${PTS.eilatBonus} arrival bonus!</b></div>
+    <div class="subTitle" style="font-size:1.5rem">💡 ${esc(STOPS[LAST].fact)}</div>
+    <div class="mfoot" style="justify-content:center;border:0"><button class="btn primary" data-act="continue">⚡ To the Final Sprint <kbd>Space</kbd></button></div></div>`;
+}
+function sprintIntroHTML() {
+  const n = Math.min(SET.finalSprintQuestions, C.finalSprint.length);
+  return `<div class="modal sprint" style="text-align:center"><div class="bolt">⚡</div>
+    <div class="bigTitle">${heb('ספרינט אחרון')} FINAL SPRINT!</div>
+    <ul class="sprintRules">
+      <li>❓ <span>${n} lightning questions — the SAME question for every team.</span></li>
+      <li>🙋 <span>First team to raise their hands buzzes in. Teacher presses their number.</span></li>
+      <li>✅ <span>Correct = <b>+${PTS.sprint}</b>. Wrong = locked out, the others can buzz again.</span></li>
+      <li>🏆 <span>Most points after the sprint wins the trip!</span></li>
+    </ul>
+    <div class="mfoot" style="justify-content:center;border:0;margin-top:1rem"><button class="btn primary" data-act="continue">⚡ Let’s go! <kbd>Space</kbd></button></div></div>`;
+}
+function buzzersHTML() {
+  const sp = S.sprint;
+  return `<div class="buzzers">${S.teams.map((t, i) => `<button class="buzz ${sp.locked.includes(i) ? 'locked' : ''} ${sp.buzzed === i ? 'on' : ''}" data-buzz="${i}" style="--c:${t.color}"><kbd>${i + 1}</kbd><span class="em">${t.emoji}</span>${esc(t.name)}</button>`).join('')}</div>`;
+}
+function sprintQHTML() {
+  const sp = S.sprint, q = C.finalSprint[sp.order[sp.qi]];
+  const state = sp.buzzed != null ? `🔔 ${esc(S.teams[sp.buzzed].name)} buzzed first. Answer!` : (sp.locked.length ? 'Anyone else? Buzz in!' : `Who buzzes first? Press 1–${S.teams.length}`);
+  return `<div class="modal sprint">
+    <div class="mhead"><div class="badge" style="--tc:#FFB703;color:#14213D;text-shadow:none">⚡ Final Sprint</div><div class="who">Question ${sp.qi + 1} of ${sp.order.length} · <b>+${PTS.sprint}</b></div>
+      <div class="timer" id="timer"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="42"/><circle class="bar" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><div class="num" style="color:#14213D">20</div></div></div>
+    <div class="timeup">⏰ Time’s up!</div>
+    <div class="mbody"><div class="prompt">${esc(q.question)}</div>${q.options && sp.opts ? `<div class="grid3">${sp.opts.map((o, k) => `<div class="opt"><span class="L">${LETTERS[k]}</span>${esc(q.options[o])}</div>`).join('')}</div>` : ''}${buzzersHTML()}<div class="buzzState">${state}</div></div>
+    <div class="mfoot"><div class="how">Click (or press the number of) the team that buzzed first.</div><div class="btns">
+      <button class="btn" data-act="sprintSkip">⏭️ Nobody / reveal <kbd>N</kbd></button>
+      <button class="btn no" data-act="wrong" ${sp.buzzed == null ? 'disabled' : ''}>❌ Wrong <kbd>W</kbd></button>
+      <button class="btn ok" data-act="right" ${sp.buzzed == null ? 'disabled' : ''}>✅ Correct <kbd>C</kbd></button></div></div></div>`;
+}
+function sprintResultHTML() {
+  const sp = S.sprint, q = C.finalSprint[sp.order[sp.qi]], last = sp.qi >= sp.order.length - 1;
+  const head = sp.winner != null ? `<div class="stamp">✅</div><div class="bigTitle">${teamHTML(sp.winner)} +${sp.pts}!</div>` : `<div class="stamp">🤷</div><div class="bigTitle">Nobody got this one</div>`;
+  const stand = rankOrder().map(i => `<span>${S.teams[i].emoji} ${esc(S.teams[i].name)} · ${S.teams[i].score}</span>`).join('');
+  return `<div class="modal sprint" style="text-align:center">${head}<div class="label" style="margin-top:1rem">Answer</div><div class="sprintAnswer">${esc(q.answer)}</div>
+    <div class="miniStand">${stand}</div>
+    <div class="mfoot" style="justify-content:center;border:0;margin-top:1rem"><button class="btn primary" data-act="continue">${last ? '🏆 See the podium' : '⚡ Next question'} <kbd>Space</kbd></button></div></div>`;
+}
+function endHTML() {
+  const order = rankOrder(), top = order.slice(0, 3);
+  const podOrder = [top[1], top[0], top[2]].filter(i => i != null);
+  const place = i => 1 + S.teams.filter(o => o.score > S.teams[i].score).length;
+  const pods = podOrder.map(i => { const t = S.teams[i], p = place(i), cls = i === top[0] ? 'p1' : i === top[1] ? 'p2' : 'p3';
+    return `<div class="pod ${cls}" style="--c:${t.color}"><div class="pveh">${t.emoji}</div><div class="pname">${esc(t.name)}</div><div class="pscore">${t.score} pts</div><div class="block">${p}</div></div>`; }).join('');
+  const recap = order.map(i => { const t = S.teams[i];
+    return `<div class="rc" style="--cs:${t.color}33"><div class="rch">${vchip(t)} ${esc(t.name)}<span class="sc">${t.score}</span></div>
+      <div class="stats">✅ ${t.stats.correct} correct · 🦹 ${t.stats.steals} steal${t.stats.steals === 1 ? '' : 's'} · 🧆 ${t.stats.bonus} bonus · ⚡ ${t.stats.sprint} sprint · reached ${esc(STOPS[t.maxPos].en)}</div>
+      <div class="schips">${STOPS.map((s, k) => `<span class="schip ${k <= t.maxPos ? 'on' : ''}">${s.icon} ${esc(s.en)}</span>`).join('')}</div></div>`; }).join('');
+  const w = S.teams[top[0]];
+  return `<div class="modal end">
+    <div class="bigTitle">🏆 ${heb('כל הכבוד!')} Kol HaKavod!</div>
+    <div class="subTitle">${vchip(w)} <b>${esc(w.name)}</b> wins the Israel Road Trip with <b>${w.score}</b> points!</div>
+    <div class="podium">${pods}</div><div class="podBase"></div>
+    <div class="label" style="text-align:left;margin-bottom:.5rem">🗺️ Trip recap: stops visited</div>
+    <div class="recap">${recap}</div>
+    <div class="mfoot" style="justify-content:center;border:0;margin-top:1.2rem"><button class="btn" data-act="newGame">🔁 New game</button></div></div>`;
+}
+
+/* ----- challenge timer ----- */
+function syncTimer() {
+  let key = null, total = 0, auto = true;
+  if (S.phase === 'challenge') {
+    const c = chal(S.ch); key = 'ch' + S.serial + S.ch.mode;
+    total = (S.ch.mode === 'steal' ? SET.stealSeconds : SET.challengeSeconds) * 1000;
+    auto = !(TYPE_META[c.type].waitStart && S.ch.mode !== 'steal');
+  } else if (S.phase === 'sprintQ') { key = 'sp' + S.serial; total = SET.sprintSeconds * 1000; }
+  if (key !== ui.timer.key) ui.timer = { key, total, left: total, running: !!key && auto, started: auto, expired: false };
+  if (S.phase === 'sprintQ') ui.timer.running = ui.timer.left > 0 && S.sprint.buzzed == null;
+  updateTimerDom();
+}
+function startTimer() { const tm = ui.timer; if (!tm.key) return; tm.started = true; tm.running = tm.left > 0; updateTimerDom(); sfx.draw(); }
+function restartTimer() { const tm = ui.timer; if (!tm.key || S.paused) return; Object.assign(tm, { left: tm.total, running: true, started: true, expired: false }); updateTimerDom(); }
+function tickTimer(dt) {
+  const tm = ui.timer;
+  if (!tm.key || !tm.running || ui.peek) return;
+  const before = Math.ceil(tm.left / 1000);
+  tm.left = Math.max(0, tm.left - dt);
+  const after = Math.ceil(tm.left / 1000);
+  if (after !== before && after <= 5 && after > 0) sfx.tick();
+  if (tm.left <= 0) { tm.running = false; tm.expired = true; sfx.timeup(); }
+  updateTimerDom();
+}
+function updateTimerDom() {
+  const el = $('#timer'), m = $('#overlay .modal'), tm = ui.timer;
+  if (!el || !tm.key) return;
+  const frac = tm.left / tm.total, secs = Math.ceil(tm.left / 1000);
+  el.querySelector('.bar').setAttribute('stroke-dashoffset', (263.9 * (1 - frac)).toFixed(1));
+  el.classList.toggle('idle', !tm.started);
+  el.classList.toggle('mid', secs <= 10 && secs > 5);
+  el.classList.toggle('low', secs <= 5 && tm.left > 0 && tm.running);
+  el.querySelector('.num').innerHTML = tm.started ? secs : 'press<br>Space';
+  if (m) { m.classList.toggle('idle', !tm.started); m.classList.toggle('expired', tm.expired); }
+}
+
+/* ---------- game logic ---------- */
+function pickChallenge(stop, types) {
+  const list = STOPS[stop].challenges;
+  let cand = list.map((_, i) => i).filter(i => !types || types.includes(list[i].type));
+  if (!cand.length) cand = list.map((_, i) => i);
+  const used = S.used[stop] = S.used[stop] || [];
+  let fresh = cand.filter(i => !used.includes(i));
+  if (!fresh.length) { S.used[stop] = used.filter(i => !cand.includes(i)); fresh = cand; }
+  const typesAvail = [...new Set(fresh.map(i => list[i].type))];
+  const recent = S.typeHistory.slice(-3);
+  let prefer = typesAvail.filter(t => !recent.includes(t));
+  if (!prefer.length) prefer = typesAvail.filter(t => t !== recent[recent.length - 1]);
+  if (!prefer.length) prefer = typesAvail;
+  const type = rand(prefer), idx = rand(fresh.filter(i => list[i].type === type));
+  S.used[stop].push(idx); S.typeHistory.push(type);
+  if (S.typeHistory.length > 12) S.typeHistory.shift();
+  return idx;
+}
+function openChallenge(stop, idx, mode, team) {
+  const c = STOPS[stop].challenges[idx];
+  let order = null;
+  if (c.type === 'order') { const base = c.items.map((_, k) => k); do { order = shuffle(base); } while (order.every((v, k) => v === k)); }
+  const list = c.type === 'quiz' ? c.options : c.type === 'emoji' ? c.choices : null;
+  if (list) order = shuffle(list.map((_, k) => k));
+  S.serial++;
+  S.ch = { stop, idx, mode, team, stealer: null, revealed: false, order };
+  S.phase = 'challenge';
+}
+function drawChallenge() {
+  if (S.phase !== 'turn') return;
+  const t = S.teams[S.current];
+  if (t.pos >= LAST) return;
+  act(() => { const dest = t.pos + 1; openChallenge(dest, pickChallenge(dest), 'normal', S.current); });
+}
+function award(i, base) {
+  const t = S.teams[i]; let pts = base, doubled = false;
+  if (t.bamba) { pts *= 2; doubled = true; t.bamba = false; }
+  t.score += pts; return { pts, doubled };
+}
+function nextTeam(i) { return (i + 1) % S.teams.length; }
+function judge(ok) {
+  if (S.phase !== 'challenge' || ui.peek) return;
+  act(() => {
+    const ch = S.ch;
+    const base = { stop: ch.stop, idx: ch.idx, team: ch.team };
+    if (ch.mode === 'normal') {
+      const t = S.teams[ch.team];
+      if (ok) {
+        const a = award(ch.team, PTS.correct);
+        t.pos = Math.min(LAST, t.pos + 1); t.maxPos = Math.max(t.maxPos, t.pos); t.stats.correct++;
+        S.result = { ...base, kind: 'correct', pts: a.pts, doubled: a.doubled, moveTo: t.pos };
+        S.phase = 'result'; sfx.correct();
+      } else if (S.teams.length > 1) {
+        S.serial++; ch.mode = 'steal'; ch.stealer = nextTeam(ch.team); ch.revealed = false; sfx.steal();
+      } else { S.result = { ...base, kind: 'wrong' }; S.phase = 'result'; sfx.wrong(); }
+    } else if (ch.mode === 'steal') {
+      if (ok) { const a = award(ch.stealer, PTS.steal); S.teams[ch.stealer].stats.steals++; S.result = { ...base, kind: 'stealOk', stealer: ch.stealer, pts: a.pts, doubled: a.doubled }; sfx.correct(); }
+      else { S.result = { ...base, kind: 'stealFail' }; sfx.wrong(); }
+      S.phase = 'result';
+    } else {
+      if (ok) { const a = award(ch.team, PTS.bonus); S.teams[ch.team].stats.bonus++; S.result = { ...base, kind: 'bonusOk', pts: a.pts, doubled: a.doubled }; sfx.correct(); }
+      else { S.result = { ...base, kind: 'bonusFail' }; sfx.wrong(); }
+      S.phase = 'result';
+    }
+  });
+}
+function rollEvent(i) {
+  const me = S.teams[i];
+  const behind = S.teams.map((t, k) => k).filter(k => k !== i && S.teams[k].pos < me.pos);
+  const pool = C.events.filter(e => (e.id !== 'camel' || behind.length) && (e.id !== 'hitchhike' || me.pos < LAST));
+  if (!pool.length) return null;
+  const e = rand(pool), ev = { id: e.id, team: i };
+  if (e.id === 'camel') { const best = Math.max(...behind.map(k => S.teams[k].pos)); ev.target = rand(behind.filter(k => S.teams[k].pos === best)); }
+  return ev;
+}
+function reachedEilat(i) { S.eilatTeam = i; S.teams[i].score += PTS.eilatBonus; S.phase = 'eilat'; }
+function continueResult() {
+  act(() => {
+    const r = S.result;
+    if (r.kind === 'correct') ui.announce = { team: r.team, stop: r.moveTo };
+    S.result = null; S.ch = null;
+    if (S.eilatTeam == null) { const w = S.teams.findIndex(t => t.pos === LAST); if (w >= 0) return reachedEilat(w); }
+    if (r.kind === 'bonusOk' || r.kind === 'bonusFail') return endTurn();
+    if (Math.random() < SET.eventChance) { const ev = rollEvent(r.team); if (ev) { S.event = ev; S.phase = 'event'; return; } }
+    endTurn();
+  });
+}
+function applyEvent() {
+  act(() => {
+    const e = S.event, t = S.teams[e.team];
+    S.event = null;
+    switch (e.id) {
+      case 'jam': t.skip = true; return endTurn();
+      case 'bamba': t.bamba = true; return endTurn();
+      case 'falafel': return openChallenge(t.pos, pickChallenge(t.pos, BONUS_TYPES), 'bonus', e.team);
+      case 'camel': {
+        const o = S.teams[e.target], p = t.pos; t.pos = o.pos; o.pos = p; o.maxPos = Math.max(o.maxPos, o.pos);
+        return endTurn();
+      }
+      case 'hitchhike':
+        t.pos = Math.min(LAST, t.pos + 1); t.maxPos = Math.max(t.maxPos, t.pos); ui.announce = { team: e.team, stop: t.pos };
+        if (t.pos === LAST && S.eilatTeam == null) return reachedEilat(e.team);
+        return endTurn();
+    }
+    endTurn();
+  });
+}
+function endTurn() {                      // (runs inside act)
+  S.ch = null; S.result = null; S.event = null;
+  const th = SET.finalSprintAtMinutesLeft * 60000;
+  if (!S.sprintDone && (S.eilatTeam != null || S.clockMs <= th)) { S.phase = 'sprintIntro'; return; }
+  const n = S.teams.length, skipped = [];
+  let next = nextTeam(S.current), guard = 0;
+  while (S.teams[next].skip && guard < n) { S.teams[next].skip = false; skipped.push(S.teams[next].name); next = nextTeam(next); guard++; }
+  S.current = next; S.phase = 'turn';
+  if (skipped.length) setTimeout(() => toast(`🚗 ${skipped.map(esc).join(' & ')} ${skipped.length > 1 ? 'are' : 'is'} stuck in the Ayalon jam: turn skipped!`, 4200), 400);
+}
+function startSprintIntro() { S.ch = null; S.result = null; S.event = null; S.phase = 'sprintIntro'; }
+function beginSprint() {
+  act(() => {
+    const n = Math.min(SET.finalSprintQuestions, C.finalSprint.length);
+    S.sprint = { order: shuffle(C.finalSprint.map((_, i) => i)).slice(0, n), qi: 0, buzzed: null, locked: [], winner: null, pts: 0 };
+    S.sprint.opts = sprintOpts(S.sprint.order[0]);
+    S.serial++; S.phase = 'sprintQ';
+  });
+}
+function sprintOpts(qIdx) { const q = C.finalSprint[qIdx]; return q.options ? shuffle(q.options.map((_, k) => k)) : null; }
+function buzz(i) {
+  if (S.phase !== 'sprintQ' || i >= S.teams.length) return;
+  const sp = S.sprint; if (sp.buzzed != null || sp.locked.includes(i)) return;
+  act(() => { S.sprint.buzzed = i; }); sfx.buzz();
+}
+function sprintJudge(ok) {
+  const sp = S.sprint; if (S.phase !== 'sprintQ' || sp.buzzed == null) return;
+  act(() => {
+    const sp = S.sprint, i = sp.buzzed;
+    if (ok) { const a = award(i, PTS.sprint); S.teams[i].stats.sprint++; sp.winner = i; sp.pts = a.pts; S.phase = 'sprintResult'; sfx.correct(); }
+    else { sp.locked.push(i); sp.buzzed = null; sfx.wrong(); if (sp.locked.length >= S.teams.length) { sp.winner = null; S.phase = 'sprintResult'; } }
+  });
+}
+function sprintSkip() { if (S.phase !== 'sprintQ') return; act(() => { S.sprint.winner = null; S.sprint.buzzed = null; S.phase = 'sprintResult'; }); sfx.wrong(); }
+function sprintNext() {
+  act(() => {
+    const sp = S.sprint; sp.qi++;
+    if (sp.qi >= sp.order.length) { S.sprintDone = true; S.phase = 'end'; return; }
+    Object.assign(sp, { buzzed: null, locked: [], winner: null, pts: 0, opts: sprintOpts(sp.order[sp.qi]) }); S.serial++; S.phase = 'sprintQ';
+  });
+}
+function endGame() { act(() => { S.ch = null; S.result = null; S.event = null; S.sprintDone = true; S.phase = 'end'; }); }
+
+/* ----- actor peek (charades / draw) ----- */
+function startPeek() {
+  if (S.phase !== 'challenge' || S.ch.mode !== 'normal') return;
+  const c = chal(S.ch); if (!TYPE_META[c.type].hidden) return;
+  closePeek();
+  const L = $('#peekLayer'); L.classList.remove('hidden');
+  let n = 3;
+  const eyes = () => { L.innerHTML = `<div><div class="peekEyes">🙈</div><div class="peekTitle">Everyone except the ${c.type === 'draw' ? 'artist' : 'actor'}:<br>close your eyes!</div><div class="peekCount">${n}</div></div>`; sfx.tick(); };
+  const show = () => {
+    clearInterval(ui.peek.iv); ui.peek.stage = 1;
+    L.innerHTML = `<div class="peekCard" style="--t:${SET.peekSeconds}s"><div class="label">🤫 ${c.type === 'draw' ? 'Draw' : 'Act out'} this:</div><div class="prompt">${esc(c.prompt)}</div><div class="peekBar"><i></i></div></div>`;
+    ui.peek.to = setTimeout(endPeek, SET.peekSeconds * 1000);
+  };
+  ui.peek = { stage: 0, show };
+  eyes();
+  ui.peek.iv = setInterval(() => { n--; if (n > 0) eyes(); else show(); }, 900);
+}
+function advancePeek() { if (!ui.peek) return; if (ui.peek.stage === 0) ui.peek.show(); else endPeek(); }
+function closePeek() { if (ui.peek) { clearInterval(ui.peek.iv); clearTimeout(ui.peek.to); } ui.peek = null; $('#peekLayer').classList.add('hidden'); }
+function endPeek() {
+  closePeek(); toast('👀 Eyes open! Go go go!'); sfx.chime();
+  if (S && S.phase === 'challenge' && !ui.timer.started) startTimer();
+}
+function revealKey() {
+  if (S.phase === 'challenge') {
+    if (ui.peek) return advancePeek();
+    const c = chal(S.ch);
+    if (TYPE_META[c.type].hidden && S.ch.mode === 'normal') return startPeek();
+    if (TYPE_META[c.type].hidden) return;
+    S.ch.revealed = !S.ch.revealed; renderOverlay();
+  } else if (S.phase === 'sprintQ') sprintSkip();
+}
+
+/* ---------- master clock + loop ---------- */
+let lastT = performance.now();
+function loop(now) {
+  const dt = now - lastT; lastT = now;
+  if (S && !S.paused && S.phase !== 'end') {
+    const before = S.clockMs; S.clockMs = Math.max(0, S.clockMs - dt);
+    clockEvents(before, S.clockMs);
+    tickTimer(dt);
+  }
+  if (S) {
+    const el = $('#clock'), ms = S.clockMs, th = SET.finalSprintAtMinutesLeft * 60000;
+    $('#clockTxt').textContent = fmt(ms);
+    el.classList.toggle('warn', ms <= 10 * 60000 && ms > th);
+    el.classList.toggle('danger', ms <= th && S.phase !== 'end');
+    el.classList.toggle('paused', S.paused);
+  }
+  requestAnimationFrame(loop);
+}
+function clockEvents(before, after) {
+  const th = SET.finalSprintAtMinutesLeft * 60000;
+  if (before > th && after <= th && !S.sprintDone && !ui.warned5) {
+    ui.warned5 = true;
+    if (S.phase === 'turn') { toast(`⏰ ${SET.finalSprintAtMinutesLeft} minutes left — FINAL SPRINT time!`, 4500); act(startSprintIntro); }
+    else if (!['eilat', 'sprintIntro', 'sprintQ', 'sprintResult'].includes(S.phase)) toast(`⏰ ${SET.finalSprintAtMinutesLeft} minutes left! The Final Sprint starts after this turn.`, 5500);
+  }
+  if (before > 0 && after <= 0 && !ui.warned0) { ui.warned0 = true; sfx.timeup(); toast('⏰ Time’s up! Finish this question, then head to the podium.', 6500); }
+}
+
+/* ---------- misc UI ---------- */
+function toast(html, ms = 2600) {
+  const el = document.createElement('div'); el.className = 'toast'; el.innerHTML = html;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, ms);
+}
+function togglePause() {
+  if (!S || S.phase === 'end') return;
+  S.paused = !S.paused;
+  $('#pauseLayer').classList.toggle('hidden', !S.paused);
+  sfx.chime();
+}
+function toggleHelp() { $('#helpLayer').classList.toggle('hidden'); }
+function toggleFullscreen() {
+  if (!document.fullscreenElement) (document.documentElement.requestFullscreen || function () {}).call(document.documentElement);
+  else document.exitFullscreen && document.exitFullscreen();
+}
+function toggleMute() { muted = !muted; $('#muteBtn').textContent = muted ? '🔇' : '🔊'; if (!muted) sfx.chime(); }
+function armOrRun(name, fn) {
+  if (ui.armed === name) { ui.armed = null; clearTimeout(ui.armTO); fn(); renderTopbar(); return; }
+  ui.armed = name; renderTopbar();
+  clearTimeout(ui.armTO); ui.armTO = setTimeout(() => { ui.armed = null; if (S) renderTopbar(); }, 3000);
+}
+function sprintButton() {
+  if (!S || S.paused || S.phase === 'end') return;
+  const inSprint = ['eilat', 'sprintIntro', 'sprintQ', 'sprintResult'].includes(S.phase);
+  armOrRun('sprint', () => { closePeek(); inSprint ? endGame() : act(startSprintIntro); });
+}
+function newGame() {
+  closePeek(); hideArrival(); S = null; undoStack = [];
+  $('#overlay').className = 'overlay hidden'; $('#overlay').innerHTML = '';
+  $('#game').classList.add('hidden'); $('#setup').classList.remove('hidden');
+  renderSetup();
+}
+
+/* primary action (Space / Enter) */
+function primary() {
+  switch (S.phase) {
+    case 'turn': return drawChallenge();
+    case 'challenge': if (ui.peek) return advancePeek(); if (!ui.timer.started) startTimer(); return;
+    case 'result': return continueResult();
+    case 'event': if (isWaiting()) return revealOverlay(); return applyEvent();
+    case 'eilat': if (isWaiting()) return revealOverlay(); return act(endTurn);
+    case 'sprintIntro': return beginSprint();
+    case 'sprintResult': return sprintNext();
+  }
+}
+function judgeKey(ok) {
+  if (S.phase === 'challenge') judge(ok);
+  else if (S.phase === 'sprintQ') sprintJudge(ok);
+}
+
+/* ---------- confetti ---------- */
+const fx = $('#fx'), fctx = fx.getContext('2d');
+let parts = [], fxRunning = false;
+function confetti(n) {
+  fx.width = innerWidth; fx.height = innerHeight;
+  const cols = ['#FF6B6B', '#FFB703', '#3DDC97', '#3A86FF', '#8338EC', '#FF006E', '#FFFFFF'];
+  for (let i = 0; i < n; i++) parts.push({ x: innerWidth * (.1 + .8 * Math.random()), y: -20 - Math.random() * innerHeight * .4, vx: (Math.random() - .5) * 6, vy: 2 + Math.random() * 5, r: Math.random() * 6.3, vr: (Math.random() - .5) * .3, w: 8 + Math.random() * 8, h: 5 + Math.random() * 6, c: rand(cols) });
+  if (!fxRunning) { fxRunning = true; requestAnimationFrame(fxStep); }
+}
+function fxStep() {
+  fctx.clearRect(0, 0, fx.width, fx.height);
+  parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .07; p.vx *= .995; p.r += p.vr; fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.r); fctx.fillStyle = p.c; fctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); fctx.restore(); });
+  parts = parts.filter(p => p.y < fx.height + 40);
+  if (parts.length) requestAnimationFrame(fxStep); else { fxRunning = false; fctx.clearRect(0, 0, fx.width, fx.height); }
+}
+
+/* ---------- input ---------- */
+document.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); }); // keep focus off buttons so Space never double-fires
+document.addEventListener('click', e => {
+  const cnt = e.target.closest('[data-count]'); if (cnt) { setup.n = +cnt.dataset.count; renderSetup(); return; }
+  const vb = e.target.closest('[data-veh]'); if (vb) { cycleVehicle(+vb.dataset.veh); return; }
+  const bz = e.target.closest('[data-buzz]'); if (bz) { buzz(+bz.dataset.buzz); return; }
+  if (e.target.closest('#arrival')) { hideArrival(); return; }
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const k = a.dataset.act;
+  if (k === 'help') return toggleHelp();
+  if (k === 'pause') return togglePause();
+  if (k === 'fullscreen') return toggleFullscreen();
+  if (k === 'mute') return toggleMute();
+  if (k === 'minDown') { setup.minutes = Math.max(5, setup.minutes - 1); return renderSetup(); }
+  if (k === 'minUp') { setup.minutes = Math.min(90, setup.minutes + 1); return renderSetup(); }
+  if (k === 'start') return startGame();
+  if (!S || S.paused) return;
+  switch (k) {
+    case 'undo': return undo();
+    case 'sprintBtn': return sprintButton();
+    case 'draw': return drawChallenge();
+    case 'right': return judgeKey(true);
+    case 'wrong': return judgeKey(false);
+    case 'reveal': return revealKey();
+    case 'startTimer': return primary();
+    case 'continue': return primary();
+    case 'sprintSkip': return sprintSkip();
+    case 'newGame': return newGame();
+  }
+});
+document.addEventListener('input', e => { const i = e.target.dataset && e.target.dataset.name; if (i != null) setup.names[+i] = e.target.value; });
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (!S) { // setup screen
+    if (k === 'enter' && !e.repeat) { e.preventDefault(); startGame(); }
+    return;
+  }
+  if (e.target.tagName === 'INPUT') return;
+  if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); undo(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (k === ' ' || k === 'enter') e.preventDefault();
+  if (e.repeat) return;
+  if (k === 'p') return togglePause();
+  if (k === 'f') return toggleFullscreen();
+  if (k === 'm') return toggleMute();
+  if (k === 'h' || k === '?') return toggleHelp();
+  if (k === 'escape') { $('#helpLayer').classList.add('hidden'); return; }
+  if (S.paused) return;
+  if (!$('#helpLayer').classList.contains('hidden')) $('#helpLayer').classList.add('hidden');
+  if (k === 'u') return undo();
+  if (k === ' ' || k === 'enter') return primary();
+  if (k === 'c') return judgeKey(true);
+  if (k === 'w') return judgeKey(false);
+  if (k === 'r') return revealKey();
+  if (k === 't') return restartTimer();
+  if (k === 'n') return sprintSkip();
+  if (/^[1-6]$/.test(k)) return buzz(+k - 1);
+});
+addEventListener('resize', () => { if (fxRunning) { fx.width = innerWidth; fx.height = innerHeight; } });
+
+renderSetup();
+requestAnimationFrame(loop);
+window.__game = { get state() { return S; }, ui }; // handy for debugging in the console
+})();
+</script>
+</body>
+</html>
