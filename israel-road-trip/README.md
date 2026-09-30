@@ -4,7 +4,7 @@ A projector game for one 35-minute class (ages 16–18). Teams race a vehicle fr
 
 - The whole game is one file, `index.html`. It has no backend and no build step, works **offline**, and doesn't save anything between sessions.
 - The UI is in English. Hebrew appears as flavor only (place names, event cards, a few fun words), always next to the English.
-- **No prior knowledge needed.** Almost every question is multiple choice with obviously silly wrong answers, or can be solved with common sense. Students learn the real facts from the arrival banners and the reveals.
+- **Medium difficulty.** Almost every question is multiple choice with realistic wrong answers (other Israeli cities, seas, snacks, kings). Students can get there with general knowledge, the map on screen, or facts from earlier in the trip.
 
 ---
 
@@ -103,8 +103,8 @@ Save the file and refresh the browser. That's all.
 ```js
 // answer must match one of the choices exactly. Leave out choices for an open question.
 { type: "emoji", clue: "🐠🪸🤿", question: "What do people do in Eilat?",
-  choices: ["Snorkel with colorful fish", "Ski down a mountain", "Bake bread"],
-  answer: "Snorkel with colorful fish", note: "Optional fact shown on reveal." },
+  choices: ["Snorkel on coral reefs", "Surf big waves", "Go whale watching"],
+  answer: "Snorkel on coral reefs", note: "Optional fact shown on reveal." },
 
 { type: "israeliOrNot", statement: "Israelis drive on the left.", answer: false,
   explain: "Israelis drive on the right." },
@@ -119,20 +119,20 @@ Save the file and refresh the browser. That's all.
 
 // answer is the position of the right option in YOUR list: 0 = first, 1 = second…
 { type: "quiz", question: "Which sea is Eilat on?",
-  options: ["The Red Sea", "The Snow Sea", "The Chocolate Sea", "The Dead Sea"],
+  options: ["The Red Sea", "The Mediterranean", "The Dead Sea", "The Black Sea"],
   answer: 0, note: "Optional extra fact shown on reveal." },
 ```
 
 Final Sprint questions look like this:
 
 ```js
-{ question: "Which Israeli snack is peanut-flavored?", options: ["Bamba", "Pizza", "Popcorn"], answer: "Bamba" },
+{ question: "Israel’s peanut-flavored snack is called…", options: ["Bamba", "Bissli", "Krembo"], answer: "Bamba" },
 ```
 
 ### Tips
 
 - **Answer order doesn't matter:** quiz options, emoji choices and Final Sprint options are shuffled on screen, so you can always write the right answer first.
-- **Keeping it easy:** make one answer right and the others clearly silly ("A chocolate lake", "Spider-Man"). Students still get the real fact from the reveal.
+- **Adjusting difficulty:** realistic wrong answers ("Haifa / Tzfat / Jerusalem") make a question medium. Silly ones ("A chocolate lake", "Spider-Man") make it easy.
 
 - **Challenges per stop:** add as many as you like. The game rotates challenge types, avoids repeats, and only recycles a stop's challenges once they've all been used.
 - **Which stop's challenges are used:** a challenge belongs to the stop the team is **heading to**. Tel Aviv's challenges are used as Falafel-stop bonus questions while a team is still in Tel Aviv.

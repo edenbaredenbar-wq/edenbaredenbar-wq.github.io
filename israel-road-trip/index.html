@@ -24,7 +24,7 @@
      quiz         { type, question, options: [A,B,C,D], answer: 0-3, note }
 
    Choices/options are SHUFFLED on screen, so you can always write the
-   right answer first. Keep wrong options silly — this makes it easy & fun!
+   right answer first. Plausible wrong options = medium; silly ones = easy.
 
    Final Sprint: { question, options: [...], answer }
 
@@ -48,151 +48,151 @@ const GAME_CONTENT = {
   stops: [
     {
       en: "Tel Aviv", he: "תל אביב", icon: "🏙️", lat: 32.08, lon: 34.78, label: "left", labelDx: 18,
-      fact: "Tel Aviv is a beach city on the Mediterranean Sea — its nickname is ‘the city that never stops’!",
+      fact: "Tel Aviv’s ‘White City’ has about 4,000 Bauhaus-style buildings — it’s a UNESCO World Heritage Site!",
       challenges: [
-        { type: "emoji", clue: "🏖️🌊☀️", question: "What is Tel Aviv famous for?", choices: ["The beach", "A ski slope", "A library"], answer: "The beach", note: "Tel Aviv is right on the Mediterranean Sea." },
-        { type: "emoji", clue: "🏓🏖️", question: "What game do Israelis play on the beach?", choices: ["Matkot (paddle ball)", "Ice hockey", "Chess"], answer: "Matkot (paddle ball)", note: "You hear the ‘tak-tak-tak’ of matkot all along Israeli beaches." },
-        { type: "israeliOrNot", statement: "Tel Aviv is next to the sea.", answer: true, explain: "It sits right on the Mediterranean Sea." },
-        { type: "israeliOrNot", statement: "Falafel is made from chickpeas.", answer: true, explain: "Chickpeas are mashed with herbs and spices, rolled into balls, and fried." },
-        { type: "quiz", question: "Tel Aviv is next to which sea?", options: ["The Mediterranean Sea", "The Pacific Ocean", "A chocolate lake", "The North Pole"], answer: 0, note: "The Mediterranean is Israel’s western coast." },
-        { type: "quiz", question: "Tel Aviv’s nickname is ‘the city that never…’", options: ["Stops", "Wakes up", "Has people", "Sees the sun"], answer: 0, note: "Cafés, beaches and parties — Tel Aviv is always busy!" },
-        { type: "charades", prompt: "Swimming in the sea" },
-        { type: "draw", prompt: "A falafel in a pita" },
-        { type: "order", question: "Put these from SMALLEST to BIGGEST:", items: ["A sesame seed", "A falafel ball", "A pita", "A watermelon"] }
+        { type: "emoji", clue: "🏙️⚪🏛️", question: "What is Tel Aviv’s nickname?", choices: ["The White City", "The Golden City", "The Blue City"], answer: "The White City", note: "Named for its thousands of white Bauhaus buildings. (Jerusalem is the ‘Golden City’!)" },
+        { type: "emoji", clue: "🏓🏖️", question: "What’s the classic Israeli beach game?", choices: ["Matkot (paddle ball)", "Beach volleyball", "Frisbee"], answer: "Matkot (paddle ball)", note: "Listen for the ‘tak-tak-tak’ all along Israeli beaches." },
+        { type: "israeliOrNot", statement: "Tel Aviv is older than the State of Israel.", answer: true, explain: "Tel Aviv was founded in 1909; Israel became a country in 1948." },
+        { type: "israeliOrNot", statement: "Tel Aviv is Israel’s biggest city by population.", answer: false, explain: "Jerusalem has about twice as many people." },
+        { type: "quiz", question: "In 1948, Israel’s Declaration of Independence was read out in which city?", options: ["Tel Aviv", "Jerusalem", "Haifa", "Beer Sheva"], answer: 0, note: "The building on Rothschild Boulevard is now called Independence Hall." },
+        { type: "quiz", question: "Falafel balls are mainly made from…", options: ["Chickpeas", "Potatoes", "Lentils", "Rice"], answer: 0, note: "Ground chickpeas, herbs and spices, deep-fried." },
+        { type: "charades", prompt: "Playing matkot on the beach" },
+        { type: "draw", prompt: "A lifeguard tower on the beach" },
+        { type: "order", question: "Put these in order of TIME — oldest first:", items: ["Jaffa’s ancient port", "Tel Aviv is founded", "Israel becomes a country", "The first iPhone"] }
       ]
     },
     {
       en: "Caesarea", he: "קיסריה", icon: "🏛️", lat: 32.50, lon: 34.89, label: "left",
-      fact: "King Herod built Caesarea over 2,000 years ago — you can still walk through its Roman ruins by the sea!",
+      fact: "King Herod built Caesarea’s harbor over 2,000 years ago — using concrete that hardened underwater!",
       challenges: [
-        { type: "emoji", clue: "🏛️👑⚔️", question: "Who lived in Caesarea long ago?", choices: ["Ancient Romans", "Astronauts", "Dinosaurs"], answer: "Ancient Romans", note: "The Romans ruled Caesarea about 2,000 years ago." },
-        { type: "emoji", clue: "🏛️🎭🎤", question: "What can you find in Caesarea?", choices: ["An old Roman theater used for concerts", "A shopping mall on the Moon", "A snowman museum"], answer: "An old Roman theater used for concerts", note: "Singers still perform there today!" },
-        { type: "israeliOrNot", statement: "Caesarea has ruins that are about 2,000 years old.", answer: true, explain: "King Herod built the city more than 2,000 years ago." },
-        { type: "israeliOrNot", statement: "Bamba is a famous Israeli snack.", answer: true, explain: "It’s peanut-flavored puffed corn — Israeli kids grow up on it!" },
-        { type: "quiz", question: "Caesarea is famous for its…", options: ["Old Roman ruins by the sea", "Giant snow castles", "Robot factory", "Volcano"], answer: 0 },
-        { type: "quiz", question: "The Romans built an aqueduct to Caesarea. What was it for?", options: ["Carrying water", "Racing horses on top", "Storing pizza", "Launching rockets"], answer: 0, note: "You can still see its arches on the beach." },
-        { type: "charades", prompt: "A king sitting on a throne" },
-        { type: "draw", prompt: "A crown" },
-        { type: "order", question: "Put these from OLDEST to NEWEST:", items: ["A Roman sword", "A bicycle", "A TV", "A smartphone"] }
+        { type: "emoji", clue: "🏛️🎭🎤", question: "What in Caesarea still hosts concerts today?", choices: ["A Roman theater", "A medieval castle", "A modern stadium"], answer: "A Roman theater", note: "It’s about 2,000 years old." },
+        { type: "emoji", clue: "👑⚓🌊", question: "Which king built Caesarea’s harbor?", choices: ["King Herod", "King David", "King Solomon"], answer: "King Herod" },
+        { type: "israeliOrNot", statement: "Caesarea was named after a Roman emperor.", answer: true, explain: "Herod named it after Caesar Augustus." },
+        { type: "israeliOrNot", statement: "Bamba, Israel’s most famous snack, is chocolate-flavored.", answer: false, explain: "Bamba is peanut-flavored puffed corn." },
+        { type: "quiz", question: "Which empire ruled Caesarea when it was built?", options: ["The Romans", "The Vikings", "The Ottomans", "The British"], answer: 0, note: "Herod was a king who ruled under Rome." },
+        { type: "quiz", question: "What did Caesarea’s long stone aqueduct carry?", options: ["Fresh water", "Olive oil", "Wine", "Salt"], answer: 0, note: "You can still see its arches on the beach." },
+        { type: "charades", prompt: "Racing a Roman chariot" },
+        { type: "draw", prompt: "The arches of an old aqueduct" },
+        { type: "order", question: "Who ruled the land? Put them in order — oldest first:", items: ["The Romans", "The Crusaders", "The Ottoman Empire", "The State of Israel"] }
       ]
     },
     {
       en: "Haifa", he: "חיפה", icon: "🌸", lat: 32.79, lon: 34.99, label: "left",
-      fact: "Haifa is built on Mount Carmel, and its famous gardens climb the mountain in 19 terraces!",
+      fact: "Haifa’s Bahá’í Gardens climb Mount Carmel in 19 terraces — another UNESCO World Heritage Site.",
       challenges: [
-        { type: "emoji", clue: "🌸🌳🪜", question: "What is Haifa famous for?", choices: ["Beautiful gardens with lots of steps", "A giant ice rink", "A desert full of camels"], answer: "Beautiful gardens with lots of steps", note: "The Bahá’í Gardens have 19 terraces." },
-        { type: "emoji", clue: "🚢⚓", question: "What can you see at Haifa?", choices: ["A big port with ships", "An airport for rockets", "A farm with cows"], answer: "A big port with ships", note: "Haifa has one of Israel’s biggest ports." },
-        { type: "israeliOrNot", statement: "Haifa is built on a mountain.", answer: true, explain: "Mount Carmel — the city goes all the way from the beach up the mountain." },
-        { type: "israeliOrNot", statement: "Falafel is made from chocolate.", answer: false, explain: "Falafel is made from chickpeas, herbs and spices." },
-        { type: "quiz", question: "Haifa’s famous gardens have lots of…", options: ["Steps going up the mountain", "Roller coasters", "Snowmen", "Sharks"], answer: 0, note: "There are 19 terraces!" },
-        { type: "quiz", question: "Haifa is next to…", options: ["The sea AND a mountain", "Only a desert", "The North Pole", "A volcano"], answer: 0 },
-        { type: "charades", prompt: "Climbing lots of stairs" },
-        { type: "draw", prompt: "A big ship" },
-        { type: "order", question: "Put these from SHORTEST to TALLEST:", items: ["A cat", "A person", "A tree", "A mountain"] }
+        { type: "emoji", clue: "🌸🪜⛰️", question: "What are Haifa’s famous gardens known for?", choices: ["19 terraces up a mountain", "A giant hedge maze", "Flowers that bloom only at night"], answer: "19 terraces up a mountain" },
+        { type: "emoji", clue: "🚢⚓🏗️", question: "Haifa has one of Israel’s biggest…", choices: ["Ports", "Airports", "Train stations"], answer: "Ports", note: "Ships from all over the world dock in Haifa." },
+        { type: "israeliOrNot", statement: "Haifa is built on the slopes of Mount Carmel.", answer: true, explain: "The city climbs from the beach all the way up the mountain." },
+        { type: "israeliOrNot", statement: "Haifa is in the Negev desert.", answer: false, explain: "Haifa is in the north, on the Mediterranean coast." },
+        { type: "quiz", question: "Haifa’s Technion is a world-famous university for…", options: ["Science and engineering", "Music", "Law", "Fashion"], answer: 0, note: "Technion graduates helped build Israel’s ‘Start-up Nation’." },
+        { type: "quiz", question: "Which of these cities is farthest NORTH?", options: ["Haifa", "Tel Aviv", "Jerusalem", "Beer Sheva"], answer: 0, note: "Check the map!" },
+        { type: "charades", prompt: "Climbing a very long staircase" },
+        { type: "draw", prompt: "A ship with a big anchor" },
+        { type: "order", question: "Put these cities from NORTH to SOUTH:", items: ["Haifa", "Tel Aviv", "Beer Sheva", "Eilat"] }
       ]
     },
     {
       en: "Tzfat", he: "צפת", icon: "🎨", lat: 32.96, lon: 35.50, label: "top", labelDx: 6,
-      fact: "Tzfat is a city high in the mountains, full of artists’ galleries and blue-painted doors.",
+      fact: "Tzfat sits about 900 m up in the Galilee mountains and has been a center of Kabbalah (Jewish mysticism) since the 1500s.",
       challenges: [
-        { type: "emoji", clue: "🎨🖌️🖼️", question: "What can you find in Tzfat?", choices: ["Lots of art galleries", "A giant water park", "A football stadium"], answer: "Lots of art galleries", note: "Tzfat has a whole Artists’ Quarter." },
-        { type: "emoji", clue: "🚪🔵", question: "What is Tzfat known for?", choices: ["Blue doors", "Green bananas", "Red cars"], answer: "Blue doors", note: "Blue is said to remind people of the sky." },
-        { type: "israeliOrNot", statement: "Tzfat is high up in the mountains.", answer: true, explain: "It’s about 900 m up — one of Israel’s highest cities." },
-        { type: "israeliOrNot", statement: "Israelis eat sufganiyot (jam doughnuts) on Hanukkah.", answer: true, explain: "They’re fried in oil — a Hanukkah tradition." },
-        { type: "quiz", question: "Tzfat is high in the mountains. In winter it can get…", options: ["Cold — sometimes even snowy!", "Hotter than a volcano", "Covered in chocolate", "Full of sharks"], answer: 0 },
-        { type: "quiz", question: "Tzfat has an ‘Artists’ Quarter’. What will you find there?", options: ["Galleries full of paintings", "A zoo of penguins", "A car racetrack", "An airport"], answer: 0 },
-        { type: "charades", prompt: "Painting a picture" },
-        { type: "draw", prompt: "A door" },
-        { type: "order", question: "Put these from HIGHEST to LOWEST:", items: ["An airplane in the sky", "A mountain top", "A house", "A fish at the bottom of the sea"] }
+        { type: "emoji", clue: "🎨🚪🔵", question: "Tzfat is known as a city of…", choices: ["Artists and blue doors", "Skyscrapers", "Beaches"], answer: "Artists and blue doors", note: "Blue is said to remind people of the sky." },
+        { type: "emoji", clue: "🧀⛰️", question: "Which food is named after Tzfat?", choices: ["A white cheese", "A bread", "A pastry"], answer: "A white cheese", note: "It’s called Tzfatit." },
+        { type: "israeliOrNot", statement: "Tzfat is one of the highest cities in Israel.", answer: true, explain: "It’s about 900 m above sea level." },
+        { type: "israeliOrNot", statement: "Israelis eat sufganiyot (jam doughnuts) on Passover.", answer: false, explain: "Sufganiyot are a Hanukkah treat — fried in oil." },
+        { type: "quiz", question: "Since the 1500s, Tzfat has been a center of…", options: ["Kabbalah (Jewish mysticism)", "Wine making", "Shipbuilding", "Fashion design"], answer: 0 },
+        { type: "quiz", question: "Why is Tzfat much colder than Tel Aviv in winter?", options: ["It’s high up in the mountains", "It’s next to the sea", "It’s further south", "It’s in the desert"], answer: 0, note: "It sometimes even snows in Tzfat!" },
+        { type: "charades", prompt: "An artist painting a masterpiece" },
+        { type: "draw", prompt: "A painter’s easel with a painting on it" },
+        { type: "order", question: "Put these from HIGHEST to LOWEST:", items: ["Mount Hermon", "Tzfat", "Tel Aviv beach", "The Dead Sea"] }
       ]
     },
     {
       en: "Tiberias", he: "טבריה", icon: "🐟", lat: 32.79, lon: 35.53, label: "right", labelDx: 26,
-      fact: "Tiberias sits on the Sea of Galilee (the Kinneret) — which is actually a big freshwater lake!",
+      fact: "Tiberias sits on the Sea of Galilee (the Kinneret), Israel’s largest freshwater lake — about 210 m below sea level.",
       challenges: [
-        { type: "emoji", clue: "🐟🎣🚣", question: "What do people do on the lake at Tiberias?", choices: ["Fishing", "Skiing", "Sandboarding"], answer: "Fishing", note: "Fish from the lake is a local favorite." },
-        { type: "emoji", clue: "♨️🛁", question: "What does Tiberias have?", choices: ["Hot springs", "An ice palace", "A snowstorm"], answer: "Hot springs", note: "Warm water comes out of the ground here." },
-        { type: "israeliOrNot", statement: "Tiberias is next to a big lake.", answer: true, explain: "The Sea of Galilee, also called the Kinneret." },
-        { type: "israeliOrNot", statement: "Shakshuka is eggs cooked in tomato sauce.", answer: true, explain: "It’s a super popular Israeli breakfast." },
-        { type: "quiz", question: "The ‘Sea of Galilee’ is actually a…", options: ["Lake", "Desert", "Mountain", "Swimming pool"], answer: 0, note: "Its water is fresh, not salty." },
-        { type: "quiz", question: "What kind of water is in the Sea of Galilee?", options: ["Fresh (not salty) water", "Orange juice", "Lava", "Chocolate milk"], answer: 0 },
-        { type: "charades", prompt: "Fishing and catching a big fish" },
-        { type: "draw", prompt: "A fish" },
-        { type: "order", question: "Put these from COLDEST to HOTTEST:", items: ["An ice cube", "Lake water", "A hot spring", "Boiling water"] }
+        { type: "emoji", clue: "🐟🍋🍽️", question: "What’s the famous fish dish of Tiberias?", choices: ["St. Peter’s fish", "Salmon", "Tuna"], answer: "St. Peter’s fish", note: "It’s a type of tilapia from the lake." },
+        { type: "emoji", clue: "♨️🛁", question: "What natural feature does Tiberias have?", choices: ["Hot springs", "Geysers", "Glaciers"], answer: "Hot springs", note: "People have bathed in them since Roman times." },
+        { type: "israeliOrNot", statement: "The Sea of Galilee is actually a freshwater lake.", answer: true, explain: "It’s about 21 km long — and not salty." },
+        { type: "israeliOrNot", statement: "The Sea of Galilee is above sea level.", answer: false, explain: "Its surface is about 210 m BELOW sea level." },
+        { type: "quiz", question: "What’s the Hebrew name of the Sea of Galilee?", options: ["The Kinneret", "The Yarden", "Yam Suf", "The Negev"], answer: 0, note: "Yarden = the Jordan River, Yam Suf = the Red Sea, the Negev = the desert." },
+        { type: "quiz", question: "Which river flows through the Sea of Galilee?", options: ["The Jordan River", "The Nile", "The Euphrates", "The Tigris"], answer: 0, note: "It continues south to the Dead Sea." },
+        { type: "charades", prompt: "Fishing from a boat" },
+        { type: "draw", prompt: "A fishing boat on a lake" },
+        { type: "order", question: "Put these bodies of water from NORTH to SOUTH:", items: ["Hula Lake", "Sea of Galilee", "Dead Sea", "Red Sea"] }
       ]
     },
     {
       en: "Jerusalem", he: "ירושלים", icon: "🏰", lat: 31.77, lon: 35.21, label: "right",
-      fact: "Jerusalem is thousands of years old, and its Old City is surrounded by a big stone wall.",
+      fact: "Jerusalem’s Old City is smaller than 1 km², yet it holds four quarters: Jewish, Christian, Muslim and Armenian.",
       challenges: [
-        { type: "emoji", clue: "🧱🙏📝", question: "Which famous place in Jerusalem is this?", choices: ["The Western Wall — people put notes in it", "A football stadium", "A beach"], answer: "The Western Wall — people put notes in it", note: "Visitors tuck little paper notes into the cracks." },
-        { type: "emoji", clue: "🥯🌿", question: "What is this Jerusalem snack?", choices: ["A Jerusalem bagel with za’atar", "A snowball", "A hamburger with ice cream"], answer: "A Jerusalem bagel with za’atar", note: "It’s long, covered in sesame, and sold on the street." },
-        { type: "israeliOrNot", statement: "Jerusalem is thousands of years old.", answer: true, explain: "It’s one of the oldest cities in the world." },
-        { type: "israeliOrNot", statement: "Hummus is made from chickpeas.", answer: true, explain: "Chickpeas, tahini, lemon and garlic — yum!" },
-        { type: "quiz", question: "Jerusalem’s Old City is surrounded by…", options: ["A big stone wall", "A river of lava", "Crocodiles", "Nothing at all"], answer: 0, note: "The walls you see today are about 500 years old." },
-        { type: "quiz", question: "Jerusalem’s buildings are famous for being made of…", options: ["Light-colored stone", "Ice", "Candy", "Cardboard"], answer: 0, note: "By law, new buildings in Jerusalem must be covered in ‘Jerusalem stone’." },
-        { type: "charades", prompt: "Taking a selfie" },
-        { type: "draw", prompt: "A wall made of big stones" },
-        { type: "order", question: "Put these from OLDEST to YOUNGEST:", items: ["Jerusalem’s Old City", "Your grandparents", "You", "A newborn baby"] }
+        { type: "emoji", clue: "🧱🙏📝", question: "Which famous Jerusalem site is this?", choices: ["The Western Wall", "The Tower of David", "The Knesset"], answer: "The Western Wall", note: "Visitors tuck paper notes into its cracks." },
+        { type: "emoji", clue: "🥯🌿", question: "What’s this Jerusalem street snack?", choices: ["A sesame bagel with za’atar", "A pretzel with mustard", "A croissant with jam"], answer: "A sesame bagel with za’atar" },
+        { type: "israeliOrNot", statement: "Jerusalem’s Old City walls are about 500 years old.", answer: true, explain: "The Ottoman sultan Suleiman built them around 1535–1541." },
+        { type: "israeliOrNot", statement: "Hummus was invented in Israel in the 1950s.", answer: false, explain: "People across the Middle East have eaten hummus for centuries." },
+        { type: "quiz", question: "How many quarters is Jerusalem’s Old City traditionally divided into?", options: ["4", "2", "6", "10"], answer: 0, note: "Jewish, Christian, Muslim and Armenian." },
+        { type: "quiz", question: "Jerusalem’s buildings are famous for being made of…", options: ["Light-colored stone", "Red brick", "Wood", "Glass"], answer: 0, note: "By law, new buildings must be covered in ‘Jerusalem stone’." },
+        { type: "charades", prompt: "A tourist lost in narrow alleys with a map" },
+        { type: "draw", prompt: "An old city gate in a stone wall" },
+        { type: "order", question: "Put these in order of TIME — oldest first:", items: ["King David’s Jerusalem", "The Romans destroy the Second Temple", "Suleiman builds the Old City walls", "Israel becomes a country"] }
       ]
     },
     {
       en: "Masada", he: "מצדה", icon: "⛰️", lat: 31.316, lon: 35.354, label: "left", labelDy: -22,
-      fact: "Masada is a flat-topped mountain in the desert. People hike up before sunrise — or take the cable car!",
+      fact: "Masada is a desert fortress on a cliff above the Dead Sea. King Herod built palaces on top — hike the Snake Path or ride the cable car!",
       challenges: [
-        { type: "emoji", clue: "⛰️🌅🥾", question: "What do people do at Masada early in the morning?", choices: ["Hike up to see the sunrise", "Go ice skating", "Go to the beach"], answer: "Hike up to see the sunrise", note: "Starting early means beating the desert heat." },
-        { type: "emoji", clue: "🚡⛰️", question: "How can you get to the top of Masada without walking?", choices: ["A cable car", "A submarine", "A tractor"], answer: "A cable car" },
-        { type: "israeliOrNot", statement: "Masada is a flat-topped mountain in the desert.", answer: true, explain: "King Herod built palaces on top of it." },
-        { type: "israeliOrNot", statement: "Masada’s ‘Snake Path’ is full of real snakes.", answer: false, explain: "It’s called that because it zig-zags like a snake!" },
-        { type: "quiz", question: "What’s the most important thing to bring on a desert hike?", options: ["Lots of water", "A winter coat", "A snowboard", "A goldfish"], answer: 0, note: "The desert is hot — hikers drink a lot!" },
-        { type: "quiz", question: "Masada is next to which famous sea?", options: ["The Dead Sea", "The North Sea", "The Baltic Sea", "Sea World"], answer: 0 },
-        { type: "charades", prompt: "Hiking up a mountain" },
-        { type: "draw", prompt: "A mountain with the sun behind it" },
-        { type: "order", question: "Put a day at Masada in order:", items: ["Sunrise", "Lunch", "Sunset", "Stars in the sky"] }
+        { type: "emoji", clue: "🐍🥾⛰️🌅", question: "What’s the famous trail up Masada called?", choices: ["The Snake Path", "The Sunrise Trail", "The King’s Road"], answer: "The Snake Path", note: "It zig-zags up the cliff like a snake." },
+        { type: "emoji", clue: "🚡🏜️", question: "Besides hiking, how can you get to the top of Masada?", choices: ["Cable car", "Train", "Elevator"], answer: "Cable car" },
+        { type: "israeliOrNot", statement: "Masada is a UNESCO World Heritage Site.", answer: true, explain: "It joined the list in 2001." },
+        { type: "israeliOrNot", statement: "Masada overlooks the Mediterranean Sea.", answer: false, explain: "It overlooks the Dead Sea." },
+        { type: "quiz", question: "Which king built palaces on top of Masada?", options: ["King Herod", "King David", "King Saul", "King Solomon"], answer: 0, note: "Herod’s Northern Palace hangs right on the cliff edge." },
+        { type: "quiz", question: "Why do hikers start climbing Masada before dawn?", options: ["To see the sunrise and beat the heat", "The trail closes at 8 a.m.", "The cable car only runs at night", "Tickets are cheaper"], answer: 0 },
+        { type: "charades", prompt: "Hiking up a steep trail in the heat" },
+        { type: "draw", prompt: "A flat-topped mountain in the desert" },
+        { type: "order", question: "Put these in order of TIME — oldest first:", items: ["Herod builds palaces on Masada", "The Romans besiege Masada", "Archaeologists dig up Masada", "Masada becomes a UNESCO site"] }
       ]
     },
     {
       en: "Dead Sea", he: "ים המלח", icon: "🧂", lat: 31.15, lon: 35.37, label: "right", labelDx: 26,
-      fact: "The Dead Sea is the lowest place on land on Earth — and it’s so salty that you float!",
+      fact: "The Dead Sea shore is the lowest place on land on Earth — about 430 m below sea level — and it’s so salty you float!",
       challenges: [
-        { type: "emoji", clue: "🧂🌊🛟", question: "What happens in the Dead Sea?", choices: ["You float", "You surf big waves", "You go ice fishing"], answer: "You float", note: "The water is so salty it holds you up." },
-        { type: "emoji", clue: "🟤🧖", question: "What do tourists do at the Dead Sea?", choices: ["Cover themselves in mud", "Paint houses", "Eat chocolate"], answer: "Cover themselves in mud", note: "Dead Sea mud is famous for skin care." },
-        { type: "israeliOrNot", statement: "The Dead Sea is so salty that you float.", answer: true, explain: "You can lie back and read a newspaper!" },
-        { type: "israeliOrNot", statement: "Lots of fish live in the Dead Sea.", answer: false, explain: "It’s way too salty for fish." },
-        { type: "quiz", question: "Why is it called the ‘Dead’ Sea?", options: ["It’s too salty for fish to live in it", "It’s haunted by ghosts", "Everyone falls asleep there", "It’s closed on Mondays"], answer: 0 },
-        { type: "quiz", question: "What’s special about the Dead Sea?", options: ["It’s the lowest place on land on Earth", "It’s the coldest place on Earth", "It’s on the Moon", "It’s full of candy"], answer: 0, note: "It’s about 430 m below sea level." },
-        { type: "charades", prompt: "Floating on the water" },
-        { type: "draw", prompt: "A person floating on the water" },
-        { type: "order", question: "Put these from LOWEST to HIGHEST:", items: ["The Dead Sea shore", "A beach in Tel Aviv", "The top of a tall building", "An airplane"] }
+        { type: "emoji", clue: "🧂🌊🛟", question: "Why do people float in the Dead Sea?", choices: ["The water is super salty", "The water is very warm", "The water is very shallow"], answer: "The water is super salty" },
+        { type: "emoji", clue: "🟤🧖✨", question: "What’s the famous Dead Sea souvenir?", choices: ["Mud and salt skin products", "Seashells", "Coral jewelry"], answer: "Mud and salt skin products" },
+        { type: "israeliOrNot", statement: "Fish live in the Dead Sea.", answer: false, explain: "It’s far too salty — only tiny microbes survive." },
+        { type: "israeliOrNot", statement: "The Dead Sea is shrinking — its level drops about a meter every year.", answer: true, explain: "More water evaporates than flows in from the Jordan River." },
+        { type: "quiz", question: "About how far below sea level is the Dead Sea shore?", options: ["About 430 m", "About 40 m", "About 4,000 m", "It’s at sea level"], answer: 0, note: "The lowest place on land on Earth." },
+        { type: "quiz", question: "About how much saltier is the Dead Sea than the ocean?", options: ["About 10 times", "About 2 times", "About 100 times", "The same"], answer: 0, note: "About a third of the water is salt." },
+        { type: "charades", prompt: "Floating in the water while reading a newspaper" },
+        { type: "draw", prompt: "A person covered in mud" },
+        { type: "order", question: "Put these from LOWEST to HIGHEST:", items: ["Dead Sea shore", "Sea of Galilee", "Tel Aviv beach", "Jerusalem"] }
       ]
     },
     {
       en: "Beer Sheva", he: "באר שבע", icon: "🐪", lat: 31.25, lon: 34.79, label: "left",
-      fact: "Beer Sheva is the biggest city in the Negev desert — and the Negev covers more than half of Israel!",
+      fact: "Beer Sheva is the ‘Capital of the Negev’ — and the Negev desert covers more than half of Israel’s land!",
       challenges: [
-        { type: "emoji", clue: "🐪🏜️", question: "Where is Beer Sheva?", choices: ["In the desert", "At the North Pole", "In the jungle"], answer: "In the desert", note: "It’s in the Negev desert." },
-        { type: "emoji", clue: "📱🗺️🚗", question: "Which Israeli app helps drivers find their way?", choices: ["Waze", "A calculator", "A flashlight"], answer: "Waze", note: "Waze was invented in Israel." },
-        { type: "israeliOrNot", statement: "The Negev is a desert.", answer: true, explain: "It covers more than half of Israel." },
-        { type: "israeliOrNot", statement: "It snows every day in Beer Sheva.", answer: false, explain: "It’s in the desert — it’s usually hot and dry!" },
-        { type: "quiz", question: "Which animal is famous in the desert?", options: ["Camel", "Penguin", "Polar bear", "Dolphin"], answer: 0 },
-        { type: "quiz", question: "About how much of Israel is the Negev desert?", options: ["More than half", "A tiny corner", "None at all", "It’s underwater"], answer: 0 },
-        { type: "charades", prompt: "Riding a camel" },
-        { type: "draw", prompt: "A cactus" },
-        { type: "order", question: "Put these from FEWEST to MOST legs:", items: ["Snake", "Bird", "Camel", "Spider"] }
+        { type: "emoji", clue: "🐪🏜️🏙️", question: "Beer Sheva is the biggest city in which desert?", choices: ["The Negev", "The Sinai", "The Sahara"], answer: "The Negev" },
+        { type: "emoji", clue: "📱🗺️🚗", question: "Which navigation app was invented in Israel?", choices: ["Waze", "Google Maps", "Uber"], answer: "Waze", note: "Google bought it in 2013." },
+        { type: "israeliOrNot", statement: "The Negev desert covers more than half of Israel’s land.", answer: true, explain: "About 60% of the country is Negev." },
+        { type: "israeliOrNot", statement: "Beer Sheva is on the Mediterranean coast.", answer: false, explain: "It’s inland, in the northern Negev." },
+        { type: "quiz", question: "Which prime minister moved to a kibbutz in the Negev? (Israel’s main airport is named after him!)", options: ["David Ben-Gurion", "Golda Meir", "Yitzhak Rabin", "Menachem Begin"], answer: 0, note: "He lived at Kibbutz Sde Boker and dreamed of making the desert bloom." },
+        { type: "quiz", question: "What makes farming in the Negev hard?", options: ["Very little rain", "Too much snow", "Too many rivers", "Volcanoes"], answer: 0, note: "Israelis developed drip irrigation to farm with very little water." },
+        { type: "charades", prompt: "Riding a stubborn camel" },
+        { type: "draw", prompt: "A camel in the desert" },
+        { type: "order", question: "Put these places from NORTH to SOUTH:", items: ["Tel Aviv", "Beer Sheva", "Mitzpe Ramon", "Eilat"] }
       ]
     },
     {
       en: "Eilat", he: "אילת", icon: "🐠", lat: 29.56, lon: 34.95, label: "right",
-      fact: "Eilat is Israel’s southernmost city, on the Red Sea — with sunshine, coral reefs and dolphins!",
+      fact: "Eilat is Israel’s southernmost city, on the Red Sea — coral reefs, dolphins and VAT-free shopping!",
       challenges: [
-        { type: "emoji", clue: "🐠🪸🤿", question: "What do people do in Eilat?", choices: ["Snorkel with colorful fish", "Ski down a mountain", "Bake bread"], answer: "Snorkel with colorful fish", note: "Eilat has amazing coral reefs." },
-        { type: "emoji", clue: "🐬🌊", question: "Which animal can you meet in Eilat?", choices: ["Dolphins", "Penguins", "Kangaroos"], answer: "Dolphins", note: "Eilat has a famous Dolphin Reef." },
-        { type: "israeliOrNot", statement: "Eilat is at the very south of Israel.", answer: true, explain: "It’s the southernmost city — the end of our road trip!" },
-        { type: "israeliOrNot", statement: "Eilat is famous for snow and skiing.", answer: false, explain: "Eilat is one of the hottest, sunniest places in Israel!" },
-        { type: "quiz", question: "Eilat is on which sea?", options: ["The Red Sea", "The Snow Sea", "The Chocolate Sea", "The Dead Sea"], answer: 0 },
-        { type: "quiz", question: "Eilat is famous for…", options: ["Sun, beaches and coral reefs", "Glaciers", "Rainforests", "Igloos"], answer: 0 },
-        { type: "charades", prompt: "Snorkeling and seeing a fish" },
-        { type: "draw", prompt: "A colorful fish" },
+        { type: "emoji", clue: "🐠🪸🤿", question: "What is Eilat’s Coral Beach famous for?", choices: ["Snorkeling on coral reefs", "Surfing big waves", "Whale watching"], answer: "Snorkeling on coral reefs" },
+        { type: "emoji", clue: "🛍️💸", question: "Why do Israelis love shopping in Eilat?", choices: ["There’s no VAT (sales tax)", "Stores never close", "Everything is imported from Egypt"], answer: "There’s no VAT (sales tax)" },
+        { type: "israeliOrNot", statement: "From Eilat you can see Egypt, Jordan and Saudi Arabia.", answer: true, explain: "Four countries meet around the Gulf of Eilat." },
+        { type: "israeliOrNot", statement: "Eilat is on the Mediterranean Sea.", answer: false, explain: "Eilat is on the Red Sea." },
+        { type: "quiz", question: "Which country’s city is right across the water from Eilat?", options: ["Jordan", "Greece", "Italy", "Turkey"], answer: 0, note: "The Jordanian city of Aqaba is just next door." },
+        { type: "quiz", question: "Timna Park, near Eilat, is famous for…", options: ["Ancient copper mines", "A dinosaur museum", "Waterfalls", "Ski slopes"], answer: 0, note: "People mined copper there thousands of years ago." },
+        { type: "charades", prompt: "Snorkeling and spotting a shark" },
+        { type: "draw", prompt: "A coral reef with fish" },
         { type: "order", question: "Put these sea animals from SMALLEST to BIGGEST:", items: ["Clownfish", "Sea turtle", "Dolphin", "Whale shark"] }
       ]
     }
@@ -209,20 +209,20 @@ const GAME_CONTENT = {
 
   /* ---------- FINAL SPRINT (lightning round — same question for everyone) ---------- */
   finalSprint: [
-    { question: "Which sea is so salty that you float?", options: ["The Dead Sea", "The Red Sea", "The Mediterranean"], answer: "The Dead Sea" },
-    { question: "Which city has gardens with 19 terraces on a mountain?", options: ["Haifa", "Eilat", "Beer Sheva"], answer: "Haifa" },
-    { question: "Which Israeli snack is peanut-flavored?", options: ["Bamba", "Pizza", "Popcorn"], answer: "Bamba" },
-    { question: "Which city is at the very south of Israel?", options: ["Eilat", "Haifa", "Tzfat"], answer: "Eilat" },
-    { question: "Which city is famous for blue doors and artists?", options: ["Tzfat", "Tel Aviv", "Beer Sheva"], answer: "Tzfat" },
-    { question: "Falafel is made from…", options: ["Chickpeas", "Chocolate", "Cheese"], answer: "Chickpeas" },
-    { question: "Tiberias is next to which lake?", options: ["The Sea of Galilee", "Lake Geneva", "Lake Michigan"], answer: "The Sea of Galilee (the Kinneret)" },
-    { question: "Which beach game goes ‘tak-tak-tak’?", options: ["Matkot", "Basketball", "Chess"], answer: "Matkot" },
-    { question: "What’s the name of the desert in southern Israel?", options: ["The Negev", "The Sahara", "The Arctic"], answer: "The Negev" },
-    { question: "On which holiday do Israelis eat jam doughnuts (sufganiyot)?", options: ["Hanukkah", "Passover", "Halloween"], answer: "Hanukkah" },
-    { question: "Which Israeli app helps drivers avoid traffic?", options: ["Waze", "TikTok", "Instagram"], answer: "Waze" },
-    { question: "Which old city is surrounded by a big stone wall?", options: ["Jerusalem", "Eilat", "Tel Aviv"], answer: "Jerusalem" },
-    { question: "Which desert mountain do people climb at sunrise?", options: ["Masada", "The Eiffel Tower", "Mount Everest"], answer: "Masada" },
-    { question: "Who built Caesarea about 2,000 years ago?", options: ["King Herod", "Spider-Man", "Napoleon"], answer: "King Herod" }
+    { question: "Which body of water is so salty that you float?", options: ["The Dead Sea", "The Red Sea", "The Sea of Galilee"], answer: "The Dead Sea" },
+    { question: "Which city has 19 terraces of gardens on Mount Carmel?", options: ["Haifa", "Tzfat", "Jerusalem"], answer: "Haifa" },
+    { question: "Which king built palaces at BOTH Masada and Caesarea?", options: ["King Herod", "King David", "King Solomon"], answer: "King Herod" },
+    { question: "Israel’s famous peanut-flavored snack is called…", options: ["Bamba", "Bissli", "Krembo"], answer: "Bamba" },
+    { question: "What is Israel’s southernmost city?", options: ["Eilat", "Beer Sheva", "Mitzpe Ramon"], answer: "Eilat" },
+    { question: "Which city is known for artists, blue doors and Kabbalah?", options: ["Tzfat", "Tiberias", "Haifa"], answer: "Tzfat" },
+    { question: "What’s another name for the Sea of Galilee?", options: ["The Kinneret", "The Jordan", "Yam Suf"], answer: "The Kinneret" },
+    { question: "Which city is nicknamed ‘the White City’?", options: ["Tel Aviv", "Jerusalem", "Haifa"], answer: "Tel Aviv" },
+    { question: "Which desert covers more than half of Israel?", options: ["The Negev", "The Sinai", "The Sahara"], answer: "The Negev" },
+    { question: "On which holiday do Israelis eat sufganiyot (jam doughnuts)?", options: ["Hanukkah", "Passover", "Purim"], answer: "Hanukkah" },
+    { question: "Which navigation app was invented in Israel?", options: ["Waze", "Google Maps", "Uber"], answer: "Waze" },
+    { question: "In which city is the Western Wall?", options: ["Jerusalem", "Tel Aviv", "Tiberias"], answer: "Jerusalem" },
+    { question: "What’s the name of the zig-zag trail up Masada?", options: ["The Snake Path", "The Camel Path", "The Sunrise Path"], answer: "The Snake Path" },
+    { question: "Which two days make up the Israeli weekend?", options: ["Friday and Saturday", "Saturday and Sunday", "Thursday and Friday"], answer: "Friday and Saturday" }
   ]
 };
 </script>
