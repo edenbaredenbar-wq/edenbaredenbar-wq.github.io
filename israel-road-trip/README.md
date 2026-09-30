@@ -68,7 +68,6 @@ Every key also has a big on-screen button.
 | 🧩 **Guess the Place** | Emoji clues. The team names the place or thing. |
 | 🤔 **Israeli or Not?** | A true/false statement about Israeli food, culture, slang or history. |
 | 🎭 **Charades** | Secret card, see below. One teammate acts it out and the team guesses. |
-| 🛒 **Shuk Haggle** | Two teammates act out a funny market-bargaining scene. The class votes 👍/👎 and you press C or W. There's no steal on this one. |
 | ✏️ **Draw It** | Secret card. One teammate draws on paper (no letters!) and the team guesses. |
 | 🔢 **Put in Order** | Four shuffled items. The team answers with letters, e.g. "C, A, D, B". |
 | 💡 **Fun Fact Quiz** | Multiple choice, A–D. |
@@ -108,9 +107,6 @@ Save the file and refresh the browser. That's all.
 
 { type: "charades", prompt: "Riding a camel that refuses to move" },
 
-{ type: "haggle", scene: "A buyer wants 3 avocados for the price of 1.",
-  roles: ["Seller: “Best avocados in the Middle East!”", "Buyer: “My savta sells them cheaper!”"] },
-
 { type: "draw", prompt: "A camel wearing sunglasses" },
 
 // items MUST be written in the CORRECT order. The game shuffles them on screen.
@@ -146,7 +142,7 @@ The game clock is the lesson clock. Setup takes about 3 minutes, so **set the cl
 | **3:00–5:00** | **First turn as a demo.** | Read the Tel Aviv fact on the start banner aloud. Draw Team 1's challenge (Space) and talk through the timer and ✅/❌. If the team is wrong, show how the next team steals. "Every turn you might get an Event Card — traffic, falafel, camels…" |
 | **5:00–15:00** | **Race, round 1.** Aim for about 1 minute per turn. | Keep it snappy: Space → challenge → C/W → Space. **Read each arrival fact aloud**; that's the learning moment. For Charades/Draw It, call up the actor and press R ("Eyes closed, everyone!"). |
 | **15:00–16:00** | **Pit stop.** | Press **P** to pause. Ask: "Which fact so far surprised you most?" Take 2–3 answers, then press P again. |
-| **16:00–30:00** | **Race, round 2.** | Let teams choose who acts, draws or haggles; rotate so everyone takes a turn. Hype the event cards. Use **U** if you click the wrong button. |
+| **16:00–30:00** | **Race, round 2.** | Let teams choose who acts or draws; rotate so everyone takes a turn. Hype the event cards. Use **U** if you click the wrong button. |
 | **≈30:00** | **Final Sprint starts automatically** (5 minutes left, or earlier if a team reaches Eilat). | "Same question for everyone — hands up to buzz!" Press the number of the first team, then C or W. If nobody gets it, press N. |
 | **33:00–35:00** | **Podium + wrap-up.** | The podium and confetti appear. Scroll through the **trip recap** and ask each team to name one place they "visited" and one fact they'll remember. Exit question: *"Which stop would you visit first in real life, and why?"* |
 

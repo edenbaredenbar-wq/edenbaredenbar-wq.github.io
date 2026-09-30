@@ -17,7 +17,6 @@
      emoji        { type, clue, answer }
      israeliOrNot { type, statement, answer: true|false, explain }
      charades     { type, prompt }                    (hidden card)
-     haggle       { type, scene, roles: [seller, buyer] }
      draw         { type, prompt }                    (hidden card)
      order        { type, question, items: [4 items IN THE CORRECT ORDER] }
                   (the game shuffles them on screen)
@@ -52,7 +51,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "In 1948, where was Israel’s Declaration of Independence read out?", options: ["Jerusalem’s Old City", "A hall on Rothschild Boulevard, Tel Aviv", "Haifa port", "A beach in Eilat"], answer: 1, note: "The building is now called Independence Hall." },
         { type: "quiz", question: "What is Tel Aviv’s famous open-air market called?", options: ["Shuk HaCarmel (Carmel Market)", "Mahane Yehuda", "Wadi Nisnas", "The Grand Bazaar"], answer: 0, note: "Mahane Yehuda is in Jerusalem; Wadi Nisnas is in Haifa." },
         { type: "charades", prompt: "Playing matkot on the beach — and the ball flies into the sea" },
-        { type: "haggle", scene: "At Shuk HaCarmel, a buyer wants 3 avocados for the price of 1.", roles: ["Seller: “These are the BEST avocados in the Middle East!”", "Buyer: “My savta sells them cheaper — and she gives hugs!”"] },
         { type: "draw", prompt: "A falafel in a pita with everything on it" },
         { type: "order", question: "Put these in order of TIME — oldest first:", items: ["The ancient port of Jaffa is busy", "Tel Aviv is founded", "Israel’s independence is declared", "The Azrieli Towers are built"] }
       ]
@@ -68,7 +66,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Which king built Caesarea’s great harbor?", options: ["King David", "King Solomon", "King Herod", "Alexander the Great"], answer: 2, note: "Herod was a mega-builder — Masada’s palaces were his too." },
         { type: "quiz", question: "What brought fresh water to ancient Caesarea?", options: ["Camels carrying jars", "A long stone aqueduct with arches", "Water tanks shipped from Egypt", "Melted snow from Mount Hermon"], answer: 1, note: "You can still walk along the aqueduct on Caesarea’s beach." },
         { type: "charades", prompt: "Racing a chariot in a Roman stadium" },
-        { type: "haggle", scene: "At an antiques stall, the seller swears a plastic sword is a REAL Roman sword.", roles: ["Seller: “Julius Caesar himself used this!”", "Buyer: “Then why does it say ‘Made in 2019’?”"] },
         { type: "draw", prompt: "Roman arches (an aqueduct) on a beach" },
         { type: "order", question: "Put these in order of TIME — oldest first:", items: ["The Romans rule Caesarea", "Crusaders build walls around Caesarea", "The Ottoman Empire rules the land", "The State of Israel is founded"] }
       ]
@@ -84,7 +81,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Haifa’s Technion university is world-famous for…", options: ["Science and engineering", "Fashion design", "Circus training", "Chocolate making"], answer: 0, note: "Technion graduates helped build Israel’s ‘Start-up Nation’." },
         { type: "quiz", question: "What makes Haifa’s Carmelit special?", options: ["It’s a boat that sails to Cyprus", "It’s an underground train that climbs a mountain", "It’s a bus with a pool on the roof", "It’s a zoo train for camels"], answer: 1, note: "It’s a funicular — the cars go up and down a steep tunnel." },
         { type: "charades", prompt: "Climbing hundreds of stairs on a super hot day" },
-        { type: "haggle", scene: "In Haifa’s Wadi Nisnas market, a buyer wants a HUGE tray of knafeh but has only 5 shekels.", roles: ["Seller: “For 5 shekels you can SMELL it.”", "Buyer: “I’ll tell all my friends — free advertising!”"] },
         { type: "draw", prompt: "A big ship arriving at a port" },
         { type: "order", question: "Put these cities from NORTH to SOUTH:", items: ["Nahariya", "Haifa", "Netanya", "Ashdod"] }
       ]
@@ -100,7 +96,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Since the 1500s, Tzfat has been famous for…", options: ["Surfing", "Kabbalah (Jewish mysticism)", "Car racing", "Opera"], answer: 1, note: "Great rabbis and scholars moved here and the city became a center of study." },
         { type: "quiz", question: "Where is Tzfat?", options: ["High in the Galilee mountains", "On the Red Sea", "In the middle of the Negev desert", "On a Mediterranean island"], answer: 0, note: "It’s one of the highest cities in Israel." },
         { type: "charades", prompt: "An artist painting a picture and getting paint all over themselves" },
-        { type: "haggle", scene: "At an art gallery in Tzfat, a buyer wants a giant painting for 10 shekels and a bag of Bamba.", roles: ["Artist: “This took me THREE YEARS!”", "Buyer: “Fine — TWO bags of Bamba!”"] },
         { type: "draw", prompt: "A blue door in an old stone alley" },
         { type: "order", question: "Put these places from HIGHEST to LOWEST:", items: ["Mount Hermon", "Tzfat", "Jerusalem", "The Dead Sea"] }
       ]
@@ -116,7 +111,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Tiberias was named after…", options: ["A Roman emperor, Tiberius", "A famous fish", "A type of boat", "A Greek god"], answer: 0, note: "The city was founded around the year 20 CE." },
         { type: "quiz", question: "Why do Israelis follow the Kinneret’s water level on the news?", options: ["It predicts the football results", "It was a main source of drinking water", "A monster lives in it", "It changes color every day"], answer: 1, note: "For decades the lake was Israel’s biggest freshwater reservoir." },
         { type: "charades", prompt: "Fishing from a boat and catching an old boot" },
-        { type: "haggle", scene: "A boat captain wants 200 shekels for a Kinneret boat ride. The buyer offers a sandwich and a song.", roles: ["Captain: “This is a LUXURY cruise!”", "Buyer: “It’s a very, very GOOD song…”"] },
         { type: "draw", prompt: "A fish jumping out of a lake" },
         { type: "order", question: "Put these bodies of water from NORTH to SOUTH:", items: ["Hula Lake", "Sea of Galilee", "Dead Sea", "Red Sea (Gulf of Eilat)"] }
       ]
@@ -132,7 +126,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "How many quarters is Jerusalem’s Old City traditionally divided into?", options: ["2", "3", "4", "7"], answer: 2, note: "Jewish, Christian, Muslim and Armenian." },
         { type: "quiz", question: "Which of these is a famous market in Jerusalem?", options: ["Shuk HaCarmel", "Mahane Yehuda", "The Grand Bazaar", "Wadi Nisnas"], answer: 1, note: "At night ‘the Shuk’ turns into a place for music and hanging out." },
         { type: "charades", prompt: "Squeezing through a crowded market on a Friday morning" },
-        { type: "haggle", scene: "At Mahane Yehuda on a Friday, a buyer wants the LAST challah — but the seller ‘promised it to his grandma’.", roles: ["Seller: “My grandma will cry!”", "Buyer: “MY grandma will cry LOUDER!”"] },
         { type: "draw", prompt: "A big stone gate in an old city wall" },
         { type: "order", question: "Put these in order of TIME — oldest first:", items: ["King David makes Jerusalem his capital", "The Romans destroy the Second Temple", "Suleiman builds the Old City walls", "The Knesset building opens in Jerusalem"] }
       ]
@@ -148,7 +141,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Which king built palaces on top of Masada?", options: ["King Herod", "King David", "King Saul", "King Arthur"], answer: 0, note: "Herod’s Northern Palace hangs right on the edge of the cliff." },
         { type: "quiz", question: "Why do many hikers start climbing Masada before dawn?", options: ["The cable car only runs at night", "To see the sunrise and beat the desert heat", "The snakes sleep late", "The gates close at 7 a.m."], answer: 1, note: "Sunrise over the Dead Sea is a famous sight." },
         { type: "charades", prompt: "Hiking up a steep desert trail and running out of water" },
-        { type: "haggle", scene: "At the top of Masada, a thirsty hiker wants water — the seller is charging 100 shekels a bottle.", roles: ["Seller: “It’s ANCIENT water. Very rare.”", "Buyer: “I’ll pay you in selfies!”"] },
         { type: "draw", prompt: "A flat-topped mountain with the sun rising behind it" },
         { type: "order", question: "Put these in order of TIME — oldest first:", items: ["Herod builds his palaces on Masada", "The Romans besiege Masada", "Archaeologists dig up Masada", "Masada becomes a UNESCO site"] }
       ]
@@ -165,7 +157,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Roughly how far below sea level is the Dead Sea shore?", options: ["About 40 m", "About 430 m", "About 4,300 m", "It’s above sea level"], answer: 1, note: "It’s the lowest place on land on Earth." },
         { type: "quiz", question: "About how much saltier is the Dead Sea than the ocean?", options: ["2 times", "10 times", "100 times", "1,000 times"], answer: 1, note: "About a third of the Dead Sea water is salt." },
         { type: "charades", prompt: "Floating in the Dead Sea while reading a newspaper" },
-        { type: "haggle", scene: "A seller offers ‘magic Dead Sea mud’ that makes you look 10 years younger. The buyer is 17.", roles: ["Seller: “You’ll look SO young!”", "Buyer: “I don’t want to look SEVEN!”"] },
         { type: "draw", prompt: "A person covered in mud from head to toe" },
         { type: "order", question: "Put these places from LOWEST to HIGHEST:", items: ["Dead Sea shore", "Sea of Galilee", "Tel Aviv beach", "Jerusalem"] }
       ]
@@ -181,7 +172,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Beer Sheva is known as the capital of which desert?", options: ["The Sahara", "The Negev", "The Gobi", "The Mojave"], answer: 1, note: "The Negev makes up more than half of Israel." },
         { type: "quiz", question: "Which Israeli prime minister moved to a kibbutz in the Negev?", options: ["David Ben-Gurion", "Golda Meir", "Menachem Begin", "Yitzhak Rabin"], answer: 0, note: "Ben-Gurion dreamed of making the desert bloom and lived at Kibbutz Sde Boker." },
         { type: "charades", prompt: "Riding a camel that refuses to move" },
-        { type: "haggle", scene: "At the market, a buyer wants to buy a camel — but only has a bicycle to trade.", roles: ["Seller: “My camel is the Ferrari of the desert!”", "Buyer: “My bike never spits at people!”"] },
         { type: "draw", prompt: "A camel wearing sunglasses" },
         { type: "order", question: "Put these Negev places from NORTH to SOUTH:", items: ["Beer Sheva", "Sde Boker", "Mitzpe Ramon", "Eilat"] }
       ]
@@ -197,7 +187,6 @@ const GAME_CONTENT = {
         { type: "quiz", question: "Which sea is Eilat on?", options: ["The Mediterranean", "The Dead Sea", "The Red Sea", "The Black Sea"], answer: 2, note: "From Eilat you can see Egypt, Jordan and Saudi Arabia across the water." },
         { type: "quiz", question: "Timna Park, near Eilat, is famous for…", options: ["Ancient copper mines", "A ski resort", "An active volcano", "A gold rush"], answer: 0, note: "People mined copper at Timna thousands of years ago." },
         { type: "charades", prompt: "Snorkeling and meeting a fish bigger than you" },
-        { type: "haggle", scene: "In a VAT-free shop in Eilat, a buyer wants sunglasses that are also ‘shekel-free’.", roles: ["Seller: “TAX-free, not FREE-free!”", "Buyer: “But I came ALL the way from Tel Aviv!”"] },
         { type: "draw", prompt: "A colorful fish swimming by a coral reef" },
         { type: "order", question: "Put these sea animals from SMALLEST to BIGGEST:", items: ["Clownfish", "Sea turtle", "Dolphin", "Whale shark"] }
       ]
@@ -444,10 +433,6 @@ kbd{font:900 .72em/1 var(--font);background:rgba(20,33,61,.14);border:2px solid 
 .secret .big{font-size:max(34px,3rem);font-weight:900}
 .secret .small{font-size:max(22px,1.5rem);font-weight:800;color:var(--ink2);margin-top:.5rem}
 .stealNote{font-size:max(28px,2rem);font-weight:900;margin-top:1rem}
-.scene{font-size:max(30px,2.3rem);font-weight:900;line-height:1.25;max-width:64rem;margin:0 auto}
-.roles{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.3rem;text-align:left}
-.role{font-size:max(28px,1.65rem);font-weight:800;border:3px solid var(--ink);border-radius:18px;padding:.9rem 1rem;background:var(--cream);line-height:1.3}
-.role:first-child{background:#FFF1CC}.role:last-child{background:#E3F2FF}
 .mfoot{display:flex;gap:.8rem .9rem;align-items:center;flex-wrap:wrap;justify-content:flex-end;border-top:3px dashed #E8DCC4;padding-top:1.1rem;flex:none}
 .btns{display:flex;gap:.9rem;align-items:center;flex:none;margin-left:auto}
 .how{flex:1 1 17rem;font-size:1.2rem;font-weight:800;color:var(--ink2);line-height:1.35}
@@ -710,7 +695,6 @@ const TYPE_META = {
   emoji:        { icon: '🧩', label: 'Guess the Place', color: '#8338EC', how: 'Look at the emoji clues and name the place or thing!' },
   israeliOrNot: { icon: '🤔', label: 'Israeli or Not?', color: '#FB5607', how: 'True or false? Talk it over, then give ONE answer.' },
   charades:     { icon: '🎭', label: 'Charades', color: '#E0115F', how: 'One teammate acts it out: no words, no sounds! The team guesses.', hidden: true, waitStart: true },
-  haggle:       { icon: '🛒', label: 'Shuk Haggle', color: '#C77D00', how: 'Two teammates act out the haggle. Then the class votes 👍 or 👎.', waitStart: true, noSteal: true },
   draw:         { icon: '✏️', label: 'Draw It', color: '#0E9F6E', how: 'One teammate draws on paper (no letters or numbers!). The team guesses.', hidden: true, waitStart: true },
   order:        { icon: '🔢', label: 'Put in Order', color: '#1F7AE0', how: 'Say the order as letters, for example “C, A, D, B”.' },
   quiz:         { icon: '💡', label: 'Fun Fact Quiz', color: '#3A0CA3', how: 'Pick A, B, C or D.' }
@@ -1146,12 +1130,8 @@ function challengeHTML() {
         ? `<div class="secret"><div class="big">🙈 Secret ${c.type === 'draw' ? 'drawing' : 'charades'} card</div><div class="small">Send up ONE ${c.type === 'draw' ? 'artist' : 'actor'}. Press <kbd>R</kbd>: the class closes their eyes and only they see the card.</div></div>`
         : `<div class="secret"><div class="big">${c.type === 'draw' ? '✏️ Look at the drawing!' : '🎭 You saw the acting!'}</div><div class="stealNote">What was it? One guess!</div></div>`;
       break;
-    case 'haggle':
-      canReveal = false;
-      body = `<div class="scene">${esc(c.scene)}</div><div class="roles">${c.roles.map(r => `<div class="role">${esc(r)}</div>`).join('')}</div>`; break;
   }
   if (ch.mode === 'steal') how = `🦹 ${esc(S.teams[ch.stealer].name)}: one answer for +${PTS.steal}.`;
-  const isHaggle = c.type === 'haggle';
   const revealBtn = hiddenCard ? `<button class="btn" data-act="reveal">👀 Actor peek <kbd>R</kbd></button>`
     : canReveal ? `<button class="btn" data-act="reveal">👁️ Reveal <kbd>R</kbd></button>` : '';
   return `<div class="modal challenge mode-${ch.mode}" style="--tc:${m.color}">
@@ -1168,8 +1148,8 @@ function challengeHTML() {
       <div class="how">${how}</div><div class="btns">
       <button class="btn startB" data-act="startTimer">▶️ Start ${ch.mode === 'steal' ? SET.stealSeconds : SET.challengeSeconds}s <kbd>Space</kbd></button>
       ${revealBtn}
-      <button class="btn no" data-act="wrong">❌ ${isHaggle ? '👎 Class says no' : 'Wrong'} <kbd>W</kbd></button>
-      <button class="btn ok" data-act="right">✅ ${isHaggle ? '👍 Class says yes' : 'Correct'} <kbd>C</kbd></button>
+      <button class="btn no" data-act="wrong">❌ Wrong <kbd>W</kbd></button>
+      <button class="btn ok" data-act="right">✅ Correct <kbd>C</kbd></button>
     </div></div></div>`;
 }
 function answerHTML(c) {
@@ -1179,7 +1159,6 @@ function answerHTML(c) {
     case 'quiz': return `✔ <b>${LETTERS[c.answer]}. ${esc(c.options[c.answer])}</b>${c.note ? `<br>💡 ${esc(c.note)}` : ''}`;
     case 'order': return `✔ <b>${c.items.map(esc).join(' → ')}</b>`;
     case 'charades': case 'draw': return `🙈 The secret card was: <b>${esc(c.prompt)}</b>`;
-    case 'haggle': return `🛒 ${esc(c.scene)}`;
   }
   return '';
 }
@@ -1364,7 +1343,7 @@ function nextTeam(i) { return (i + 1) % S.teams.length; }
 function judge(ok) {
   if (S.phase !== 'challenge' || ui.peek) return;
   act(() => {
-    const ch = S.ch, c = chal(ch), m = TYPE_META[c.type];
+    const ch = S.ch;
     const base = { stop: ch.stop, idx: ch.idx, team: ch.team };
     if (ch.mode === 'normal') {
       const t = S.teams[ch.team];
@@ -1373,7 +1352,7 @@ function judge(ok) {
         t.pos = Math.min(LAST, t.pos + 1); t.maxPos = Math.max(t.maxPos, t.pos); t.stats.correct++;
         S.result = { ...base, kind: 'correct', pts: a.pts, doubled: a.doubled, moveTo: t.pos };
         S.phase = 'result'; sfx.correct();
-      } else if (!m.noSteal && S.teams.length > 1) {
+      } else if (S.teams.length > 1) {
         S.serial++; ch.mode = 'steal'; ch.stealer = nextTeam(ch.team); ch.revealed = false; sfx.steal();
       } else { S.result = { ...base, kind: 'wrong' }; S.phase = 'result'; sfx.wrong(); }
     } else if (ch.mode === 'steal') {
@@ -1497,7 +1476,7 @@ function revealKey() {
     if (ui.peek) return advancePeek();
     const c = chal(S.ch);
     if (TYPE_META[c.type].hidden && S.ch.mode === 'normal') return startPeek();
-    if (c.type === 'haggle' || TYPE_META[c.type].hidden) return;
+    if (TYPE_META[c.type].hidden) return;
     S.ch.revealed = !S.ch.revealed; renderOverlay();
   } else if (S.phase === 'sprintQ') sprintSkip();
 }
