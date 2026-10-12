@@ -60,12 +60,12 @@ window.GAME = {
     zoomStart: 10,     // starting zoom (10 = 10x)
     zoomSeconds: 15,   // how long the zoom-out takes
     photos: [
-      { file: "israel3.webp", answer: "israel",  place: "Tel Aviv skyline at sunset" },
       { file: "chicago.jpg",  answer: "chicago", place: "Lake Shore Drive & the Lake Michigan beaches" },
-      { file: "israel4.jpg",  answer: "israel",  place: "Jerusalem's Old City & the Dome of the Rock" },
-      { file: "chicago3.jpg", answer: "chicago", place: "Chicago Riverwalk & the Wrigley Building" },
       { file: "israel2.webp", answer: "israel",  place: "Tel Aviv beaches & promenade" },
-      { file: "chicago4.jpg", answer: "chicago", place: "Cloud Gate (“The Bean”), Millennium Park" }
+      { file: "israel3.webp", answer: "israel",  place: "Tel Aviv skyline at sunset" },
+      { file: "chicago3.jpg", answer: "chicago", place: "Chicago Riverwalk & the Wrigley Building" },
+      { file: "chicago4.jpg", answer: "chicago", place: "Cloud Gate (“The Bean”), Millennium Park" },
+      { file: "israel4.jpg",  answer: "israel",  place: "Jerusalem's Old City & the Dome of the Rock" }
     ]
   },
 
