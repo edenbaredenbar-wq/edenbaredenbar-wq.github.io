@@ -60,14 +60,12 @@ window.GAME = {
     zoomStart: 10,     // starting zoom (10 = 10x)
     zoomSeconds: 15,   // how long the zoom-out takes
     photos: [
-      { file: "photo1.jpg", answer: "chicago", place: "PLACE NAME 1 — edit in data.js" },
-      { file: "photo2.jpg", answer: "israel",  place: "PLACE NAME 2 — edit in data.js" },
-      { file: "photo3.jpg", answer: "chicago", place: "PLACE NAME 3 — edit in data.js" },
-      { file: "photo4.jpg", answer: "israel",  place: "PLACE NAME 4 — edit in data.js" },
-      { file: "photo5.jpg", answer: "chicago", place: "PLACE NAME 5 — edit in data.js" },
-      { file: "photo6.jpg", answer: "israel",  place: "PLACE NAME 6 — edit in data.js" },
-      { file: "photo7.jpg", answer: "chicago", place: "PLACE NAME 7 — edit in data.js" },
-      { file: "photo8.jpg", answer: "israel",  place: "PLACE NAME 8 — edit in data.js" }
+      { file: "israel3.webp", answer: "israel",  place: "Tel Aviv skyline at sunset" },
+      { file: "chicago.jpg",  answer: "chicago", place: "Lake Shore Drive & the Lake Michigan beaches" },
+      { file: "israel4.jpg",  answer: "israel",  place: "Jerusalem's Old City & the Dome of the Rock" },
+      { file: "chicago3.jpg", answer: "chicago", place: "Chicago Riverwalk & the Wrigley Building" },
+      { file: "israel2.webp", answer: "israel",  place: "Tel Aviv beaches & promenade" },
+      { file: "chicago4.jpg", answer: "chicago", place: "Cloud Gate (“The Bean”), Millennium Park" }
     ]
   },
 
