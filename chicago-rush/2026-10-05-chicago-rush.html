@@ -263,7 +263,8 @@ kbd{display:inline-block;font:700 .9em/1 ui-monospace,Consolas,monospace;backgro
   </div>
 </div>
 
-<script src="data.js"></script>
+<!-- Load data.js with a fresh URL each time so browsers never show an old copy after it is edited -->
+<script>document.write('<script src="data.js?v=' + Date.now() + '"><\/script>');</script>
 <script>
 (function () {
 "use strict";
@@ -272,6 +273,7 @@ kbd{display:inline-block;font:700 .9em/1 ui-monospace,Consolas,monospace;backgro
    Helpers
    ==================================================================== */
 const G = window.GAME;
+const BOOT = Date.now(); // cache-buster for photos
 const $ = (s, el) => (el || document).querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const stage = $("#stage"), overlay = $("#overlay");
@@ -628,7 +630,7 @@ RENDER.photo = function (s, st) {
   img.alt = "";
   img.onload = () => { useContent("", img.naturalWidth / img.naturalHeight || 16 / 9); zoomer.appendChild(img); };
   img.onerror = () => useContent(placeholderSVG(p.file, s.i + 1), 16 / 9);
-  img.src = "photos/" + encodeURI(p.file || "");
+  img.src = "photos/" + encodeURI(p.file || "") + "?v=" + BOOT;
   fit();
   const onResize = () => fit();
   window.addEventListener("resize", onResize);
