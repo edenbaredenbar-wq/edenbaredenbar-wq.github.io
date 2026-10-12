@@ -43,7 +43,7 @@ Press **H** at any time to show all the shortcuts on screen.
 | Key | What it does |
 |---|---|
 | **→** / **←** | Next / previous screen |
-| **Space** | Reveal the answer, the next card, or the winner |
+| **Space** | Reveal the answer, the next clue, or the winner |
 | **Home** | Back to team setup |
 | **H** | Show or hide help |
 | **M** | Sound on or off |
@@ -57,13 +57,15 @@ Press **H** at any time to show all the shortcuts on screen.
 | 3 | `3` | Shift + `3` | `D` | Shift + `D` |
 | 4 | `4` | Shift + `4` | `F` | Shift + `F` |
 
+Need to give 2 points (Round 3)? Press the team's +1 key twice.
+
 **Round controls**
 
 | Round | Keys |
 |---|---|
 | 1 · Chicago or Not? | **Space** shows TRUE or FALSE and the explanation |
 | 2 · Chicago or Israel? | **C** runs the countdown "3, 2, 1, SHOW YOUR ANSWER!" · **Space** shows the full photo and the answer · **P** pauses or resumes the zoom · **Z** restarts the zoom |
-| 3 · Build the Chicago Dog | **T** starts or pauses the 60-second timer · **R** resets it · **Space** reveals the next card |
+| 3 · Who Am I? | **Space** shows the next clue, and after clue 3 the answer · **Enter** shows the answer right away (when a team guesses early) |
 | 4 · Skyscraper Build | **T** starts or pauses the 4-minute timer · **R** resets it |
 | 5 · Closest Number Wins | **Space** counts up to the answer |
 | Final | **Space** plays a drumroll, then shows the winner and confetti |

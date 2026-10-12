@@ -11,7 +11,7 @@ window.GAME = {
   rounds: {
     1: { title: "Chicago or Not?",       rules: "TRUE or FALSE? Agree as a team — one answer per team!" },
     2: { title: "Chicago or Israel?",    rules: "Watch the photo zoom out. On the countdown, shout CHICAGO or ISRAEL!" },
-    3: { title: "Build the Chicago Dog", rules: "Pick the numbers of the real Chicago-dog toppings in 60 seconds. +1 per correct, −3 for ketchup!" },
+    3: { title: "Who Am I?",             rules: "Clues come one at a time — raise your hand to guess! Right after clue 1 = 3 pts · clue 2 = 2 pts · clue 3 = 1 pt. Wrong guess = you're out for that person!" },
     4: { title: "Skyscraper Build",      rules: "Build the tallest FREESTANDING tower using only paper and tape. 4 minutes!" },
     5: { title: "Closest Number Wins",   rules: "Write down your best guess. The closest team wins the point!" }
   },
@@ -55,26 +55,43 @@ window.GAME = {
     ]
   },
 
-  /* ---------- ROUND 3: Build the Chicago Dog ----------
-     Cards are numbered in this order and revealed in this order.
-     correct: true = belongs on a Chicago dog. forbidden: true = the FORBIDDEN! animation. */
-  round3: {
-    seconds: 60,
-    toppings: [
-      { name: "Yellow mustard",       emoji: "🟡", correct: true  },
-      { name: "Mayonnaise",           emoji: "🥚", correct: false },
-      { name: "Chopped white onions", emoji: "🧅", correct: true  },
-      { name: "Dill pickle spear",    emoji: "🥒", correct: true  },
-      { name: "Cheese",               emoji: "🧀", correct: false },
-      { name: "Tomato slices",        emoji: "🍅", correct: true  },
-      { name: "Bright green relish",  emoji: "🟢", correct: true  },
-      { name: "Ketchup",              emoji: "🥫", correct: false, forbidden: true },
-      { name: "Sport peppers",        emoji: "🌶️", correct: true  },
-      { name: "Hummus",               emoji: "🥣", correct: false },
-      { name: "Celery salt",          emoji: "🧂", correct: true  },
-      { name: "Poppy seed bun",       emoji: "🍞", correct: true  }
-    ]
-  },
+  /* ---------- ROUND 3: Who Am I? ----------
+     Famous people with a Chicago connection. Clues go from hardest to easiest.
+     name:  the answer shown on reveal       emoji: shown next to the name
+     clues: exactly 3 clues (clue 1 = 3 points, clue 2 = 2 points, clue 3 = 1 point)
+     fact:  optional extra line shown with the answer */
+  round3: [
+    { name: "Walt Disney", emoji: "🐭",
+      clues: ["I was born in Chicago in 1901.",
+              "I created a famous cartoon mouse.",
+              "My name is on theme parks all over the world."],
+      fact: "Born in Chicago's Hermosa neighborhood." },
+    { name: "Michael Jordan", emoji: "🏀",
+      clues: ["There's a bronze statue of me at the United Center, Chicago's basketball arena.",
+              "I won six championships with the Chicago Bulls.",
+              "My sneakers are called “Air Jordan”."],
+      fact: "6 NBA titles, all with the Bulls (1991–93 and 1996–98)." },
+    { name: "Harrison Ford", emoji: "🤠",
+      clues: ["I was born in Chicago in 1942.",
+              "Before I was famous, I worked as a carpenter.",
+              "I played Han Solo in Star Wars and Indiana Jones."],
+      fact: "Born in Chicago on July 13, 1942." },
+    { name: "Al Capone", emoji: "🎩",
+      clues: ["I finally went to prison… for not paying my taxes!",
+              "My nickname was “Scarface”.",
+              "I was Chicago's most famous gangster in the 1920s."],
+      fact: "He was later sent to Alcatraz, the famous island prison." },
+    { name: "Oprah Winfrey", emoji: "📺",
+      clues: ["My TV talk show was filmed in Chicago for 25 years.",
+              "I once gave everyone in my studio audience a new car.",
+              "My last name is Winfrey."],
+      fact: "“The Oprah Winfrey Show” ran from Chicago, 1986–2011." },
+    { name: "Barack Obama", emoji: "🇺🇸",
+      clues: ["I taught law at the University of Chicago.",
+              "I was a U.S. senator from Illinois.",
+              "I was the 44th President of the United States."],
+      fact: "He met Michelle while they both worked at a Chicago law firm." }
+  ],
 
   /* ---------- ROUND 4: Skyscraper Build ---------- */
   round4: {
