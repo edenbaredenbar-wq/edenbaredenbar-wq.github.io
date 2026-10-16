@@ -4,73 +4,156 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Election Day · Host</title>
+<title>USA or Israel? · Election Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css">
+
+<script>
+/* =====================================================================
+   ✏️  STARTING CONTENT
+   ---------------------------------------------------------------------
+   You don't need to edit this: the ⚙️ Settings button changes all of it
+   and remembers your changes in this browser. This is only the starting
+   point (and what "Restore" goes back to).
+
+   Round 1 answers: "usa", "israel" or "both".
+   The Hebrew word fields (he, translit, meaning) are optional.
+   ===================================================================== */
+const DEFAULT_CONTENT = {
+
+  round1: [
+    { statement: "You vote for a specific person", answer: "usa",
+      explain: "Americans vote for a candidate by name. Israelis vote for a party (מפלגה), and the party’s ranked list decides who fills its seats.",
+      he: "מפלגה", translit: "miflaga", meaning: "political party" },
+    { statement: "Election day is a national day off", answer: "israel",
+      explain: "In Israel, election day is a day off so everyone can get to the polls. In the US it’s a normal Tuesday, and most people still go to work or school.",
+      he: "בחירות", translit: "bchirot", meaning: "elections" },
+    { statement: "You vote with paper slips marked with letters", answer: "israel",
+      explain: "Israelis choose a paper slip (פתק) printed with their party’s letters, put it in an envelope, and drop it in the ballot box.",
+      he: "פתק", translit: "petek", meaning: "ballot slip (a note)" },
+    { statement: "Two big parties dominate", answer: "usa",
+      explain: "Democrats and Republicans win almost every seat in Congress and every modern presidential election.",
+      he: "", translit: "", meaning: "" },
+    { statement: "Many parties make it into parliament", answer: "israel",
+      explain: "Israel’s parliament, the Knesset, has 120 seats, and usually around 10 different parties win some of them.",
+      he: "כנסת", translit: "Knesset", meaning: "Israel’s parliament" },
+    { statement: "A party needs a minimum % of votes to get any seats", answer: "israel",
+      explain: "In Israel a party needs at least 3.25% of all votes to enter the Knesset. Below that, it gets zero seats.",
+      he: "אחוז החסימה", translit: "achuz ha-chasima", meaning: "the election threshold" },
+    { statement: "The leader is chosen through an Electoral College", answer: "usa",
+      explain: "Each US state has electors, and a candidate needs 270 of the 538 electoral votes to become president. In Israel, the prime minister is whoever can form a majority in the Knesset.",
+      he: "נשיא", translit: "nasi", meaning: "president" },
+    { statement: "Parties must team up (coalition) to form a government", answer: "israel",
+      explain: "No Israeli party has ever won a majority alone, so parties team up until they have at least 61 of the 120 seats.",
+      he: "קואליציה", translit: "koalitzya", meaning: "coalition" },
+    { statement: "Elections can be held early if the government falls", answer: "israel",
+      explain: "If the coalition falls apart, Israel can hold new elections early. It had five elections between 2019 and 2022!",
+      he: "ממשלה", translit: "memshala", meaning: "government" },
+    { statement: "Election day is on a fixed date set by law", answer: "usa",
+      explain: "US federal elections are always on the Tuesday after the first Monday in November, and they can’t be moved earlier. Israel has a planned date too, but elections often come early.",
+      he: "", translit: "", meaning: "" },
+    { statement: "You can vote at 18", answer: "both",
+      explain: "In both countries, citizens can vote from age 18.",
+      he: "להצביע", translit: "lehatzbia", meaning: "to vote" },
+    { statement: "Your vote is secret", answer: "both",
+      explain: "Both countries use a secret ballot: you vote alone, and nobody can see your choice.",
+      he: "קלפי", translit: "kalpi", meaning: "ballot box" }
+  ],
+
+  round2: {
+    topic: "Best fast food chain",
+    options: ["McDonald’s", "Chipotle", "Chick-fil-A", "Taco Bell", "Wendy’s", "Panda Express", "Subway"],
+    threshold: 10,   // % of the vote an option needs to get any seats (Israel's real one is 3.25%)
+    seats: 20        // size of the class "parliament" (Israel's Knesset has 120)
+  }
+};
+</script>
+
 <style>
+  :root {
+    --bg: #F3F6FC; --card: #FFFFFF; --ink: #0F1B3D; --muted: #5A6788; --line: #DCE3F1;
+    --il: #0038B8; --il-soft: #E6EDFC; --us-red: #B22234; --us-red-soft: #FBE9EC;
+    --both: #6B4FBB; --both-soft: #EFEAFB; --good: #15803D; --good-soft: #E3F6E9;
+    --bad: #C2410C; --gold: #F5B700;
+    --radius: 18px;
+    --shadow: 0 6px 24px rgba(15, 27, 61, .08), 0 1px 3px rgba(15, 27, 61, .06);
+    --font: 'Rubik', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  }
   /* Everything scales with the screen width, so it looks the same on any projector. */
   html { font-size: clamp(13px, 1.12vw, 24px); }
-  body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased;
+         height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .he { font-family: 'Rubik', 'Arial Hebrew', 'Segoe UI', Arial, sans-serif; unicode-bidi: isolate; }
+
+  .flagband { flex: none; height: 8px; background:
+    linear-gradient(180deg, var(--il) 0 2px, #fff 2px 6px, var(--il) 6px 8px) left / 50% 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--us-red) 0 2px, #fff 2px 4px) right / 50% 100% no-repeat; }
+  .flag { display: inline-block; height: 1em; width: auto; vertical-align: -0.12em; border-radius: 3px; box-shadow: 0 0 0 1px rgba(15, 27, 61, .15); }
+  .flag-pair { display: inline-flex; gap: .2em; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5em; border: 0; border-radius: 14px;
+         padding: .8em 1.3em; font-weight: 600; background: var(--ink); color: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.15);
+         transition: transform .08s ease, filter .15s ease; font-size: 1.05rem; }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: translateY(1px) scale(.98); }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .btn.blue { background: var(--il); }
+  .btn.red { background: var(--us-red); }
+  .btn.green { background: var(--good); }
+  .btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+  .btn.ghost:hover { background: #fff; }
+  .btn.small { padding: .5em .9em; border-radius: 10px; font-size: .9rem; }
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .kbd { font-size: .75em; opacity: .65; font-weight: 500; border: 1px solid currentColor; border-radius: 5px; padding: 0 .35em; margin-left: .3em; }
+
+  @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+  @keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
+  .waiting-dots::after { content: '…'; animation: pulse 1.4s infinite; }
 
   /* ---------- top bar ---------- */
-  .flagband, .topbar, #banners { flex: none; }
-  .topbar { display: flex; align-items: center; gap: 1rem; padding: .55rem 1.2rem; background: var(--ink); color: #fff; }
+  .topbar { flex: none; display: flex; align-items: center; gap: 1rem; padding: .55rem 1.2rem; background: var(--ink); color: #fff; }
   .topbar .brand { font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: .45em; white-space: nowrap; }
   .topbar .brand .he { font-weight: 500; opacity: .7; }
-  .joinchip { margin: 0 auto; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); color: #fff; border-radius: 99px; padding: .35em 1em; font-size: .95rem; }
-  .joinchip b { letter-spacing: .06em; }
-  .joinchip .code { background: var(--gold); color: var(--ink); border-radius: 6px; padding: 0 .35em; margin-left: .2em; }
-  .joinchip.hide { visibility: hidden; }
-  .topbar .right { display: flex; align-items: center; gap: .6rem; white-space: nowrap; }
-  .topbar .count { font-weight: 600; font-size: 1rem; }
-  .conn { display: inline-flex; align-items: center; gap: .35em; font-size: .8rem; opacity: .85; }
-  .conn::before { content: ''; width: .6em; height: .6em; border-radius: 50%; background: #9aa3b5; }
-  .conn.ok::before { background: #34D399; }
-  .conn.off::before { background: #F87171; animation: pulse 1s infinite; }
-  .conn.demo::before { background: var(--gold); }
+  .topbar .right { margin-left: auto; display: flex; align-items: center; gap: .6rem; }
   .iconbtn { background: rgba(255,255,255,.1); border: 0; color: #fff; border-radius: 10px; width: 2.2rem; height: 2.2rem; font-size: 1.05rem; display: inline-flex; align-items: center; justify-content: center; }
   .iconbtn:hover { background: rgba(255,255,255,.22); }
-
-  .banner { background: #FFF4D6; color: #6B4E00; padding: .5rem 1.2rem; font-size: .9rem; display: flex; gap: 1rem; align-items: center; }
-  .banner.err { background: #FDE2E2; color: #8A1C1C; }
-  .banner .btn { font-size: .85rem; }
 
   main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 1.2rem 2rem .8rem; }
   .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: rise .35s ease; position: relative; overflow-y: auto; overflow-x: hidden; }
   main.static .screen, main.static .row { animation: none; }
-  .controls { display: flex; align-items: center; gap: .8rem; padding-top: .8rem; }
+  .controls { flex: none; display: flex; align-items: center; gap: .8rem; padding-top: .8rem; }
   .controls .spacer { flex: 1; }
-  .controls .btn { font-size: 1.05rem; }
-  .kbd { font-size: .75em; opacity: .65; font-weight: 500; border: 1px solid currentColor; border-radius: 5px; padding: 0 .35em; margin-left: .3em; }
-
   .pill { display: inline-flex; align-items: center; gap: .4em; border-radius: 99px; padding: .35em .9em; font-weight: 700; font-size: .95rem; background: var(--il-soft); color: var(--il); }
   .pill.red { background: var(--us-red-soft); color: var(--us-red); }
   .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .6rem; }
   .head .muted { color: var(--muted); font-weight: 600; font-size: 1.05rem; }
 
-  /* ---------- lobby ---------- */
-  .lobby { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2.5rem; align-items: center; flex: 1; }
+  /* ---------- home ---------- */
+  .home { flex: 1; display: grid; grid-template-columns: 1.3fr 1fr; gap: 3rem; align-items: center; }
   .kicker { color: var(--il); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: .95rem; }
-  .title { font-size: 4.2rem; line-height: 1.02; margin: .2em 0 .15em; font-weight: 900; letter-spacing: -.02em; }
+  .title { font-size: 4.4rem; line-height: 1.02; margin: .2em 0 .15em; font-weight: 900; letter-spacing: -.02em; }
   .title .flag { height: .8em; margin-left: .1em; }
-  .title-he { font-size: 2.2rem; color: var(--il); font-weight: 700; display: block; margin-bottom: .3em; }
-  .subtitle { font-size: 1.35rem; color: var(--muted); margin: 0 0 1.4rem; line-height: 1.4; }
-  .joinbox { display: flex; align-items: center; gap: 1.6rem; margin-bottom: 1.4rem; }
-  .joinbox .lbl { color: var(--muted); font-weight: 600; font-size: 1.05rem; line-height: 1.5; }
-  .joinbox .lbl b { color: var(--ink); }
-  .code-big { font-size: 4.6rem; font-weight: 900; letter-spacing: .14em; background: var(--ink); color: #fff; border-radius: 20px; padding: .05em .35em .05em .5em; line-height: 1.25; }
-  .joined-big { font-size: 1.6rem; font-weight: 600; margin-bottom: 1.6rem; display: flex; align-items: center; gap: .5em; }
-  .joined-big b { font-size: 2.6rem; color: var(--il); min-width: 1.4em; display: inline-block; text-align: center; }
-  .lobby-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
-  .lobby-actions .btn { font-size: 1.15rem; padding: .9em 1.4em; }
-  .lobby-small { display: flex; gap: .6rem; margin-top: .9rem; }
-  .qr-card { padding: 1.6rem; display: flex; flex-direction: column; align-items: center; gap: .8rem; justify-self: center; width: 100%; max-width: 30rem; }
-  .qr { width: 100%; aspect-ratio: 1; }
-  .qr svg { width: 100%; height: 100%; display: block; }
-  .qr-url { font-weight: 600; color: var(--muted); font-size: 1.05rem; text-align: center; word-break: break-all; }
-  .bump { animation: pop .35s ease; }
+  .title-he { font-size: 2.3rem; color: var(--il); font-weight: 700; display: block; margin-bottom: .35em; }
+  .subtitle { font-size: 1.4rem; color: var(--muted); margin: 0 0 1.8rem; line-height: 1.45; max-width: 34rem; }
+  .home-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+  .home-actions .btn { font-size: 1.2rem; padding: .95em 1.5em; }
+  .home-small { display: flex; gap: .6rem; margin-top: 1rem; }
+  .plan { padding: 1.6rem 1.8rem; display: flex; flex-direction: column; gap: 1.1rem; }
+  .plan h3 { margin: 0; font-size: 1.1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .plan .step { display: flex; gap: 1rem; align-items: flex-start; font-size: 1.15rem; line-height: 1.4; }
+  .plan .step .n { flex: none; width: 2.2rem; height: 2.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; background: var(--il); }
+  .plan .step:nth-child(3) .n { background: var(--us-red); }
+  .plan .step b { display: block; }
+  .plan .step span { color: var(--muted); font-size: .95rem; }
+  .hand { display: inline-block; transform-origin: 70% 90%; animation: wave 1.6s ease-in-out infinite; }
 
   /* ---------- round 1 ---------- */
   .statement { font-size: 3.1rem; line-height: 1.15; font-weight: 800; margin: .15em 0 .35em; letter-spacing: -.01em; }
@@ -79,7 +162,7 @@
   .vocab { display: inline-flex; align-items: center; gap: 1rem; background: #fff; border-radius: 16px; padding: .5em 1.1em; box-shadow: var(--shadow); font-size: 1.25rem; align-self: flex-start; border-left: 6px solid var(--il); }
   .vocab .tag { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
   .vocab .heword { font-size: 2rem; font-weight: 700; color: var(--il); }
-  .vocab .tr { font-style: italic; color: var(--ink); font-weight: 500; }
+  .vocab .tr { font-style: italic; font-weight: 500; }
   .vocab .mean { color: var(--muted); }
   .r1-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.35fr 1fr; gap: 2rem; margin-top: 1.1rem; }
   .chart { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; min-height: 0; }
@@ -92,24 +175,29 @@
   .col.both .bar { background: var(--both); }
   .bar .num { color: var(--ink); position: absolute; bottom: 100%; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 1.7rem; padding-bottom: .15em; opacity: 0; transition: opacity .3s .7s; }
   .bar .num small { display: block; font-size: .55em; color: var(--muted); font-weight: 600; }
-  .revealed .bar .num { opacity: 1; }
+  .revealed.has-hands .bar .num { opacity: 1; }
   .revealed .barbox .q { opacity: 0; }
   .col .label { background: #fff; border-radius: 0 0 14px 14px; padding: .7em .4em; text-align: center; font-weight: 800; font-size: 1.5rem; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: .15em; border: 3px solid transparent; transition: border-color .3s, background .3s; }
   .col .label .flag, .col .label .flag-pair { font-size: 2rem; }
   .col .label .he { font-size: 1rem; color: var(--muted); font-weight: 500; }
+  .tally { display: flex; align-items: center; justify-content: center; gap: .4rem; margin-top: .5rem; }
+  .tally button { border: 0; width: 2rem; height: 2rem; border-radius: 50%; background: #fff; box-shadow: var(--shadow); font-weight: 800; font-size: 1.1rem; color: var(--muted); }
+  .tally button:hover { color: var(--ink); }
+  .tally .tn { min-width: 2.2em; text-align: center; font-weight: 800; font-size: 1.2rem; color: var(--muted); }
+  .revealed .tally { visibility: hidden; }
   .show-answer .col:not(.is-correct) { opacity: .35; }
   .show-answer .col.is-correct .label { border-color: var(--good); background: var(--good-soft); animation: pop .5s ease; }
   .show-answer .col.is-correct .label::before { content: '✓ Correct'; color: var(--good); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
   .side { display: flex; flex-direction: column; justify-content: center; gap: 1rem; min-height: 0; }
-  .answered { text-align: center; }
-  .answered .n { font-size: 6rem; font-weight: 900; line-height: 1; color: var(--ink); }
-  .answered .of { font-size: 1.4rem; color: var(--muted); font-weight: 600; }
+  .raise { text-align: center; }
+  .raise .big { font-size: 6rem; line-height: 1; }
+  .raise .t { font-size: 2.2rem; font-weight: 900; margin-top: .2em; }
+  .raise .s { font-size: 1.2rem; color: var(--muted); margin-top: .5em; line-height: 1.45; }
   .explain { padding: 1.4rem 1.6rem; border-top: 8px solid var(--good); opacity: 0; transform: translateY(14px); transition: opacity .5s, transform .5s; }
   .show-answer .explain { opacity: 1; transform: none; }
   .explain .ans { font-size: 2rem; font-weight: 900; display: flex; align-items: center; gap: .4em; margin-bottom: .4em; }
   .explain .ans .flag, .explain .ans .flag-pair { font-size: 2rem; }
   .explain p { font-size: 1.35rem; line-height: 1.45; margin: 0; }
-  .explain .nobody { font-size: .95rem; color: var(--muted); margin-top: .8em; }
 
   .center-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1rem; }
   .center-screen h1 { font-size: 4rem; margin: 0; }
@@ -117,18 +205,22 @@
   .center-screen .btn { font-size: 1.3rem; padding: .9em 1.6em; }
   .emoji-big { font-size: 6rem; line-height: 1; }
 
-  /* ---------- round 2: voting ---------- */
-  .topic { font-size: 3.4rem; font-weight: 900; margin: .1em 0 .4em; letter-spacing: -.01em; }
-  .chips { display: flex; flex-wrap: wrap; gap: .6rem; }
-  .chip { display: inline-flex; align-items: center; gap: .5em; padding: .45em 1em; border-radius: 99px; background: #fff; box-shadow: var(--shadow); font-weight: 600; font-size: 1.2rem; }
-  .chip .dot, .dot { width: .85em; height: .85em; border-radius: 50%; display: inline-block; flex: none; }
-  .vote-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-  .vote-count { font-size: 10rem; font-weight: 900; line-height: 1; color: var(--ink); }
-  .vote-count-label { font-size: 2rem; font-weight: 700; }
-  .vote-hint { font-size: 1.3rem; color: var(--muted); margin-top: .8rem; }
-  .vote-hint.live { color: var(--us-red); font-weight: 600; }
-  .vote-hint.live::before { content: '● '; animation: pulse 1.2s infinite; }
-  .manual-tag { display: inline-block; background: #FFF4D6; color: #6B4E00; font-weight: 600; border-radius: 8px; padding: .2em .6em; font-size: .9rem; margin-left: .6rem; }
+  /* ---------- round 2: counting hands ---------- */
+  .topic { font-size: 3.2rem; font-weight: 900; margin: .1em 0 .2em; letter-spacing: -.01em; }
+  .count-help { font-size: 1.25rem; color: var(--muted); margin: 0 0 1rem; line-height: 1.45; }
+  .count-grid { display: grid; gap: .7rem; align-content: start; }
+  .count-grid.two { grid-template-columns: 1fr 1fr; column-gap: 1.4rem; }
+  .crow { display: flex; align-items: center; gap: .9rem; background: #fff; border-radius: 16px; padding: .6rem .8rem .6rem 1.1rem; box-shadow: var(--shadow); font-size: 1.5rem; font-weight: 700; }
+  .crow .nm { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crow .cbtn { flex: none; border: 0; width: 2.8rem; height: 2.8rem; border-radius: 12px; font-size: 1.6rem; font-weight: 800; background: var(--bg); color: var(--ink); }
+  .crow .cbtn.plus { background: var(--il); color: #fff; }
+  .crow .cbtn:active { transform: scale(.94); }
+  .crow input { width: 4.2rem; text-align: center; font-size: 1.8rem; font-weight: 900; border: 2px solid var(--line); border-radius: 12px; padding: .1em 0; -moz-appearance: textfield; }
+  .crow input::-webkit-inner-spin-button, .crow input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .crow input:focus { outline: none; border-color: var(--il); }
+  .dot { width: .85em; height: .85em; border-radius: 50%; display: inline-block; flex: none; }
+  .total-line { font-size: 1.5rem; font-weight: 700; color: var(--muted); }
+  .total-line b { color: var(--ink); font-size: 2rem; }
 
   /* ---------- round 2: results ---------- */
   .tabs { position: absolute; top: 0; right: 0; display: flex; gap: .4rem; background: #E7ECF6; padding: .3rem; border-radius: 14px; }
@@ -161,11 +253,11 @@
   .row .meta { color: var(--muted); font-weight: 600; font-size: .95rem; }
   .row .seatsN { text-align: right; font-weight: 900; font-size: 1.5rem; white-space: nowrap; }
   .row .seatsN small { font-size: .55em; color: var(--muted); font-weight: 600; margin-left: .2em; }
-  .track { position: relative; height: 1.3rem; background: #EEF1F7; border-radius: 99px; overflow: visible; }
+  .track { position: relative; height: 1.3rem; background: #EEF1F7; border-radius: 99px; }
   .track .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 99px; transition: width 1s cubic-bezier(.2,.8,.2,1); }
-  .track .pct { position: absolute; left: .5rem; top: 50%; transform: translateY(-50%); font-size: .85rem; font-weight: 700; color: var(--ink); white-space: nowrap; transition: left 1s cubic-bezier(.2,.8,.2,1); }
+  .track .pct { position: absolute; left: .5rem; top: 50%; transform: translateY(-50%); font-size: .85rem; font-weight: 700; white-space: nowrap; transition: left 1s cubic-bezier(.2,.8,.2,1); }
   .tline { position: absolute; top: -.35rem; bottom: -.35rem; width: 3px; background: var(--ink); border-radius: 2px; z-index: 1; }
-  .tline-label { position: absolute; bottom: 100%; transform: translateX(-50%); font-size: .75rem; font-weight: 700; white-space: nowrap; color: var(--ink); margin-bottom: .2rem; }
+  .tline-label { position: absolute; bottom: 100%; transform: translateX(-50%); font-size: .75rem; font-weight: 700; white-space: nowrap; margin-bottom: .2rem; }
   .row.lost .nm { text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: rgba(194, 65, 12, .7); }
   .row.fail { animation: shake .55s ease; opacity: .55; }
   .row .stamp { position: absolute; right: 7.5rem; top: 50%; transform: translateY(-50%) rotate(-6deg) scale(1.6); opacity: 0; color: var(--bad); border: 3px solid var(--bad); border-radius: 8px; padding: .1em .5em; font-weight: 900; font-size: .9rem; text-transform: uppercase; letter-spacing: .04em; background: rgba(255,255,255,.92); transition: transform .3s cubic-bezier(.3,1.6,.5,1), opacity .2s; pointer-events: none; z-index: 2; }
@@ -174,7 +266,6 @@
   .callout { margin-top: 1rem; font-size: 1.25rem; background: var(--us-red-soft); color: #7A1424; border-radius: 14px; padding: .8em 1.1em; font-weight: 600; opacity: 0; transition: opacity .5s; }
   .callout.blue { background: var(--il-soft); color: #0B2E80; }
   .callout.show { opacity: 1; }
-
   .thr-ctl { display: inline-flex; align-items: center; gap: .6rem; margin-top: .9rem; font-weight: 700; font-size: 1.1rem; background: #fff; border-radius: 99px; padding: .3rem .4rem .3rem 1rem; box-shadow: var(--shadow); }
   .thr-ctl button { border: 0; background: var(--il-soft); color: var(--il); width: 2rem; height: 2rem; border-radius: 50%; font-size: 1.2rem; font-weight: 800; }
   .thr-ctl .v { min-width: 3.4em; text-align: center; }
@@ -184,7 +275,7 @@
   .meter .nums { display: flex; align-items: baseline; gap: .6rem; font-weight: 800; font-size: 1.6rem; margin-bottom: .4rem; }
   .meter .nums b { font-size: 3rem; }
   .meter .nums .need { color: var(--muted); font-weight: 600; font-size: 1.2rem; }
-  .meter .trackbig { position: relative; height: 1.7rem; border-radius: 99px; background: #E3E8F3; overflow: visible; }
+  .meter .trackbig { position: relative; height: 1.7rem; border-radius: 99px; background: #E3E8F3; }
   .meter .trackbig .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: var(--il); transition: width .5s cubic-bezier(.2,.8,.2,1), background .3s; }
   .meter.ok .trackbig .fill { background: var(--good); }
   .meter .mark { position: absolute; top: -.5rem; bottom: -.5rem; width: 4px; background: var(--ink); border-radius: 2px; }
@@ -198,21 +289,11 @@
   .pcard.in::after { content: '✓'; font-weight: 900; }
   .koal { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; z-index: 40; }
   .koal .word { font-size: 9rem; font-weight: 900; color: var(--good); text-shadow: 0 6px 0 #fff, 0 10px 30px rgba(0,0,0,.2); animation: pop .6s cubic-bezier(.3,1.6,.5,1); }
-  .koal .sub { font-size: 2rem; font-weight: 800; color: var(--ink); background: #fff; padding: .2em .8em; border-radius: 99px; box-shadow: var(--shadow); animation: rise .5s .2s both; }
+  .koal .sub { font-size: 2rem; font-weight: 800; background: #fff; padding: .2em .8em; border-radius: 99px; box-shadow: var(--shadow); animation: rise .5s .2s both; }
   .koal.fade { transition: opacity .6s; opacity: 0; }
   .badge-maj { display: inline-flex; align-items: center; gap: .4em; background: var(--good); color: #fff; border-radius: 99px; padding: .25em .9em; font-weight: 800; font-size: 1.1rem; margin-left: .4rem; animation: pop .5s ease; }
 
-  /* ---------- modals & settings ---------- */
-  .modal-bg { position: fixed; inset: 0; background: rgba(15,27,61,.55); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 2rem; animation: rise .2s ease; }
-  .modal { background: #fff; border-radius: 22px; padding: 1.8rem 2rem; width: min(40rem, 100%); max-height: 100%; overflow: auto; }
-  .modal h2 { margin: 0 0 .3em; font-size: 1.8rem; }
-  .modal p { color: var(--muted); margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.45; }
-  .modal .mrow { display: flex; align-items: center; gap: .8rem; padding: .45rem 0; border-bottom: 1px solid var(--line); font-size: 1.2rem; font-weight: 600; }
-  .modal .mrow input { margin-left: auto; width: 6rem; font-size: 1.3rem; padding: .3em .5em; border: 2px solid var(--line); border-radius: 10px; text-align: center; }
-  .modal .actions { display: flex; gap: .7rem; justify-content: flex-end; margin-top: 1.2rem; flex-wrap: wrap; }
-  .qr-modal { text-align: center; width: min(34rem, 100%); }
-  .qr-modal .code-big { display: inline-block; margin: .4rem 0; }
-
+  /* ---------- settings ---------- */
   .settings { position: fixed; inset: 0; background: var(--bg); z-index: 45; display: flex; flex-direction: column; font-size: 15px; }
   .settings header { display: flex; align-items: center; gap: 1rem; padding: 12px 24px; background: var(--ink); color: #fff; }
   .settings header h2 { margin: 0; font-size: 20px; }
@@ -227,8 +308,7 @@
   .qedit-head { display: flex; align-items: center; gap: 8px; }
   .qedit-head b { font-size: 16px; }
   .qedit-head .sp { flex: 1; }
-  .qedit-head button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 4px 9px; }
-  .qedit-head button:hover { background: var(--bg); }
+  .qedit-head button, .optrow button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 4px 9px; }
   .settings label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
   .settings input[type=text], .settings input[type=number], .settings textarea { border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 15px; color: var(--ink); background: #fff; width: 100%; }
   .settings textarea { resize: vertical; min-height: 2.6em; }
@@ -237,222 +317,152 @@
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .apick { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .apick span.t { font-size: 13px; font-weight: 600; color: var(--muted); margin-right: 4px; }
-  .apick label { display: inline-flex; grid: none; align-items: center; gap: 6px; border: 1.5px solid var(--line); border-radius: 99px; padding: 5px 12px; color: var(--ink); font-size: 14px; cursor: pointer; background: #fff; }
+  .apick label { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); border-radius: 99px; padding: 5px 12px; color: var(--ink); font-size: 14px; cursor: pointer; background: #fff; }
   .apick input { margin: 0; }
   .apick label:has(input:checked) { border-color: var(--il); background: var(--il-soft); }
   .optrow { display: flex; gap: 8px; align-items: center; }
   .optrow .dot { width: 16px; height: 16px; }
-  .optrow button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 10px; }
   .scard { padding: 18px 20px; }
   .scard h3 { margin: 0 0 8px; font-size: 17px; }
   .scard p { margin: 0 0 10px; color: var(--muted); line-height: 1.5; }
-  .scard code { background: var(--bg); padding: 1px 6px; border-radius: 6px; }
 
   #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
 </style>
-<script src="config.js"></script>
-<script src="content.js"></script>
-<script src="vendor/qrcode.js"></script>
 </head>
 <body>
 <div class="flagband"></div>
 <header class="topbar">
   <div class="brand">🗳️ Election Day <bdi class="he" dir="rtl" lang="he">יום הבחירות</bdi></div>
-  <button class="joinchip" id="joinChip" title="Show the QR code">Join: <b id="chipUrl"></b> · code <b class="code" id="chipCode">····</b></button>
   <div class="right">
-    <span class="count">👥 <b data-bind="joined">0</b> joined</span>
-    <span class="conn" id="conn">…</span>
     <button class="iconbtn" id="fsBtn" title="Full screen (F)">⛶</button>
     <button class="iconbtn" id="setBtn" title="Settings">⚙️</button>
     <button class="iconbtn" id="homeBtn" title="Home">🏠</button>
   </div>
 </header>
-<div id="banners"></div>
 <main id="main"></main>
-<div id="layer"></div>
 <canvas id="confetti"></canvas>
 
-<script type="module">
-import {
-  connect, configState, onBackendError, esc, heText, toArray, randomId, makeRoomCode,
-  playerUrl, playerUrlShort, FLAG, ANSWERS, ANSWER_KEYS, PARTY_COLORS, dhondt
-} from './common.js';
+<script>
+(function () {
+'use strict';
 
-const B = connect();
 const main = document.getElementById('main');
-const layer = document.getElementById('layer');
-const LS_STATE = 'electionVote.host';
-const LS_CONTENT = 'electionVote.content';
+const LS_STATE = 'electionDay.state';
+const LS_CONTENT = 'electionDay.content';
 
 /* ================================================================== */
-/*  Saved content (questions, options) and game state                  */
+/*  Helpers                                                            */
 /* ================================================================== */
 
 const clone = o => JSON.parse(JSON.stringify(o));
 
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+/** Escape text, and wrap any Hebrew inside it so it reads right-to-left. */
+function heText(s) {
+  return esc(s).replace(/[֐-׿]+(?:[\s\-"'״׳]+[֐-׿]+)*/g,
+    m => `<bdi class="he" dir="rtl" lang="he">${m}</bdi>`);
+}
+const hebrew = s => `<bdi class="he" dir="rtl" lang="he">${esc(s)}</bdi>`;
+
+/* Flags drawn as pictures, because Windows computers don't show flag emoji. */
+function usFlagSvg() {
+  const h = 20 / 13;
+  let s = '<svg class="flag" viewBox="0 0 38 20" aria-hidden="true"><rect width="38" height="20" fill="#fff"/>';
+  for (let i = 0; i < 13; i += 2) s += `<rect y="${(i * h).toFixed(3)}" width="38" height="${h.toFixed(3)}" fill="#B22234"/>`;
+  s += `<rect width="15.2" height="${(7 * h).toFixed(3)}" fill="#3C3B6E"/>`;
+  for (let r = 0; r < 9; r++) {
+    const n = r % 2 === 0 ? 6 : 5;
+    for (let c = 0; c < n; c++) {
+      const x = (r % 2 === 0 ? 1.27 : 2.53) + c * 2.53;
+      s += `<circle cx="${x.toFixed(2)}" cy="${(0.6 + r * 1.2).toFixed(2)}" r="0.42" fill="#fff"/>`;
+    }
+  }
+  return s + '</svg>';
+}
+function ilFlagSvg() {
+  return '<svg class="flag" viewBox="0 0 220 160" aria-hidden="true"><rect width="220" height="160" fill="#fff"/>' +
+    '<rect y="15" width="220" height="25" fill="#0038B8"/><rect y="120" width="220" height="25" fill="#0038B8"/>' +
+    '<g fill="none" stroke="#0038B8" stroke-width="5.5"><polygon points="110,47 138.6,96.5 81.4,96.5"/>' +
+    '<polygon points="110,113 138.6,63.5 81.4,63.5"/></g></svg>';
+}
+const FLAG = { usa: usFlagSvg(), israel: ilFlagSvg() };
+FLAG.both = '<span class="flag-pair">' + FLAG.usa + FLAG.israel + '</span>';
+
+const ANSWERS = {
+  usa: { label: 'USA', he: 'ארה״ב' },
+  israel: { label: 'Israel', he: 'ישראל' },
+  both: { label: 'Both', he: 'שתיהן' }
+};
+const ANSWER_KEYS = ['usa', 'israel', 'both'];
+
+const PARTY_COLORS = [
+  { bg: '#E63946', fg: '#fff' }, { bg: '#1F6FEB', fg: '#fff' }, { bg: '#F2A900', fg: '#1b1b1b' },
+  { bg: '#16A085', fg: '#fff' }, { bg: '#8E44AD', fg: '#fff' }, { bg: '#F06292', fg: '#1b1b1b' },
+  { bg: '#2E7D32', fg: '#fff' }, { bg: '#795548', fg: '#fff' }
+];
+const color = i => PARTY_COLORS[i % PARTY_COLORS.length];
+
+/**
+ * The D'Hondt method (what Israel uses to turn votes into seats).
+ * Options under the threshold get 0 seats; the seats are then handed out one
+ * at a time to whichever remaining option has the highest votes / (seats won + 1).
+ */
+function dhondt(votes, seats, thresholdPct) {
+  const total = votes.reduce((a, b) => a + b, 0);
+  const passed = votes.map(v => total > 0 && v > 0 && v * 100 >= thresholdPct * total - 1e-9);
+  const won = votes.map(() => 0);
+  if (!passed.some(Boolean)) return { total, passed, seats: won };
+  for (let s = 0; s < seats; s++) {
+    let best = -1, bestQ = -1;
+    votes.forEach((v, i) => {
+      if (!passed[i]) return;
+      const q = v / (won[i] + 1);
+      if (q > bestQ || (q === bestQ && v > votes[best])) { bestQ = q; best = i; }
+    });
+    won[best]++;
+  }
+  return { total, passed, seats: won };
+}
+
+const toNum = v => Math.max(0, Math.min(999, Math.round(Number(v) || 0)));
+
+/* ================================================================== */
+/*  Saved content and progress (kept in this browser)                  */
+/* ================================================================== */
+
+function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* private mode */ } }
+function load(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+
 function loadContent() {
-  let saved = null;
-  try { saved = JSON.parse(localStorage.getItem(LS_CONTENT)); } catch (e) { /* ignore */ }
+  const saved = load(LS_CONTENT);
   const c = saved && Array.isArray(saved.round1) && saved.round2 ? saved : clone(DEFAULT_CONTENT);
   c.round2 = Object.assign(clone(DEFAULT_CONTENT.round2), c.round2);
   return c;
 }
-function saveContent() {
-  try { localStorage.setItem(LS_CONTENT, JSON.stringify(content)); } catch (e) { /* ignore */ }
-}
+const saveContent = () => store(LS_CONTENT, content);
 
-const freshState = () => ({ room: null, screen: 'lobby', r1run: randomId(4), r1i: 0, r1rev: false, r2: null });
+const freshState = () => ({ screen: 'home', r1i: 0, r1rev: false, r1hands: {}, r2: null });
 function loadState() {
-  try {
-    const s = JSON.parse(localStorage.getItem(LS_STATE));
-    if (s && typeof s === 'object') return Object.assign(freshState(), s);
-  } catch (e) { /* ignore */ }
-  return freshState();
+  const s = load(LS_STATE);
+  return s && typeof s === 'object' ? Object.assign(freshState(), s) : freshState();
 }
-function saveState() {
-  try { localStorage.setItem(LS_STATE, JSON.stringify(S)); } catch (e) { /* ignore */ }
-}
+const saveState = () => store(LS_STATE, S);
 
 let content = loadContent();
 let S = loadState();
-let players = {};
-let votes = {};
-let unsubs = [];
 let wasMajority = false;   // so the coalition party only fires once per majority
-
-/* ================================================================== */
-/*  Room + live data                                                   */
-/* ================================================================== */
-
-async function newRoomCode() {
-  for (let i = 0; i < 8; i++) {
-    const code = makeRoomCode();
-    try {
-      if (!(await B.get(`rooms/${code}/live`))) return code;
-    } catch (e) {
-      return code;   // offline: just use it
-    }
-  }
-  return makeRoomCode();
-}
-
-function subscribe() {
-  unsubs.forEach(u => u());
-  unsubs = [
-    B.on(`rooms/${S.room}/players`, v => { players = v || {}; updateBindings(); }),
-    B.on(`rooms/${S.room}/votes`, v => { votes = v || {}; updateBindings(); })
-  ];
-}
-
-const r1Key = () => `r1_${S.r1run}_${S.r1i}`;
-const r2Key = () => (S.r2 ? `r2_${S.r2.id}` : null);
-const votesFor = key => (key && votes && votes[key]) || {};
-
-function r1Counts() {
-  const c = { usa: 0, israel: 0, both: 0 };
-  Object.values(votesFor(r1Key())).forEach(v => { if (c[v] !== undefined) c[v]++; });
-  return c;
-}
-function r2LiveCounts() {
-  const n = S.r2.options.length;
-  const c = new Array(n).fill(0);
-  Object.values(votesFor(r2Key())).forEach(v => {
-    v = Number(v);
-    if (Number.isInteger(v) && v >= 0 && v < n) c[v]++;
-  });
-  return c;
-}
-const r2Results = () => S.r2.manual || S.r2.final || r2LiveCounts();
-
-/* What the students' phones should show right now. */
-let lastLive = '';
-function publishLive(force) {
-  if (!S.room) return;
-  const L = { screen: 'lobby' };
-  const q = content.round1[S.r1i];
-  if (S.screen === 'r1' && q) {
-    L.screen = 'r1';
-    L.q = { key: r1Key(), i: S.r1i, n: content.round1.length, text: q.statement || '', revealed: !!S.r1rev };
-    if (S.r1rev) L.q.answer = q.answer;
-  } else if (S.screen === 'r2' && S.r2) {
-    L.screen = 'r2';
-    L.r2 = { key: r2Key(), status: S.r2.status, topic: S.r2.topic, options: S.r2.options };
-  }
-  const json = JSON.stringify(L);
-  if (json === lastLive && !force) return;
-  lastLive = json;
-  B.set(`rooms/${S.room}/live`, L).catch(() => {});
-}
 
 function go(screen) {
   S.screen = screen;
   saveState();
-  publishLive();
   render();
-}
-
-/* ================================================================== */
-/*  Header, live counters, banners                                     */
-/* ================================================================== */
-
-function updateHeader() {
-  document.getElementById('chipUrl').textContent = playerUrlShort();
-  document.getElementById('chipCode').textContent = S.room || '····';
-  document.getElementById('joinChip').classList.toggle('hide', S.screen === 'lobby');
-}
-
-function setBind(name, value) {
-  document.querySelectorAll(`[data-bind="${name}"]`).forEach(el => {
-    if (el.textContent !== String(value)) {
-      el.textContent = value;
-      el.classList.remove('bump');
-      void el.offsetWidth;
-      el.classList.add('bump');
-    }
-  });
-}
-function updateBindings() {
-  const joined = Object.keys(players || {}).length;
-  setBind('joined', joined);
-  document.querySelectorAll('[data-students]').forEach(el => { el.textContent = joined === 1 ? 'student' : 'students'; });
-  if (S.screen === 'r1') setBind('answered', Object.keys(votesFor(r1Key())).length);
-  if (S.screen === 'r2' && S.r2 && S.r2.status === 'open') setBind('r2votes', Object.keys(votesFor(r2Key())).length);
-}
-
-function renderBanners(errorText) {
-  const el = document.getElementById('banners');
-  let html = '';
-  if (B.mode === 'demo') {
-    const why = configState() === 'nodb'
-      ? 'config.js is missing the <b>databaseURL</b> line. Create the Realtime Database first, then copy the config again (README, Step 1).'
-      : 'Phones can’t join yet: Firebase isn’t set up in <b>config.js</b> (see README, Step 1). You can still practise in another tab on this computer, or type votes by hand.';
-    html += `<div class="banner">⚠️ <span><b>Demo mode.</b> ${why}</span>
-      <button class="btn small ghost" id="openStudent">Open a student view ↗</button></div>`;
-  }
-  if (errorText) html += `<div class="banner err">⛔ <span>${errorText}</span></div>`;
-  el.innerHTML = html;
-  const b = document.getElementById('openStudent');
-  if (b) b.addEventListener('click', () => window.open(playerUrl(S.room), '_blank'));
-}
-
-onBackendError(err => {
-  const msg = String((err && err.message) || err);
-  if (/permission/i.test(msg)) {
-    renderBanners('Firebase said <b>permission denied</b>. In Firebase → Realtime Database → Rules, paste the rules from README (Step 1) and press Publish.');
-  }
-});
-
-const conn = document.getElementById('conn');
-if (B.mode === 'demo') {
-  conn.className = 'conn demo';
-  conn.textContent = 'Demo';
-} else {
-  let offTimer = null;
-  B.onConnection(ok => {
-    clearTimeout(offTimer);
-    if (ok) { conn.className = 'conn ok'; conn.textContent = 'Live'; }
-    else offTimer = setTimeout(() => { conn.className = 'conn off'; conn.textContent = 'Offline'; }, 2500);
-  });
 }
 
 /* ================================================================== */
@@ -466,73 +476,66 @@ function clearTimers() { timers.forEach(clearTimeout); timers = []; }
 let lastSig = '';
 function render() {
   clearTimers();
-  updateHeader();
   // only play the fade-in when the screen really changes (not on every click)
-  const sig = [S.screen, S.r1i, S.r1rev, S.r2 && S.r2.view, S.r2 && S.r2.status].join('|');
+  const sig = [S.screen, S.r1i, S.r1rev, S.r2 && S.r2.view].join('|');
   main.classList.toggle('static', sig === lastSig);
   lastSig = sig;
-  if (S.screen === 'r1' && !content.round1.length) S.screen = 'lobby';
+  if (S.screen === 'r1' && !content.round1.length) S.screen = 'home';
   if (S.screen === 'r1') renderR1();
   else if (S.screen === 'r1done') renderR1Done();
   else if (S.screen === 'r2' && S.r2) renderR2();
-  else renderLobby();
-  updateBindings();
+  else renderHome();
 }
+const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
 
-function qrSvg(text) {
-  try {
-    const qr = qrcode(0, 'M');
-    qr.addData(text);
-    qr.make();
-    return qr.createSvgTag({ cellSize: 8, margin: 2, scalable: true, alt: 'QR code to join' });
-  } catch (e) {
-    return '';
-  }
-}
-
-function hebrew(s) { return `<bdi class="he" dir="rtl" lang="he">${esc(s)}</bdi>`; }
-
-/* ---------------- lobby ---------------- */
-function renderLobby() {
-  const url = playerUrl(S.room);
+/* ---------------- home ---------------- */
+function renderHome() {
   main.innerHTML = `
-    <section class="screen lobby">
+    <section class="screen home">
       <div>
         <div class="kicker">Hebrew class · Elections</div>
         <h1 class="title">USA ${FLAG.usa} or Israel ${FLAG.israel}?</h1>
         <span class="title-he">${hebrew('בחירות בארה״ב ובישראל')}</span>
-        <p class="subtitle">How do elections work in each country? Vote on your phone and find out.</p>
-        <div class="joinbox">
-          <div class="lbl">Scan the QR code, or go to<br><b>${esc(playerUrlShort())}</b><br>and type the code:</div>
-          <div class="code-big">${esc(S.room || '····')}</div>
-        </div>
-        <div class="joined-big">👥 <b data-bind="joined">0</b> <span><span data-students>students</span> joined</span></div>
-        <div class="lobby-actions">
+        <p class="subtitle">How do elections work in each country? Raise your hand and find out.</p>
+        <div class="home-actions">
           <button class="btn blue" id="startR1">▶ Round 1: USA or Israel?</button>
           <button class="btn red" id="startR2">Round 2: Class election →</button>
         </div>
-        <div class="lobby-small">
-          <button class="btn small ghost" id="lobbySettings">⚙️ Settings</button>
-          <button class="btn small ghost" id="lobbyReset">↺ Reset everything (new class)</button>
+        <div class="home-small">
+          <button class="btn small ghost" id="homeSettings">⚙️ Settings</button>
+          <button class="btn small ghost" id="homeReset">↺ Reset everything (new class)</button>
         </div>
       </div>
-      <div class="card qr-card">
-        <div class="qr">${qrSvg(url)}</div>
-        <div class="qr-url">${esc(url.replace(/^https?:\/\//, ''))}</div>
+      <div class="card plan">
+        <h3>Today</h3>
+        <div class="step"><div class="n">1</div><div><b>USA or Israel?</b><span>Raise your hand for 🇺🇸 USA, 🇮🇱 Israel, or both.</span></div></div>
+        <div class="step"><div class="n">2</div><div><b>A class election</b><span>Everyone votes once, then we count the same votes two ways.</span></div></div>
+        <div class="step"><div class="n">3</div><div><b>Build a coalition ${hebrew('קואליציה')}</b><span>Can you team up to a majority?</span></div></div>
+        <div style="font-size:3.4rem;text-align:center"><span class="hand">✋</span></div>
       </div>
     </section>`;
-  document.getElementById('startR1').addEventListener('click', startRound1);
-  document.getElementById('startR2').addEventListener('click', startRound2);
-  document.getElementById('lobbySettings').addEventListener('click', () => openSettings('r1'));
-  document.getElementById('lobbyReset').addEventListener('click', resetEverything);
+  // the emoji flags in the plan card are just decoration; swap in the pictures
+  main.querySelectorAll('.plan .step span').forEach(el => {
+    el.innerHTML = el.innerHTML.replace('🇺🇸', FLAG.usa).replace('🇮🇱', FLAG.israel);
+  });
+  on('startR1', startRound1);
+  on('startR2', startRound2);
+  on('homeSettings', () => openSettings('r1'));
+  on('homeReset', resetEverything);
 }
 
 /* ---------------- round 1 ---------------- */
 function startRound1() {
   if (!content.round1.length) { openSettings('r1'); return; }
-  if (S.screen === 'lobby') { S.r1run = randomId(4); S.r1i = 0; }
+  if (S.screen === 'home') { S.r1i = 0; S.r1hands = {}; }
   S.r1rev = false;
   go('r1');
+}
+
+function hands() {
+  const h = S.r1hands[S.r1i] || { usa: 0, israel: 0, both: 0 };
+  S.r1hands[S.r1i] = h;
+  return h;
 }
 
 function renderR1() {
@@ -540,6 +543,7 @@ function renderR1() {
   const q = content.round1[S.r1i];
   const n = content.round1.length;
   const isLast = S.r1i === n - 1;
+  const h = hands();
   const vocab = q.he || q.translit || q.meaning ? `
     <div class="vocab">
       <span class="tag">Word</span>
@@ -563,17 +567,22 @@ function renderR1() {
             <div class="col ${k} ${q.answer === k ? 'is-correct' : ''}">
               <div class="barbox"><div class="q">?</div><div class="bar" data-bar="${k}"><span class="num" data-num="${k}"></span></div></div>
               <div class="label">${FLAG[k]}<span>${ANSWERS[k].label}</span>${hebrew(ANSWERS[k].he)}</div>
+              <div class="tally" title="Optional: count the hands">
+                <button data-hand="${k}" data-d="-1" aria-label="One fewer hand for ${ANSWERS[k].label}">−</button>
+                <span class="tn" data-tn="${k}">✋ ${h[k]}</span>
+                <button data-hand="${k}" data-d="1" aria-label="One more hand for ${ANSWERS[k].label}">+</button>
+              </div>
             </div>`).join('')}
         </div>
         <div class="side">
-          <div class="answered" id="answeredBox">
-            <div class="n" data-bind="answered">0</div>
-            <div class="of">of <span data-bind="joined">0</span> <span data-students>students</span> answered</div>
+          <div class="raise" id="raiseBox">
+            <div class="big"><span class="hand">✋</span></div>
+            <div class="t">Raise your hand!</div>
+            <div class="s">USA, Israel, or both?<br><small>Counting hands is optional: use the + buttons (or keys 1, 2, 3) to show a chart.</small></div>
           </div>
           <div class="explain card" id="explainBox" hidden>
             <div class="ans">${FLAG[q.answer] || ''} ${esc(ans.label)}</div>
             <p>${heText(q.explain || '')}</p>
-            <div class="nobody" id="nobody" hidden>No phone answers for this one, so the bars are empty.</div>
           </div>
         </div>
       </div>
@@ -586,39 +595,47 @@ function renderR1() {
         : `<button class="btn green" id="revealQ">Reveal answer<span class="kbd">Space</span></button>`}
     </nav>`;
 
-  document.getElementById('prevQ').addEventListener('click', prevQuestion);
-  const reveal = document.getElementById('revealQ');
-  if (reveal) reveal.addEventListener('click', revealQuestion);
-  const next = document.getElementById('nextQ');
-  if (next) next.addEventListener('click', nextQuestion);
+  on('prevQ', prevQuestion);
+  on('revealQ', revealQuestion);
+  on('nextQ', nextQuestion);
+  main.querySelectorAll('[data-hand]').forEach(b => b.addEventListener('click', () => addHand(b.dataset.hand, Number(b.dataset.d))));
   if (S.r1rev) animateReveal();
+}
+
+function addHand(k, d) {
+  if (S.screen !== 'r1' || S.r1rev) return;
+  const h = hands();
+  h[k] = Math.max(0, h[k] + d);
+  saveState();
+  const el = main.querySelector(`[data-tn="${k}"]`);
+  if (el) el.textContent = '✋ ' + h[k];
 }
 
 function revealQuestion() {
   if (S.screen !== 'r1' || S.r1rev) return;
   S.r1rev = true;
   saveState();
-  publishLive();
   render();
 }
 
 function animateReveal() {
   const r1 = document.getElementById('r1');
-  const counts = r1Counts();
-  const total = counts.usa + counts.israel + counts.both;
-  const max = Math.max(1, counts.usa, counts.israel, counts.both);
-  document.getElementById('answeredBox').hidden = true;
+  const h = hands();
+  const total = h.usa + h.israel + h.both;
+  const max = Math.max(1, h.usa, h.israel, h.both);
+  document.getElementById('raiseBox').hidden = true;
   document.getElementById('explainBox').hidden = false;
-  document.getElementById('nobody').hidden = total > 0;
+  r1.classList.toggle('has-hands', total > 0);
   later(() => {
     r1.classList.add('revealed');
+    if (!total) return;
     ANSWER_KEYS.forEach(k => {
-      const pct = total ? Math.round(counts[k] * 100 / total) : 0;
-      document.querySelector(`[data-bar="${k}"]`).style.height = (counts[k] / max * 82) + '%';
-      document.querySelector(`[data-num="${k}"]`).innerHTML = `${counts[k]}<small>${pct}%</small>`;
+      const pct = Math.round(h[k] * 100 / total);
+      document.querySelector(`[data-bar="${k}"]`).style.height = (h[k] / max * 82) + '%';
+      document.querySelector(`[data-num="${k}"]`).innerHTML = `${h[k]}<small>${pct}%</small>`;
     });
   }, 60);
-  later(() => r1.classList.add('show-answer'), 1400);
+  later(() => r1.classList.add('show-answer'), total ? 1400 : 300);
 }
 
 function nextQuestion() {
@@ -646,8 +663,8 @@ function renderR1Done() {
         <button class="btn red" id="toR2">Start Round 2 →</button>
       </div>
     </section>`;
-  document.getElementById('backR1').addEventListener('click', () => { S.r1rev = true; go('r1'); });
-  document.getElementById('toR2').addEventListener('click', startRound2);
+  on('backR1', () => { S.r1rev = true; go('r1'); });
+  on('toR2', startRound2);
 }
 
 /* ---------------- round 2 ---------------- */
@@ -656,49 +673,28 @@ function cleanOptions() {
 }
 function newR2() {
   wasMajority = false;
-  return {
-    id: randomId(6), status: 'ready', topic: content.round2.topic, options: cleanOptions(),
-    final: null, manual: null, view: 'vote', coalition: []
-  };
+  const options = cleanOptions();
+  return { topic: content.round2.topic, options, counts: options.map(() => 0), view: 'count', coalition: [] };
 }
 function startRound2() {
   if (!S.r2) S.r2 = newR2();
   go('r2');
 }
-
+const VIEWS = ['count', 'usa', 'israel', 'coalition'];
+function setView(v) {
+  S.r2.view = v;
+  saveState();
+  render();
+}
 function renderR2() {
   const v = S.r2.view;
   if (v === 'usa' || v === 'israel' || v === 'coalition') return renderResults(v);
-  renderVote();
+  renderCount();
 }
+const totalVotes = () => S.r2.counts.reduce((a, b) => a + b, 0);
 
-function optChips(options) {
-  return options.map((o, i) => {
-    const c = PARTY_COLORS[i % PARTY_COLORS.length];
-    return `<span class="chip"><span class="dot" style="background:${c.bg}"></span>${heText(o)}</span>`;
-  }).join('');
-}
-
-function renderVote() {
+function renderCount() {
   const r2 = S.r2;
-  let center;
-  if (r2.status === 'ready') {
-    center = `
-      <div class="emoji-big">🗳️</div>
-      <div class="vote-hint">Everyone gets <b>one secret vote</b>. Open the vote when the class is ready.</div>`;
-  } else if (r2.status === 'open') {
-    center = `
-      <div class="vote-count" data-bind="r2votes">0</div>
-      <div class="vote-count-label">votes</div>
-      <div class="vote-hint">out of <span data-bind="joined">0</span> <span data-students>students</span></div>
-      <div class="vote-hint live">Voting is open · the results stay hidden until you close it</div>`;
-  } else {
-    const total = r2Results().reduce((a, b) => a + b, 0);
-    center = `
-      <div class="vote-count">${total}</div>
-      <div class="vote-count-label">votes ${r2.manual ? '<span class="manual-tag">typed by hand</span>' : ''}</div>
-      <div class="vote-hint">🔒 Voting is closed. Let’s count them, two different ways…</div>`;
-  }
   main.innerHTML = `
     <section class="screen">
       <div class="head">
@@ -706,43 +702,60 @@ function renderVote() {
         <span class="muted">Class election</span>
       </div>
       <h1 class="topic">${heText(r2.topic)}</h1>
-      <div class="chips">${optChips(r2.options)}</div>
-      <div class="vote-center">${center}</div>
+      <p class="count-help">Everyone gets <b>one vote</b>. Read each option aloud and count the hands.
+        <br><small>Tip: for a secret ballot, everyone closes their eyes while they vote.</small></p>
+      <div class="count-grid ${r2.options.length > 4 ? 'two' : ''}">
+        ${r2.options.map((o, i) => `
+          <div class="crow">
+            <span class="dot" style="background:${color(i).bg}"></span>
+            <span class="nm">${heText(o)}</span>
+            <button class="cbtn" data-dec="${i}" aria-label="One fewer vote">−</button>
+            <input type="number" min="0" max="999" inputmode="numeric" data-c="${i}" value="${r2.counts[i] || 0}" aria-label="Votes for ${esc(o)}">
+            <button class="cbtn plus" data-inc="${i}" aria-label="One more vote">+</button>
+          </div>`).join('')}
+      </div>
     </section>
     <nav class="controls">
-      <button class="btn ghost" id="manualBtn">✍️ Type votes by hand</button>
-      ${r2.status === 'ready' ? `<button class="btn ghost" id="editR2">✏️ Edit topic & options</button>` : ''}
-      ${r2.status === 'closed' ? `<button class="btn ghost" id="newVote">↺ New vote</button>` : ''}
+      <button class="btn ghost" id="editR2">✏️ Edit topic & options</button>
+      <button class="btn ghost" id="clearCount">↺ Clear the counts</button>
       <span class="spacer"></span>
-      ${r2.status === 'ready' ? `<button class="btn green" id="openVote">▶ Open voting</button>` : ''}
-      ${r2.status === 'open' ? `<button class="btn red" id="closeVote">■ Close voting</button>` : ''}
-      ${r2.status === 'closed' ? `<button class="btn blue" id="toUsa">See results: the American way →</button>` : ''}
+      <span class="total-line">Total: <b id="totalVotes">0</b> votes</span>
+      <button class="btn blue" id="toUsa">Show results →</button>
     </nav>`;
-  const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-  on('manualBtn', openManual);
-  on('editR2', () => openSettings('r2'));
-  on('newVote', () => { if (confirm('Start a new vote? The current results will be cleared.')) { S.r2 = newR2(); go('r2'); } });
-  on('openVote', () => {
-    if (r2.options.length < 2) { alert('Add at least 2 options first (⚙️ Settings → Round 2).'); return; }
-    S.r2.status = 'open'; go('r2');
+
+  const updateTotal = () => {
+    document.getElementById('totalVotes').textContent = totalVotes();
+    document.getElementById('toUsa').disabled = totalVotes() === 0;
+  };
+  const setCount = (i, v) => {
+    r2.counts[i] = toNum(v);
+    r2.coalition = [];
+    wasMajority = false;
+    saveState();
+    updateTotal();
+  };
+  main.querySelectorAll('[data-c]').forEach(inp => {
+    inp.addEventListener('input', () => setCount(Number(inp.dataset.c), inp.value));
+    inp.addEventListener('focus', () => inp.select());
   });
-  on('closeVote', closeVoting);
+  const bump = (i, d) => {
+    const inp = main.querySelector(`[data-c="${i}"]`);
+    inp.value = toNum(Number(inp.value) + d);
+    setCount(i, inp.value);
+  };
+  main.querySelectorAll('[data-inc]').forEach(b => b.addEventListener('click', () => bump(b.dataset.inc, 1)));
+  main.querySelectorAll('[data-dec]').forEach(b => b.addEventListener('click', () => bump(b.dataset.dec, -1)));
+  on('editR2', () => openSettings('r2'));
+  on('clearCount', () => {
+    if (!confirm('Set all the counts back to 0?')) return;
+    r2.counts = r2.options.map(() => 0);
+    r2.coalition = [];
+    saveState();
+    render();
+  });
   on('toUsa', () => setView('usa'));
+  updateTotal();
 }
-
-function closeVoting() {
-  S.r2.final = r2LiveCounts();
-  S.r2.status = 'closed';
-  go('r2');
-}
-
-function setView(v) {
-  S.r2.view = v;
-  saveState();
-  render();
-}
-
-const VIEWS = ['vote', 'usa', 'israel', 'coalition'];
 
 function resultsShell(view, inner) {
   const idx = VIEWS.indexOf(view);
@@ -757,35 +770,31 @@ function resultsShell(view, inner) {
       ${inner}
     </section>
     <nav class="controls">
-      <button class="btn ghost" id="backView">← ${idx === 1 ? 'Back to voting' : 'Back'}</button>
-      <button class="btn ghost" id="manualBtn">✍️ Type votes by hand</button>
+      <button class="btn ghost" id="backView">← ${idx === 1 ? 'Back to counting' : 'Back'}</button>
       <span class="spacer"></span>
       <span id="extraCtl"></span>
       ${nextLabel ? `<button class="btn blue" id="nextView">${nextLabel}</button>` : ''}
     </nav>`;
 }
-
 function bindResultsShell(view) {
   main.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
-  document.getElementById('backView').addEventListener('click', () => setView(VIEWS[VIEWS.indexOf(view) - 1]));
-  document.getElementById('manualBtn').addEventListener('click', openManual);
-  const n = document.getElementById('nextView');
-  if (n) n.addEventListener('click', () => setView(VIEWS[VIEWS.indexOf(view) + 1]));
+  on('backView', () => setView(VIEWS[VIEWS.indexOf(view) - 1]));
+  on('nextView', () => setView(VIEWS[VIEWS.indexOf(view) + 1]));
 }
 
 function renderResults(view) {
-  const counts = r2Results();
-  const total = counts.reduce((a, b) => a + b, 0);
+  const counts = S.r2.counts;
+  const total = totalVotes();
   if (!total) {
     main.innerHTML = resultsShell(view, `
       <div class="center-screen">
-        <div class="emoji-big">🤷</div>
+        <div class="emoji-big">✋</div>
         <h1>No votes yet</h1>
-        <p>Nobody voted from a phone. You can count hands and type the numbers in.</p>
-        <button class="btn red" id="manualBig">✍️ Type votes by hand</button>
+        <p>Count the hands first, then come back here.</p>
+        <button class="btn red" id="countBig">← Count the votes</button>
       </div>`);
     bindResultsShell(view);
-    document.getElementById('manualBig').addEventListener('click', openManual);
+    on('countBig', () => setView('count'));
     return;
   }
   if (view === 'usa') renderUsa(counts, total);
@@ -813,23 +822,20 @@ function hemiLayout(n) {
   const gap = rows > 1 ? (1 - r0) / (rows - 1) : 0.5;
   let arc = Infinity;
   radii.forEach((r, ri) => { if (counts[ri] > 1) arc = Math.min(arc, Math.PI * r / (counts[ri] - 1)); });
-  const dot = Math.min(gap * 0.38, arc * 0.38, 0.11);
-  return { seats, dot };
+  return { seats, dot: Math.min(gap * 0.38, arc * 0.38, 0.11) };
 }
-
 function hemiSvg(n, label, sub, small) {
   const { seats, dot } = hemiLayout(n);
   const m = dot + 0.03;
   const circles = seats.map((s, i) =>
-    `<circle class="seat" data-seat="${i}" cx="${s.x.toFixed(4)}" cy="${(-s.y).toFixed(4)}" r="${dot.toFixed(4)}"/>`).join('');
+    `<circle class="seat" cx="${s.x.toFixed(4)}" cy="${(-s.y).toFixed(4)}" r="${dot.toFixed(4)}"/>`).join('');
   return `<div class="hemi ${small ? 'small' : ''}"><svg viewBox="${-1 - m} ${-1 - m} ${2 + 2 * m} ${1 + 2 * m}" role="img" aria-label="${esc(label + ' ' + sub)}">${circles}</svg></div>
     <div class="hemi-cap"><b>${esc(label)}</b><span>${esc(sub)}</span></div>`;
 }
-
-/** colors: one color per seat (left to right). */
-function fillSeats(colors, { start = 0, step = 0, dimmed = null } = {}) {
-  const seats = main.querySelectorAll('.seat');
-  seats.forEach((el, i) => {
+/** colors: one color per seat, left to right. */
+function fillSeats(colors, opts) {
+  const { start = 0, step = 0, dimmed = null } = opts || {};
+  main.querySelectorAll('.seat').forEach((el, i) => {
     const apply = () => {
       el.style.fill = colors[i] || '';
       if (step) el.classList.add('on');
@@ -838,14 +844,14 @@ function fillSeats(colors, { start = 0, step = 0, dimmed = null } = {}) {
     if (step || start) later(apply, start + i * step); else apply();
   });
 }
-
 function seatColors(seatCounts) {
   const out = [];
-  seatCounts.forEach((s, i) => { for (let k = 0; k < s; k++) out.push(PARTY_COLORS[i % PARTY_COLORS.length].bg); });
+  seatCounts.forEach((s, i) => { for (let k = 0; k < s; k++) out.push(color(i).bg); });
   return out;
 }
 const seatsTotal = () => Math.max(1, Math.min(200, Math.round(Number(content.round2.seats) || 20)));
 const majorityOf = n => Math.floor(n / 2) + 1;
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 /* ----- the American way ----- */
 function renderUsa(counts, total) {
@@ -857,16 +863,14 @@ function renderUsa(counts, total) {
   const w = winners[0];
   const order = counts.map((c, i) => i).sort((a, b) => counts[b] - counts[a] || a - b);
   const others = total - (tie ? 0 : counts[w]);
-  const othersPct = Math.round(others * 100 / total);
 
   const rows = order.map((i, k) => {
-    const c = PARTY_COLORS[i % PARTY_COLORS.length];
     const isWin = !tie && i === w;
     const isTie = tie && winners.includes(i);
     return `<div class="row usa-row" data-i="${i}" style="animation-delay:${k * 70}ms; grid-template-columns: 1.3rem 1fr auto 6.5rem">
-      <span class="dot" style="background:${c.bg}"></span>
+      <span class="dot" style="background:${color(i).bg}"></span>
       <span class="nm">${heText(opts[i])}</span>
-      <span class="meta">${counts[i]} vote${counts[i] === 1 ? '' : 's'} (${Math.round(counts[i] * 100 / total)}%)</span>
+      <span class="meta">${plural(counts[i], 'vote')} (${Math.round(counts[i] * 100 / total)}%)</span>
       <span class="seatsN" data-final="${isWin ? nSeats : isTie ? '?' : 0}">…</span>
     </div>`;
   }).join('');
@@ -883,7 +887,7 @@ function renderUsa(counts, total) {
         <div class="rows">${rows}</div>
         <div class="callout" id="usaCallout">${tie
           ? 'It’s a tie! Winner-takes-all needs one winner, so a real election would need a recount or a new vote.'
-          : `<b>${others}</b> of ${total} voters (${othersPct}%) picked something else, and their votes won <b>nothing</b>.`}</div>
+          : `<b>${others}</b> of ${total} voters (${Math.round(others * 100 / total)}%) picked something else, and their votes won <b>nothing</b>.`}</div>
       </div>
     </div>`);
   bindResultsShell('usa');
@@ -892,21 +896,19 @@ function renderUsa(counts, total) {
     const card = document.getElementById('winCard');
     if (tie) {
       card.innerHTML = `<div class="crown">🤝</div><div class="name">It’s a tie!</div>
-        <div class="takes">${winners.map(i => heText(opts[i])).join(' & ')} · ${max} votes each</div>`;
+        <div class="takes">${winners.map(i => heText(opts[i])).join(' & ')} · ${plural(max, 'vote')} each</div>`;
     } else {
-      const c = PARTY_COLORS[w % PARTY_COLORS.length];
-      card.innerHTML = `<div class="crown">👑</div><div class="name" style="color:${c.bg}">${heText(opts[w])}</div>
-        <div class="takes">${counts[w]} votes → wins all ${nSeats} seats</div>`;
-      fillSeats(new Array(nSeats).fill(c.bg), { start: 150, step: Math.min(40, 900 / nSeats) });
+      card.innerHTML = `<div class="crown">👑</div><div class="name" style="color:${color(w).bg}">${heText(opts[w])}</div>
+        <div class="takes">${plural(counts[w], 'vote')} → wins all ${nSeats} seats</div>`;
+      fillSeats(new Array(nSeats).fill(color(w).bg), { start: 150, step: Math.min(40, 900 / nSeats) });
       confetti(90);
     }
     main.querySelectorAll('.usa-row').forEach(row => {
       const i = Number(row.dataset.i);
       const s = row.querySelector('.seatsN');
-      const f = s.dataset.final;
-      s.innerHTML = `${f}<small>seats</small>`;
+      s.innerHTML = `${s.dataset.final}<small>seats</small>`;
       if (!tie && i === w) row.classList.add('win');
-      else if (f === '0') row.classList.add('lost');
+      else if (s.dataset.final === '0') row.classList.add('lost');
     });
   }, 1500);
   later(() => document.getElementById('usaCallout').classList.add('show'), 2600);
@@ -922,22 +924,20 @@ function renderIsrael(counts, total, animate) {
   const pcts = counts.map(c => c * 100 / total);
   const scale = Math.max(Math.max(...pcts), thr) * 1.12 || 1;
   const anyPassed = res.passed.some(Boolean);
-  const failed = res.passed.filter((p, i) => !p).length;
+  const failed = res.passed.filter(p => !p).length;
 
-  const rows = opts.map((o, i) => {
-    const c = PARTY_COLORS[i % PARTY_COLORS.length];
-    return `<div class="row il-row" data-i="${i}" style="animation-delay:${animate ? i * 70 : 0}ms">
-      <span class="dot" style="background:${c.bg}"></span>
+  const rows = opts.map((o, i) => `
+    <div class="row il-row" data-i="${i}" style="animation-delay:${animate ? i * 70 : 0}ms">
+      <span class="dot" style="background:${color(i).bg}"></span>
       <span class="nm">${heText(o)}</span>
       <div class="track">
-        <div class="fill" style="background:${c.bg}" data-w="${(pcts[i] / scale * 100).toFixed(2)}"></div>
+        <div class="fill" style="background:${color(i).bg}" data-w="${(pcts[i] / scale * 100).toFixed(2)}"></div>
         <span class="pct" data-l="${(pcts[i] / scale * 100).toFixed(2)}">${counts[i]} · ${fmtPct(pcts[i])}%</span>
-        ${i === 0 ? `<div class="tline" style="left:${thr / scale * 100}%"><span class="tline-label">${thr}% threshold</span></div>` : `<div class="tline" style="left:${thr / scale * 100}%"></div>`}
+        <div class="tline" style="left:${thr / scale * 100}%">${i === 0 ? `<span class="tline-label">${thr}% threshold</span>` : ''}</div>
       </div>
       <span class="seatsN" data-final="${res.seats[i]}">${animate ? '' : res.seats[i] + '<small>seats</small>'}</span>
       <span class="stamp">Didn’t pass the threshold</span>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 
   main.innerHTML = resultsShell('israel', `
     <h2 class="res-title">${FLAG.israel} The Israeli way</h2>
@@ -957,46 +957,42 @@ function renderIsrael(counts, total, animate) {
       </div>
     </div>`);
   bindResultsShell('israel');
-  document.getElementById('thrDown').addEventListener('click', () => changeThreshold(-1));
-  document.getElementById('thrUp').addEventListener('click', () => changeThreshold(1));
+  on('thrDown', () => changeThreshold(-1));
+  on('thrUp', () => changeThreshold(1));
 
-  const t0 = animate ? 300 : 0;
-  const t1 = animate ? 1600 : 0;
-  const t2 = animate ? 2400 : 0;
-  const go1 = () => main.querySelectorAll('.il-row').forEach(row => {
-    row.querySelector('.fill').style.width = row.querySelector('.fill').dataset.w + '%';
+  const step1 = () => main.querySelectorAll('.il-row').forEach(row => {
+    const fill = row.querySelector('.fill');
+    fill.style.width = fill.dataset.w + '%';
     const pct = row.querySelector('.pct');
     pct.style.left = `calc(${pct.dataset.l}% + .5rem)`;
   });
-  const go2 = () => main.querySelectorAll('.il-row').forEach(row => {
+  const step2 = () => main.querySelectorAll('.il-row').forEach(row => {
     if (!res.passed[Number(row.dataset.i)]) row.classList.add('fail');
   });
-  const go3 = () => {
-    fillSeats(seatColors(res.seats), animate ? { start: 0, step: Math.min(90, 1800 / nSeats) } : {});
+  const step3 = () => {
+    fillSeats(seatColors(res.seats), animate ? { step: Math.min(90, 1800 / nSeats) } : null);
     main.querySelectorAll('.il-row .seatsN').forEach(s => { s.innerHTML = `${s.dataset.final}<small>seats</small>`; });
     document.getElementById('ilCallout').classList.add('show');
   };
-  if (animate) { later(go1, t0); later(go2, t1); later(go3, t2); }
+  if (animate) { later(step1, 300); later(step2, 1600); later(step3, 2400); }
   else {
     main.querySelectorAll('.track .fill, .track .pct').forEach(el => { el.style.transition = 'none'; });
     main.querySelectorAll('.il-row').forEach(r => { r.style.animation = 'none'; });
-    go1(); go2();
+    step1(); step2();
     main.querySelectorAll('.il-row.fail').forEach(r => { r.style.animation = 'none'; });
-    go3();
+    step3();
   }
 }
-
 function changeThreshold(d) {
   const cur = Number(content.round2.threshold) || 0;
-  let v = d > 0 ? Math.floor(cur + 1) : Math.ceil(cur - 1);
-  v = Math.max(0, Math.min(50, v));
+  const v = Math.max(0, Math.min(50, d > 0 ? Math.floor(cur + 1) : Math.ceil(cur - 1)));
   content.round2.threshold = v;
   S.r2.coalition = [];
   wasMajority = false;
   saveContent();
   saveState();
   clearTimers();
-  renderIsrael(r2Results(), r2Results().reduce((a, b) => a + b, 0), false);
+  renderIsrael(S.r2.counts, totalVotes(), false);
 }
 
 /* ----- coalition builder ----- */
@@ -1025,37 +1021,33 @@ function renderCoalition(counts) {
           </div>
         </div>
         <div class="pcards">
-          ${parties.map(i => {
-            const c = PARTY_COLORS[i % PARTY_COLORS.length];
-            return `<button class="pcard ${inC.has(i) ? 'in' : ''}" data-p="${i}" style="${inC.has(i) ? `background:${c.bg};color:${c.fg}` : ''}">
-              <span class="dot" style="background:${c.bg};box-shadow:0 0 0 2px #fff"></span>${heText(opts[i])}
-              <span class="s">${res.seats[i]}<small> seats</small></span></button>`;
-          }).join('')}
+          ${parties.map(i => `
+            <button class="pcard ${inC.has(i) ? 'in' : ''}" data-p="${i}" style="${inC.has(i) ? `background:${color(i).bg};color:${color(i).fg}` : ''}">
+              <span class="dot" style="background:${color(i).bg};box-shadow:0 0 0 2px #fff"></span>${heText(opts[i])}
+              <span class="s">${res.seats[i]}<small> seats</small></span></button>`).join('')}
         </div>
       </div>
     </div>`);
   bindResultsShell('coalition');
   document.getElementById('extraCtl').innerHTML = `<button class="btn ghost" id="resetCoal">↺ Reset coalition</button>`;
-  document.getElementById('resetCoal').addEventListener('click', () => { S.r2.coalition = []; wasMajority = false; saveState(); render(); });
+  on('resetCoal', () => { S.r2.coalition = []; wasMajority = false; saveState(); render(); });
   main.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => {
     const i = Number(b.dataset.p);
     const set = new Set(S.r2.coalition);
-    set.has(i) ? set.delete(i) : set.add(i);
+    if (set.has(i)) set.delete(i); else set.add(i);
     S.r2.coalition = [...set];
     saveState();
     render();
   }));
 
-  // seat colors: everyone keeps their color; parties outside the coalition fade out
-  const colors = seatColors(res.seats);
+  // everyone keeps their color; parties outside the coalition fade out
   const owner = [];
   res.seats.forEach((s, i) => { for (let k = 0; k < s; k++) owner.push(i); });
-  fillSeats(colors, { dimmed: owner.map(i => inC.size > 0 && !inC.has(i)) });
+  fillSeats(seatColors(res.seats), { dimmed: owner.map(i => inC.size > 0 && !inC.has(i)) });
 
   if (ok && !wasMajority) celebrate(have, nSeats);
   wasMajority = ok;
 }
-
 function celebrate(have, nSeats) {
   confetti(220);
   const el = document.createElement('div');
@@ -1064,75 +1056,6 @@ function celebrate(have, nSeats) {
   document.body.appendChild(el);
   setTimeout(() => el.classList.add('fade'), 2600);
   setTimeout(() => el.remove(), 3300);
-}
-
-/* ---------------- backup: type the votes by hand ---------------- */
-function openManual() {
-  if (!S.r2) return;
-  const opts = S.r2.options;
-  const start = S.r2.manual || S.r2.final || r2LiveCounts();
-  layer.innerHTML = `
-    <div class="modal-bg" id="mbg">
-      <div class="modal">
-        <h2>✍️ Type the votes by hand</h2>
-        <p>Phones not working? Ask for a show of hands, count each option, and type the numbers. Both results screens will use these numbers.</p>
-        ${opts.map((o, i) => {
-          const c = PARTY_COLORS[i % PARTY_COLORS.length];
-          return `<div class="mrow"><span class="dot" style="background:${c.bg}"></span>${heText(o)}
-            <input type="number" min="0" max="999" inputmode="numeric" data-m="${i}" value="${start[i] || 0}"></div>`;
-        }).join('')}
-        <div class="mrow" style="border:0">Total <b id="mTotal" style="margin-left:auto;font-size:1.4rem"></b></div>
-        <div class="actions">
-          ${S.r2.manual ? '<button class="btn ghost" id="mPhone">Use the phone votes instead</button>' : ''}
-          <button class="btn ghost" id="mCancel">Cancel</button>
-          <button class="btn red" id="mGo">Show results →</button>
-        </div>
-      </div>
-    </div>`;
-  const inputs = [...layer.querySelectorAll('[data-m]')];
-  const read = () => inputs.map(inp => Math.max(0, Math.min(999, Math.round(Number(inp.value) || 0))));
-  const upd = () => { document.getElementById('mTotal').textContent = read().reduce((a, b) => a + b, 0); };
-  inputs.forEach(inp => inp.addEventListener('input', upd));
-  upd();
-  inputs[0] && inputs[0].select();
-  const close = () => { layer.innerHTML = ''; };
-  document.getElementById('mCancel').addEventListener('click', close);
-  document.getElementById('mbg').addEventListener('click', e => { if (e.target.id === 'mbg') close(); });
-  const phone = document.getElementById('mPhone');
-  if (phone) phone.addEventListener('click', () => {
-    S.r2.manual = null;
-    close();
-    saveState();
-    render();
-  });
-  document.getElementById('mGo').addEventListener('click', () => {
-    if (S.r2.status === 'open') S.r2.final = r2LiveCounts();
-    S.r2.manual = read();
-    S.r2.status = 'closed';
-    S.r2.coalition = [];
-    wasMajority = false;
-    if (S.r2.view === 'vote') S.r2.view = 'usa';
-    close();
-    go('r2');
-  });
-}
-
-/* ---------------- QR pop-up ---------------- */
-function openQr() {
-  const url = playerUrl(S.room);
-  layer.innerHTML = `
-    <div class="modal-bg" id="qbg">
-      <div class="modal qr-modal">
-        <h2>Join the vote</h2>
-        <div class="qr" style="max-width:22rem;margin:0 auto">${qrSvg(url)}</div>
-        <div class="code-big">${esc(S.room)}</div>
-        <div class="qr-url">${esc(playerUrlShort())}</div>
-        <div class="actions" style="justify-content:center"><button class="btn" id="qClose">Close</button></div>
-      </div>
-    </div>`;
-  const close = () => { layer.innerHTML = ''; };
-  document.getElementById('qClose').addEventListener('click', close);
-  document.getElementById('qbg').addEventListener('click', e => { if (e.target.id === 'qbg') close(); });
 }
 
 /* ================================================================== */
@@ -1149,23 +1072,23 @@ function openSettings(tab) {
     el.className = 'settings';
     document.body.appendChild(el);
   }
-  const tabs = [['r1', 'Round 1 questions'], ['r2', 'Round 2 election'], ['setup', 'Phone voting & reset']];
+  const tabs = [['r1', 'Round 1 questions'], ['r2', 'Round 2 election'], ['reset', 'Reset']];
   el.innerHTML = `
-    <header><h2>⚙️ Settings</h2><span style="opacity:.7;font-size:14px">Changes save automatically on this computer.</span>
+    <header><h2>⚙️ Settings</h2><span style="opacity:.7;font-size:14px">Changes save automatically in this browser.</span>
       <button class="btn small blue" id="sDone">Done</button></header>
     <nav class="stabs">${tabs.map(([k, l]) => `<button data-st="${k}" class="${k === settingsTab ? 'on' : ''}">${l}</button>`).join('')}</nav>
     <div class="sbody"><div class="sinner" id="sInner"></div></div>`;
   el.querySelectorAll('[data-st]').forEach(b => b.addEventListener('click', () => openSettings(b.dataset.st)));
-  document.getElementById('sDone').addEventListener('click', closeSettings);
+  on('sDone', closeSettings);
   const inner = document.getElementById('sInner');
   if (settingsTab === 'r1') settingsR1(inner);
   else if (settingsTab === 'r2') settingsR2(inner);
-  else settingsSetup(inner);
+  else settingsReset(inner);
 }
 function closeSettings() {
   const el = document.getElementById('settings');
   if (el) el.remove();
-  publishLive();
+  lastSig = '';
   render();
 }
 
@@ -1209,10 +1132,12 @@ function settingsR1(inner) {
     if (b.dataset.act === 'up' && i > 0) [list[i - 1], list[i]] = [list[i], list[i - 1]];
     if (b.dataset.act === 'down' && i < list.length - 1) [list[i + 1], list[i]] = [list[i], list[i + 1]];
     if (b.dataset.act === 'del' && confirm(`Delete question ${i + 1}?`)) list.splice(i, 1);
+    S.r1hands = {};
+    saveState();
     saveContent();
     openSettings();
   }));
-  document.getElementById('addQ').addEventListener('click', () => {
+  on('addQ', () => {
     content.round1.push({ statement: '', answer: 'usa', explain: '', he: '', translit: '', meaning: '' });
     saveContent();
     openSettings();
@@ -1221,9 +1146,11 @@ function settingsR1(inner) {
     last.scrollIntoView({ behavior: 'smooth' });
     last.querySelector('input').focus();
   });
-  document.getElementById('restoreR1').addEventListener('click', () => {
+  on('restoreR1', () => {
     if (!confirm('Replace all Round 1 questions with the original 12?')) return;
     content.round1 = clone(DEFAULT_CONTENT.round1);
+    S.r1hands = {};
+    saveState();
     saveContent();
     openSettings();
   });
@@ -1231,9 +1158,7 @@ function settingsR1(inner) {
 
 function settingsR2(inner) {
   const r2 = content.round2;
-  const locked = S.r2 && S.r2.status !== 'ready';
   inner.innerHTML = `
-    ${locked ? `<div class="card scard" style="border-left:6px solid var(--gold)"><p style="margin:0">A vote has already started. Topic and option changes will apply when you press <b>↺ New vote</b> on the Round 2 screen.</p></div>` : ''}
     <div class="card scard">
       <h3>Election topic</h3>
       <input type="text" id="r2topic" value="${esc(r2.topic)}">
@@ -1241,8 +1166,8 @@ function settingsR2(inner) {
     <div class="card scard">
       <h3>Options (2 to 8)</h3>
       <p>These are the “parties” students vote for. 5 to 7 works best.</p>
-      <div id="optList" style="display:grid;gap:8px">
-        ${r2.options.map((o, i) => `<div class="optrow"><span class="dot" style="background:${PARTY_COLORS[i % PARTY_COLORS.length].bg}"></span>
+      <div style="display:grid;gap:8px">
+        ${r2.options.map((o, i) => `<div class="optrow"><span class="dot" style="background:${color(i).bg}"></span>
           <input type="text" data-o="${i}" value="${esc(o)}"><button data-del="${i}" ${r2.options.length <= 2 ? 'disabled' : ''}>✕</button></div>`).join('')}
       </div>
       <div style="margin-top:10px"><button class="btn small blue" id="addOpt" ${r2.options.length >= 8 ? 'disabled' : ''}>+ Add option</button></div>
@@ -1257,20 +1182,31 @@ function settingsR2(inner) {
     </div>
     <div><button class="btn ghost" id="restoreR2">Restore the original Round 2 settings</button></div>`;
 
-  const syncReady = () => {
+  // Keep the current election in step with the settings (counts stay with their option).
+  const sync = () => {
     saveContent();
-    if (S.r2 && S.r2.status === 'ready') {
+    if (S.r2) {
+      const options = cleanOptions();
+      if (options.join('\n') !== S.r2.options.join('\n')) {
+        // renamed (same number of options): keep counts in place; otherwise match by name
+        const sameLength = options.length === S.r2.options.length;
+        S.r2.counts = options.map((o, i) => {
+          const j = sameLength ? i : S.r2.options.indexOf(o);
+          return j >= 0 ? S.r2.counts[j] || 0 : 0;
+        });
+        S.r2.options = options;
+        S.r2.coalition = [];
+      }
       S.r2.topic = r2.topic;
-      S.r2.options = cleanOptions();
       saveState();
     }
   };
-  document.getElementById('r2topic').addEventListener('input', e => { r2.topic = e.target.value; syncReady(); });
-  inner.querySelectorAll('[data-o]').forEach(inp => inp.addEventListener('input', e => { r2.options[Number(e.target.dataset.o)] = e.target.value; syncReady(); }));
-  inner.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { r2.options.splice(Number(b.dataset.del), 1); syncReady(); openSettings(); }));
-  document.getElementById('addOpt').addEventListener('click', () => {
+  document.getElementById('r2topic').addEventListener('input', e => { r2.topic = e.target.value; sync(); });
+  inner.querySelectorAll('[data-o]').forEach(inp => inp.addEventListener('input', e => { r2.options[Number(e.target.dataset.o)] = e.target.value; sync(); }));
+  inner.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { r2.options.splice(Number(b.dataset.del), 1); sync(); openSettings(); }));
+  on('addOpt', () => {
     r2.options.push('');
-    syncReady();
+    sync();
     openSettings();
     const inputs = document.querySelectorAll('[data-o]');
     inputs[inputs.length - 1].focus();
@@ -1283,70 +1219,53 @@ function settingsR2(inner) {
     const v = Math.round(Number(e.target.value));
     if (v >= 5 && v <= 120) { r2.seats = v; saveContent(); }
   });
-  document.getElementById('restoreR2').addEventListener('click', () => {
+  on('restoreR2', () => {
     if (!confirm('Restore the original topic, options, threshold and seats?')) return;
     content.round2 = clone(DEFAULT_CONTENT.round2);
-    syncReady();
+    sync();
     openSettings();
   });
 }
 
-function settingsSetup(inner) {
-  const state = configState();
-  const status = B.mode === 'firebase'
-    ? `<p>✅ Phone voting is connected to Firebase project <code>${esc(B.projectId)}</code>. The dot in the top bar shows <b>Live</b> when it’s working.</p>`
-    : state === 'nodb'
-      ? `<p>⚠️ <b>config.js</b> has your Firebase keys but no <code>databaseURL</code>. Create the Realtime Database in Firebase first, then copy the config again.</p>`
-      : `<p>⚠️ <b>Demo mode.</b> Firebase isn’t set up in <code>config.js</code> yet, so phones can’t join. Follow Step 1 in README.md. Until then, you can practise with a student view in another tab on this computer.</p>`;
+function settingsReset(inner) {
   inner.innerHTML = `
-    <div class="card scard"><h3>Phone voting</h3>${status}
-      <p>Students join at <b>${esc(playerUrlShort())}</b> with the code <b>${esc(S.room)}</b>.</p>
-      <button class="btn small ghost" id="sOpenStudent">Open a student view in a new tab ↗</button></div>
     <div class="card scard"><h3>Reset everything (new class)</h3>
-      <p>Clears all votes, makes a new room code, and goes back to the start screen. Your questions and options stay.</p>
+      <p>Clears all the hand counts and goes back to the start screen. Your questions and options stay.</p>
       <button class="btn red" id="sReset">↺ Reset everything</button></div>`;
-  document.getElementById('sOpenStudent').addEventListener('click', () => window.open(playerUrl(S.room), '_blank'));
-  document.getElementById('sReset').addEventListener('click', async () => { if (await resetEverything()) closeSettings(); });
+  on('sReset', () => { if (resetEverything()) closeSettings(); });
 }
 
 /* ================================================================== */
 /*  Reset, keyboard, confetti, start-up                                */
 /* ================================================================== */
 
-async function resetEverything() {
-  if (!confirm('Reset everything for a new class?\n\nAll votes are cleared and you get a new room code. Your questions stay.')) return false;
-  const old = S.room;
+function resetEverything() {
+  if (!confirm('Reset everything for a new class?\n\nAll the counts are cleared. Your questions stay.')) return false;
   S = freshState();
-  players = {};
-  votes = {};
   wasMajority = false;
-  S.room = await newRoomCode();
   saveState();
-  if (old) B.remove(`rooms/${old}`).catch(() => {});
-  subscribe();
-  publishLive(true);
+  lastSig = '';
   render();
   return true;
 }
 
-document.getElementById('homeBtn').addEventListener('click', () => go('lobby'));
-document.getElementById('setBtn').addEventListener('click', () => openSettings());
-document.getElementById('joinChip').addEventListener('click', openQr);
+on('homeBtn', () => go('home'));
+on('setBtn', () => openSettings());
 function toggleFullscreen() {
   if (document.fullscreenElement) document.exitFullscreen();
   else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
 }
-document.getElementById('fsBtn').addEventListener('click', toggleFullscreen);
+on('fsBtn', toggleFullscreen);
 
 document.addEventListener('keydown', e => {
   if (e.target.closest('input, textarea, select') || document.getElementById('settings')) return;
-  if (layer.innerHTML) { if (e.key === 'Escape') layer.innerHTML = ''; return; }
   if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); return; }
   if (S.screen === 'r1') {
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); S.r1rev ? nextQuestion() : revealQuestion(); }
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (S.r1rev) nextQuestion(); else revealQuestion(); }
     else if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); nextQuestion(); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevQuestion(); }
-  } else if (S.screen === 'r2' && S.r2 && S.r2.status === 'closed') {
+    else if (e.key === '1' || e.key === '2' || e.key === '3') addHand(ANSWER_KEYS[Number(e.key) - 1], 1);
+  } else if (S.screen === 'r2' && S.r2 && S.r2.view !== 'count') {
     const i = VIEWS.indexOf(S.r2.view);
     if ((e.key === 'ArrowRight' || e.key === 'PageDown') && i < VIEWS.length - 1) setView(VIEWS[i + 1]);
     if ((e.key === 'ArrowLeft' || e.key === 'PageUp') && i > 0) setView(VIEWS[i - 1]);
@@ -1360,7 +1279,7 @@ function confetti(count) {
   const dpr = window.devicePixelRatio || 1;
   cv.width = innerWidth * dpr;
   cv.height = innerHeight * dpr;
-  ctx.scale(dpr, dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const colors = ['#0038B8', '#B22234', '#FFFFFF', '#F5B700', '#3C3B6E', '#16A34A'];
   const parts = Array.from({ length: count }, () => ({
     x: innerWidth * (0.2 + Math.random() * 0.6), y: innerHeight * 0.45,
@@ -1371,7 +1290,6 @@ function confetti(count) {
   }));
   const start = performance.now();
   function frame(now) {
-    const t = now - start;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     parts.forEach(p => {
       p.vy += 0.35; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
@@ -1380,23 +1298,14 @@ function confetti(count) {
       ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.strokeRect(-p.w / 2, -p.h / 2, p.w, p.h);
       ctx.restore();
     });
-    if (t < 4000) requestAnimationFrame(frame);
+    if (now - start < 4000) requestAnimationFrame(frame);
     else ctx.clearRect(0, 0, innerWidth, innerHeight);
   }
   requestAnimationFrame(frame);
 }
 
-async function boot() {
-  renderBanners();
-  if (!S.room) {
-    S.room = await newRoomCode();
-    saveState();
-  }
-  subscribe();
-  publishLive(true);
-  render();
-}
-boot();
+render();
+})();
 </script>
 </body>
 </html>
