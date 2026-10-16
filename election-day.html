@@ -61,9 +61,35 @@ const DEFAULT_CONTENT = {
       he: "קלפי", translit: "kalpi", meaning: "ballot box" }
   ],
 
+  /* Round 2 election topics. You pick one in class (or press 🎲 Surprise me).
+     Each topic: an emoji, the question, and 2 to 8 options. */
   round2: {
-    topic: "Best fast food chain",
-    options: ["McDonald’s", "Chipotle", "Chick-fil-A", "Taco Bell", "Wendy’s", "Panda Express", "Subway"],
+    topics: [
+      { icon: "🍔", topic: "Best fast food chain",
+        options: ["McDonald’s", "Chipotle", "Chick-fil-A", "Taco Bell", "Wendy’s", "Panda Express", "Subway"] },
+      { icon: "🎓", topic: "Best college to go to",
+        options: ["Harvard", "Stanford", "NYU", "UCLA", "University of Michigan", "Duke", "Tel Aviv University"] },
+      { icon: "📱", topic: "Best social media app",
+        options: ["TikTok", "Instagram", "Snapchat", "YouTube", "Pinterest", "Discord"] },
+      { icon: "🧆", topic: "Best Israeli food",
+        options: ["Falafel פלאפל", "Shawarma שווארמה", "Hummus חומוס", "Shakshuka שקשוקה", "Schnitzel שניצל", "Bamba במבה", "Sabich סביח"] },
+      { icon: "🎉", topic: "Best holiday of the year",
+        options: ["Hanukkah חנוכה", "Purim פורים", "Passover פסח", "Thanksgiving", "Halloween", "Fourth of July", "Yom Ha’atzmaut יום העצמאות"] },
+      { icon: "✈️", topic: "Best class trip",
+        options: ["Israel", "New York City", "Disney World", "Washington, D.C.", "Hawaii", "Six Flags", "Paris"] },
+      { icon: "🏀", topic: "Best sport to watch",
+        options: ["Football", "Basketball", "Soccer", "Baseball", "Hockey", "Tennis"] },
+      { icon: "🎬", topic: "Best streaming service",
+        options: ["Netflix", "YouTube", "Disney+", "Hulu", "Max", "Prime Video"] },
+      { icon: "🎵", topic: "Best kind of music",
+        options: ["Pop", "Hip-hop", "Country", "Rock", "R&B", "K-pop", "Latin"] },
+      { icon: "🍕", topic: "Best pizza topping",
+        options: ["Pepperoni", "Plain cheese", "Mushrooms", "Pineapple", "Olives", "Sausage", "Peppers"] },
+      { icon: "🦸", topic: "Best superpower",
+        options: ["Flying", "Invisibility", "Teleporting", "Super strength", "Reading minds", "Time travel"] },
+      { icon: "🍽️", topic: "Best school lunch",
+        options: ["Pizza day", "Tacos", "Chicken nuggets", "Pasta", "Burgers", "Salad bar"] }
+    ],
     threshold: 10,   // % of the vote an option needs to get any seats (Israel's real one is 3.25%)
     seats: 20        // size of the class "parliament" (Israel's Knesset has 120)
   }
@@ -221,6 +247,20 @@ const DEFAULT_CONTENT = {
   .dot { width: .85em; height: .85em; border-radius: 50%; display: inline-block; flex: none; }
   .total-line { font-size: 1.5rem; font-weight: 700; color: var(--muted); }
   .total-line b { color: var(--ink); font-size: 2rem; }
+
+  .pick-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; align-content: start; margin-top: .4rem; }
+  .pick { display: grid; grid-template-columns: auto 1fr; column-gap: .7rem; align-items: center; text-align: left; padding: .65rem .9rem; border-radius: 16px; border: 3px solid transparent; background: #fff; box-shadow: var(--shadow); transition: transform .12s, border-color .15s, background .15s; min-width: 0; }
+  .pick:hover { transform: translateY(-2px); border-color: var(--il-soft); }
+  .pick .ic { grid-row: span 2; font-size: 2.1rem; line-height: 1; }
+  .pick .tt { font-weight: 800; font-size: 1.2rem; line-height: 1.2; }
+  .pick .pv { font-size: .85rem; color: var(--muted); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .pick.current { border-color: var(--line); }
+  .pick.current .tt::after { content: ' · now'; color: var(--muted); font-weight: 600; font-size: .8em; }
+  .pick.spin { border-color: var(--us-red); background: var(--us-red-soft); transform: scale(1.04); }
+  .tpick { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tpick button { border: 1.5px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 12px; font-size: 14px; }
+  .tpick button.on { border-color: var(--il); background: var(--il-soft); font-weight: 600; }
+  .tpick button.add { border-style: dashed; color: var(--il); }
 
   /* ---------- round 2: results ---------- */
   .tabs { position: absolute; top: 0; right: 0; display: flex; gap: .4rem; background: #E7ECF6; padding: .3rem; border-radius: 14px; }
@@ -444,6 +484,14 @@ function loadContent() {
   const saved = load(LS_CONTENT);
   const c = saved && Array.isArray(saved.round1) && saved.round2 ? saved : clone(DEFAULT_CONTENT);
   c.round2 = Object.assign(clone(DEFAULT_CONTENT.round2), c.round2);
+  // older saves had a single topic: keep it as the first topic
+  if (c.round2.topic && Array.isArray(c.round2.options)) {
+    const old = { icon: '🗳️', topic: c.round2.topic, options: c.round2.options };
+    if (old.topic !== DEFAULT_CONTENT.round2.topics[0].topic) c.round2.topics.unshift(old);
+    delete c.round2.topic;
+    delete c.round2.options;
+  }
+  if (!Array.isArray(c.round2.topics) || !c.round2.topics.length) c.round2.topics = clone(DEFAULT_CONTENT.round2.topics);
   return c;
 }
 const saveContent = () => store(LS_CONTENT, content);
@@ -483,6 +531,7 @@ function render() {
   if (S.screen === 'r1' && !content.round1.length) S.screen = 'home';
   if (S.screen === 'r1') renderR1();
   else if (S.screen === 'r1done') renderR1Done();
+  else if (S.screen === 'pick') renderPick();
   else if (S.screen === 'r2' && S.r2) renderR2();
   else renderHome();
 }
@@ -509,7 +558,7 @@ function renderHome() {
       <div class="card plan">
         <h3>Today</h3>
         <div class="step"><div class="n">1</div><div><b>USA or Israel?</b><span>Raise your hand for 🇺🇸 USA, 🇮🇱 Israel, or both.</span></div></div>
-        <div class="step"><div class="n">2</div><div><b>A class election</b><span>Everyone votes once, then we count the same votes two ways.</span></div></div>
+        <div class="step"><div class="n">2</div><div><b>A class election</b><span>Pick a topic, everyone votes once, and we count the same votes two ways.</span></div></div>
         <div class="step"><div class="n">3</div><div><b>Build a coalition ${hebrew('קואליציה')}</b><span>Can you team up to a majority?</span></div></div>
         <div style="font-size:3.4rem;text-align:center"><span class="hand">✋</span></div>
       </div>
@@ -668,17 +717,71 @@ function renderR1Done() {
 }
 
 /* ---------------- round 2 ---------------- */
-function cleanOptions() {
-  return content.round2.options.map(o => String(o).trim()).filter(Boolean).slice(0, 8);
+const topics = () => content.round2.topics;
+function cleanOptions(ti) {
+  const t = topics()[ti];
+  return t ? t.options.map(o => String(o).trim()).filter(Boolean).slice(0, 8) : [];
 }
-function newR2() {
+function newR2(ti) {
   wasMajority = false;
-  const options = cleanOptions();
-  return { topic: content.round2.topic, options, counts: options.map(() => 0), view: 'count', coalition: [] };
+  const options = cleanOptions(ti);
+  return { ti, topic: topics()[ti].topic, options, counts: options.map(() => 0), view: 'count', coalition: [] };
 }
 function startRound2() {
-  if (!S.r2) S.r2 = newR2();
+  go(S.r2 ? 'r2' : 'pick');
+}
+function pickTopic(ti) {
+  if (cleanOptions(ti).length < 2) { alert('This topic needs at least 2 options. Add them in ⚙️ Settings → Round 2.'); return; }
+  if (S.r2 && S.r2.ti !== ti && totalVotes() > 0 &&
+      !confirm(`Start a new vote on “${topics()[ti].topic}”? The current counts will be cleared.`)) return;
+  if (!S.r2 || S.r2.ti !== ti || totalVotes() === 0) S.r2 = newR2(ti);
+  S.r2.view = 'count';
   go('r2');
+}
+
+/* ----- choosing the election topic ----- */
+function renderPick() {
+  const list = topics();
+  main.innerHTML = `
+    <section class="screen">
+      <div class="head">
+        <span class="pill red">Round 2 · Same votes, different winner</span>
+        <span class="muted">${list.length} topics</span>
+      </div>
+      <h1 class="topic">What should we vote on?</h1>
+      <div class="pick-grid">
+        ${list.map((t, i) => `
+          <button class="pick ${S.r2 && S.r2.ti === i ? 'current' : ''}" data-t="${i}">
+            <span class="ic">${esc(t.icon || '🗳️')}</span>
+            <span class="tt">${heText(t.topic)}</span>
+            <span class="pv">${heText(cleanOptions(i).slice(0, 4).join(', '))}${cleanOptions(i).length > 4 ? '…' : ''}</span>
+          </button>`).join('')}
+      </div>
+    </section>
+    <nav class="controls">
+      ${S.r2 ? `<button class="btn ghost" id="backToVote">← Back to “${heText(S.r2.topic)}”</button>` : ''}
+      <button class="btn ghost" id="editTopics">✏️ Edit topics</button>
+      <span class="spacer"></span>
+      <button class="btn red" id="surprise">🎲 Surprise me</button>
+    </nav>`;
+  main.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => pickTopic(Number(b.dataset.t))));
+  on('backToVote', () => go('r2'));
+  on('editTopics', () => openSettings('r2'));
+  on('surprise', () => {
+    const choices = list.map((t, i) => i).filter(i => cleanOptions(i).length >= 2 && (!S.r2 || i !== S.r2.ti));
+    if (!choices.length) return;
+    const cards = [...main.querySelectorAll('[data-t]')];
+    const final = choices[Math.floor(Math.random() * choices.length)];
+    let n = 0;
+    const spin = () => {
+      cards.forEach(c => c.classList.remove('spin'));
+      const i = n < 12 ? choices[Math.floor(Math.random() * choices.length)] : final;
+      cards[i].classList.add('spin');
+      if (n++ < 12) setTimeout(spin, 70 + n * 12);
+      else setTimeout(() => pickTopic(final), 700);
+    };
+    spin();
+  });
 }
 const VIEWS = ['count', 'usa', 'israel', 'coalition'];
 function setView(v) {
@@ -716,7 +819,8 @@ function renderCount() {
       </div>
     </section>
     <nav class="controls">
-      <button class="btn ghost" id="editR2">✏️ Edit topic & options</button>
+      <button class="btn ghost" id="changeTopic">🔀 Change topic</button>
+      <button class="btn ghost" id="editR2">✏️ Edit options</button>
       <button class="btn ghost" id="clearCount">↺ Clear the counts</button>
       <span class="spacer"></span>
       <span class="total-line">Total: <b id="totalVotes">0</b> votes</span>
@@ -745,7 +849,8 @@ function renderCount() {
   };
   main.querySelectorAll('[data-inc]').forEach(b => b.addEventListener('click', () => bump(b.dataset.inc, 1)));
   main.querySelectorAll('[data-dec]').forEach(b => b.addEventListener('click', () => bump(b.dataset.dec, -1)));
-  on('editR2', () => openSettings('r2'));
+  on('editR2', () => openSettings('r2', S.r2.ti));
+  on('changeTopic', () => go('pick'));
   on('clearCount', () => {
     if (!confirm('Set all the counts back to 0?')) return;
     r2.counts = r2.options.map(() => 0);
@@ -759,7 +864,7 @@ function renderCount() {
 
 function resultsShell(view, inner) {
   const idx = VIEWS.indexOf(view);
-  const nextLabel = { usa: 'Now the Israeli way →', israel: 'Build a coalition →', coalition: '' }[view];
+  const nextLabel = { usa: 'Now the Israeli way →', israel: 'Build a coalition →', coalition: '🗳️ Vote on another topic →' }[view];
   return `
     <section class="screen">
       <div class="tabs">
@@ -779,7 +884,7 @@ function resultsShell(view, inner) {
 function bindResultsShell(view) {
   main.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
   on('backView', () => setView(VIEWS[VIEWS.indexOf(view) - 1]));
-  on('nextView', () => setView(VIEWS[VIEWS.indexOf(view) + 1]));
+  on('nextView', () => (view === 'coalition' ? go('pick') : setView(VIEWS[VIEWS.indexOf(view) + 1])));
 }
 
 function renderResults(view) {
@@ -1063,8 +1168,9 @@ function celebrate(have, nSeats) {
 /* ================================================================== */
 
 let settingsTab = 'r1';
-function openSettings(tab) {
+function openSettings(tab, topicIndex) {
   if (tab) settingsTab = tab;
+  if (typeof topicIndex === 'number' && topicIndex >= 0) settingsTopic = topicIndex;
   let el = document.getElementById('settings');
   if (!el) {
     el = document.createElement('div');
@@ -1156,22 +1262,36 @@ function settingsR1(inner) {
   });
 }
 
+let settingsTopic = 0;
 function settingsR2(inner) {
   const r2 = content.round2;
+  const list = r2.topics;
+  settingsTopic = Math.max(0, Math.min(list.length - 1, settingsTopic));
+  const t = list[settingsTopic];
   inner.innerHTML = `
     <div class="card scard">
-      <h3>Election topic</h3>
-      <input type="text" id="r2topic" value="${esc(r2.topic)}">
-    </div>
-    <div class="card scard">
-      <h3>Options (2 to 8)</h3>
-      <p>These are the “parties” students vote for. 5 to 7 works best.</p>
-      <div style="display:grid;gap:8px">
-        ${r2.options.map((o, i) => `<div class="optrow"><span class="dot" style="background:${color(i).bg}"></span>
-          <input type="text" data-o="${i}" value="${esc(o)}"><button data-del="${i}" ${r2.options.length <= 2 ? 'disabled' : ''}>✕</button></div>`).join('')}
+      <h3>Election topics</h3>
+      <p>Pick a topic to edit it. In class you choose one of these at the start of Round 2.</p>
+      <div class="tpick">
+        ${list.map((x, i) => `<button data-st-t="${i}" class="${i === settingsTopic ? 'on' : ''}">${esc(x.icon || '🗳️')} ${heText(x.topic || 'New topic')}</button>`).join('')}
+        <button id="addTopic" class="add">+ New topic</button>
       </div>
-      <div style="margin-top:10px"><button class="btn small blue" id="addOpt" ${r2.options.length >= 8 ? 'disabled' : ''}>+ Add option</button></div>
     </div>
+    ${t ? `
+    <div class="card scard">
+      <div style="display:flex;gap:10px;align-items:end">
+        <label style="width:70px">Emoji<input type="text" id="r2icon" value="${esc(t.icon || '')}" maxlength="4" style="text-align:center"></label>
+        <label style="flex:1">Topic<input type="text" id="r2topic" value="${esc(t.topic)}"></label>
+        <button class="btn small ghost" id="delTopic" ${list.length <= 1 ? 'disabled' : ''}>🗑 Delete topic</button>
+      </div>
+      <h3 style="margin-top:16px">Options (2 to 8)</h3>
+      <p>These are the “parties” students vote for. 5 to 7 works best. You can add Hebrew, like <bdi class="he" dir="rtl" lang="he">חומוס</bdi>.</p>
+      <div style="display:grid;gap:8px">
+        ${t.options.map((o, i) => `<div class="optrow"><span class="dot" style="background:${color(i).bg}"></span>
+          <input type="text" data-o="${i}" value="${esc(o)}"><button data-del="${i}" ${t.options.length <= 2 ? 'disabled' : ''}>✕</button></div>`).join('')}
+      </div>
+      <div style="margin-top:10px"><button class="btn small blue" id="addOpt" ${t.options.length >= 8 ? 'disabled' : ''}>+ Add option</button></div>
+    </div>` : ''}
     <div class="card scard">
       <h3>The Israeli way</h3>
       <div class="grid2">
@@ -1180,13 +1300,13 @@ function settingsR2(inner) {
       </div>
       <p style="margin-top:10px">Defaults: 10% threshold and 20 seats (majority 11). Israel’s real Knesset: 3.25% and 120 seats (majority 61).</p>
     </div>
-    <div><button class="btn ghost" id="restoreR2">Restore the original Round 2 settings</button></div>`;
+    <div><button class="btn ghost" id="restoreR2">Restore the original topics and settings</button></div>`;
 
-  // Keep the current election in step with the settings (counts stay with their option).
+  // Keep the vote in progress in step with its topic (counts stay with their option).
   const sync = () => {
     saveContent();
-    if (S.r2) {
-      const options = cleanOptions();
+    if (S.r2 && S.r2.ti === settingsTopic && list[settingsTopic]) {
+      const options = cleanOptions(settingsTopic);
       if (options.join('\n') !== S.r2.options.join('\n')) {
         // renamed (same number of options): keep counts in place; otherwise match by name
         const sameLength = options.length === S.r2.options.length;
@@ -1197,20 +1317,43 @@ function settingsR2(inner) {
         S.r2.options = options;
         S.r2.coalition = [];
       }
-      S.r2.topic = r2.topic;
+      S.r2.topic = list[settingsTopic].topic;
       saveState();
     }
   };
-  document.getElementById('r2topic').addEventListener('input', e => { r2.topic = e.target.value; sync(); });
-  inner.querySelectorAll('[data-o]').forEach(inp => inp.addEventListener('input', e => { r2.options[Number(e.target.dataset.o)] = e.target.value; sync(); }));
-  inner.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { r2.options.splice(Number(b.dataset.del), 1); sync(); openSettings(); }));
-  on('addOpt', () => {
-    r2.options.push('');
-    sync();
+  inner.querySelectorAll('[data-st-t]').forEach(b => b.addEventListener('click', () => { settingsTopic = Number(b.dataset.stT); openSettings(); }));
+  on('addTopic', () => {
+    list.push({ icon: '🗳️', topic: '', options: ['', ''] });
+    settingsTopic = list.length - 1;
+    saveContent();
     openSettings();
-    const inputs = document.querySelectorAll('[data-o]');
-    inputs[inputs.length - 1].focus();
+    document.getElementById('r2topic').focus();
   });
+  if (t) {
+    document.getElementById('r2icon').addEventListener('input', e => { t.icon = e.target.value; saveContent(); });
+    document.getElementById('r2topic').addEventListener('input', e => { t.topic = e.target.value; sync(); });
+    inner.querySelectorAll('[data-o]').forEach(inp => inp.addEventListener('input', e => { t.options[Number(e.target.dataset.o)] = e.target.value; sync(); }));
+    inner.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { t.options.splice(Number(b.dataset.del), 1); sync(); openSettings(); }));
+    on('addOpt', () => {
+      t.options.push('');
+      sync();
+      openSettings();
+      const inputs = document.querySelectorAll('[data-o]');
+      inputs[inputs.length - 1].focus();
+    });
+    on('delTopic', () => {
+      if (!confirm(`Delete the topic “${t.topic}”?`)) return;
+      list.splice(settingsTopic, 1);
+      if (S.r2) {
+        if (S.r2.ti === settingsTopic) S.r2.ti = -1;          // the vote in progress keeps its own copy
+        else if (S.r2.ti > settingsTopic) S.r2.ti--;
+        saveState();
+      }
+      settingsTopic = Math.max(0, settingsTopic - 1);
+      saveContent();
+      openSettings();
+    });
+  }
   document.getElementById('r2thr').addEventListener('input', e => {
     const v = Number(e.target.value);
     if (e.target.value !== '' && v >= 0 && v <= 50) { r2.threshold = v; saveContent(); }
@@ -1220,9 +1363,11 @@ function settingsR2(inner) {
     if (v >= 5 && v <= 120) { r2.seats = v; saveContent(); }
   });
   on('restoreR2', () => {
-    if (!confirm('Restore the original topic, options, threshold and seats?')) return;
+    if (!confirm('Restore the original topics, threshold and seats? Topics you added will be removed.')) return;
     content.round2 = clone(DEFAULT_CONTENT.round2);
-    sync();
+    if (S.r2) { S.r2.ti = -1; saveState(); }
+    settingsTopic = 0;
+    saveContent();
     openSettings();
   });
 }
