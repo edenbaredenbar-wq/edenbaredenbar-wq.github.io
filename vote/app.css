@@ -1,0 +1,78 @@
+/* Shared look for the host screen and the student phones. */
+:root {
+  --bg: #F3F6FC;
+  --card: #FFFFFF;
+  --ink: #0F1B3D;
+  --muted: #5A6788;
+  --line: #DCE3F1;
+  --il: #0038B8;
+  --il-soft: #E6EDFC;
+  --us-red: #B22234;
+  --us-red-soft: #FBE9EC;
+  --us-blue: #3C3B6E;
+  --both: #6B4FBB;
+  --both-soft: #EFEAFB;
+  --good: #15803D;
+  --good-soft: #E3F6E9;
+  --bad: #C2410C;
+  --gold: #F5B700;
+  --radius: 18px;
+  --shadow: 0 6px 24px rgba(15, 27, 61, .08), 0 1px 3px rgba(15, 27, 61, .06);
+  --font: 'Rubik', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* Hebrew shown inside English text */
+.he { font-family: 'Rubik', 'Arial Hebrew', 'Segoe UI', Arial, sans-serif; unicode-bidi: isolate; }
+
+/* Thin flag-colored band at the very top: Israel's blue stripes, then US stripes */
+.flagband {
+  height: 8px;
+  background:
+    linear-gradient(180deg, var(--il) 0 2px, #fff 2px 6px, var(--il) 6px 8px) left / 50% 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--us-red) 0 2px, #fff 2px 4px) right / 50% 100% no-repeat;
+}
+
+.flag { display: inline-block; height: 1em; width: auto; vertical-align: -0.12em; border-radius: 3px; box-shadow: 0 0 0 1px rgba(15, 27, 61, .15); }
+.flag-pair { display: inline-flex; gap: .2em; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  border: 0; border-radius: 14px; padding: .8em 1.3em;
+  font-weight: 600; background: var(--ink); color: #fff;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .15);
+  transition: transform .08s ease, filter .15s ease, background .15s ease;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px) scale(.98); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.blue { background: var(--il); }
+.btn.red { background: var(--us-red); }
+.btn.green { background: var(--good); }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.btn.ghost:hover { background: #fff; }
+.btn.small { padding: .5em .9em; border-radius: 10px; font-size: .9em; }
+
+/* animated "…" */
+.waiting-dots::after { content: '…'; animation: pulse 1.4s infinite; }
+
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
