@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Israeli Hitster</title>
+<style>
+/* Layout: projector-first. Dark stage, one bright team color at a time, big type that reads from the back row. */
+:root {
+  --ink: #0b0e1f;
+  --panel: #151a35;
+  --panel-2: #1e2449;
+  --line: #2e3769;
+  --text: #f6f3e8;
+  --muted: #aab1d8;
+  --gold: #ffd166;
+  --good: #3ddc84;
+  --bad: #ff5c6c;
+  --euro-1: #7b2ff7;
+  --euro-2: #f107a3;
+  --font-display: "Segoe UI Black", "Arial Black", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-he: "Arial Hebrew", "Segoe UI", "Noto Sans Hebrew", Arial, sans-serif;
+  --radius: 0.9rem;
+  color-scheme: dark;
+}
+html { font-size: clamp(14px, 0.85vw + 0.55vh, 30px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ink); color: var(--text); font-family: var(--font-body); line-height: 1.35; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+/* The YouTube player sits UNDER the app. #app has an opaque background, so the video is never visible. */
+#ytDock { position: fixed; right: 0; bottom: 0; width: 320px; height: 240px; z-index: 0; overflow: hidden; pointer-events: none; }
+#app { position: fixed; inset: 0; z-index: 1; background: var(--ink); display: flex; flex-direction: column; overflow: hidden; }
+#modalRoot { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; background: rgba(5, 7, 18, 0.78); padding: 1rem; }
+#modalRoot.open { display: flex; }
+#toastRoot { position: fixed; right: 1.2rem; bottom: 11.5rem; z-index: 60; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; pointer-events: none; max-width: min(36rem, 90vw); }
+#confetti { position: fixed; inset: 0; z-index: 40; pointer-events: none; width: 100%; height: 100%; }
+
+/* ---------- top bar ---------- */
+.topbar { display: flex; align-items: center; gap: 0.8rem; padding: 0.55rem 1rem; background: var(--panel); border-bottom: 2px solid var(--line); flex: 0 0 auto; }
+.brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 900; font-size: 1.15rem; letter-spacing: 0.02em; white-space: nowrap; }
+.disc { width: 1.7rem; height: 1.7rem; border-radius: 50%; flex: 0 0 auto;
+  background: radial-gradient(circle, var(--gold) 0 14%, var(--ink) 15% 22%, #262d5c 23% 30%, #121633 31% 44%, #262d5c 45% 52%, #121633 53% 100%); box-shadow: 0 0 0 2px #39427d; }
+.pill { font-size: 0.8rem; padding: 0.2rem 0.65rem; border-radius: 99px; background: var(--panel-2); color: var(--muted); white-space: nowrap; }
+.topbar .spacer { flex: 1; }
+.tbtn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 0.6rem; padding: 0.35rem 0.8rem; font-size: 0.85rem; white-space: nowrap; }
+.tbtn:hover { border-color: var(--muted); }
+.tbtn--danger { border-color: #6b2a3a; color: #ffb3bd; }
+
+.screen { flex: 1 1 auto; min-height: 0; overflow: auto; }
+
+/* ---------- generic buttons ---------- */
+.btn { border: 0; border-radius: 0.8rem; padding: 0.7rem 1.3rem; font-weight: 800; font-size: 1rem; background: var(--panel-2); border: 2px solid var(--line); display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; }
+.btn:hover:not(:disabled) { border-color: var(--muted); }
+.btn:disabled { opacity: 0.38; cursor: not-allowed; }
+.btn--primary { background: var(--gold); color: #1b1300; border-color: var(--gold); }
+.btn--primary:hover:not(:disabled) { border-color: #fff; }
+.btn--good { background: var(--good); color: #062512; border-color: var(--good); }
+.btn--big { font-size: 1.25rem; padding: 0.85rem 1.7rem; }
+.kbd { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.72em; font-weight: 700; padding: 0.05em 0.45em; border-radius: 0.35em; border: 1px solid currentColor; opacity: 0.75; }
+
+/* ---------- setup ---------- */
+.setup { max-width: 72rem; margin: 0 auto; padding: 1.4rem max(16px, 1.5rem) 2.5rem; display: flex; flex-direction: column; gap: 1.3rem; }
+.hero { display: flex; align-items: center; gap: 1.4rem; }
+.hero .disc { width: 5.5rem; height: 5.5rem; animation: spin 6s linear infinite; }
+.hero h1 { font-family: var(--font-display); font-weight: 900; font-size: 3.3rem; margin: 0; line-height: 1; letter-spacing: -0.01em; text-wrap: balance; }
+.hero h1 span { color: var(--gold); }
+.hero p { margin: 0.4rem 0 0; color: var(--muted); font-size: 1.15rem; max-width: 42rem; }
+.setup-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.2rem; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; min-width: 0; }
+.panel h2 { margin: 0 0 0.8rem; font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.seg { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+.seg button { min-width: 3rem; padding: 0.45rem 0.8rem; border-radius: 0.6rem; border: 2px solid var(--line); background: var(--panel-2); font-weight: 800; font-size: 1.1rem; }
+.seg button[aria-pressed="true"] { background: var(--gold); color: #1b1300; border-color: var(--gold); }
+.team-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+.team-input { min-width: 0; display: flex; align-items: center; gap: 0.5rem; background: var(--panel-2); border-radius: 0.6rem; padding: 0.35rem 0.5rem; border-left: 0.5rem solid var(--tc); }
+.team-input input { flex: 1; width: 100%; min-width: 0; background: transparent; border: 0; font-size: 1.05rem; font-weight: 700; padding: 0.25rem; }
+.team-input input:focus { outline: none; }
+.team-input:focus-within { box-shadow: 0 0 0 2px var(--gold); }
+.modes { display: grid; gap: 0.7rem; }
+.mode { text-align: left; border: 2px solid var(--line); background: var(--panel-2); border-radius: 0.8rem; padding: 0.8rem 1rem; }
+.mode[aria-pressed="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
+.mode b { display: block; font-size: 1.2rem; font-family: var(--font-display); font-weight: 900; }
+.mode span { color: var(--muted); font-size: 0.95rem; }
+.setup-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.setup-actions .stats { color: var(--muted); flex: 1; min-width: 14rem; }
+.setup-actions .stats strong { color: var(--text); }
+.warn-line { color: #ffcf8a; }
+.howto { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.9rem 1.2rem; }
+.howto summary { cursor: pointer; font-weight: 800; }
+.howto ol { margin: 0.6rem 0 0; padding-left: 1.3rem; display: grid; gap: 0.3rem; color: var(--muted); }
+.howto ol b { color: var(--text); }
+
+/* ---------- game ---------- */
+.game { height: 100%; display: grid; grid-template-columns: minmax(15rem, 23%) 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+.scoreboard { grid-row: 1; padding: 0.8rem; display: flex; flex-direction: column; gap: 0.55rem; overflow: auto; border-right: 2px solid var(--line); background: #0e1228; }
+.sb-team { border-radius: 0.8rem; padding: 0.55rem 0.7rem; background: var(--panel); border: 2px solid transparent; border-left: 0.55rem solid var(--tc); }
+.sb-team.is-active { border-color: var(--tc); background: color-mix(in srgb, var(--tc) 18%, var(--panel)); }
+.sb-team.is-steal { border-color: var(--tc); border-style: dashed; }
+.sb-row { display: flex; align-items: baseline; gap: 0.5rem; }
+.sb-name { font-weight: 800; font-size: 1.05rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-score { font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.sb-score small { font-size: 0.7em; color: var(--muted); }
+.sb-meta { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.25rem; min-height: 1.1rem; }
+.tokens { display: inline-flex; gap: 0.2rem; align-items: center; font-size: 0.8rem; color: var(--muted); }
+.token { width: 0.95rem; height: 0.95rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff3c4, var(--gold) 45%, #c99a2e); box-shadow: 0 0 0 1px #6b5418; display: inline-block; }
+.sb-tag { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; padding: 0.05rem 0.45rem; border-radius: 99px; background: var(--tc); color: var(--ink); text-transform: uppercase; }
+.scoreboard.is-crowded { gap: 0.4rem; padding: 0.6rem; }
+.scoreboard.is-crowded .sb-team { padding: 0.35rem 0.6rem; }
+.scoreboard.is-crowded .sb-name { font-size: 0.95rem; }
+.scoreboard.is-crowded .mini { margin-top: 0.2rem; }
+.mini { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-top: 0.35rem; }
+.mini span { font-size: 0.72rem; font-weight: 700; padding: 0.05rem 0.3rem; border-radius: 0.3rem; background: color-mix(in srgb, var(--tc) 30%, transparent); font-variant-numeric: tabular-nums; }
+
+.stage { grid-row: 1; min-width: 0; min-height: 0; overflow: auto; padding: 1rem 1.4rem; display: flex; flex-direction: column; gap: 0.8rem; align-items: stretch; }
+.turn-head { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.turn-team { font-family: var(--font-display); font-weight: 900; font-size: 2.4rem; line-height: 1.05; color: var(--tc); text-wrap: balance; }
+.turn-sub { font-size: 1.15rem; color: var(--muted); }
+.turn-sub b { color: var(--text); }
+.placer { margin-left: auto; background: var(--panel); border: 2px dashed var(--tc); border-radius: 0.8rem; padding: 0.45rem 0.9rem; font-size: 1.05rem; }
+.placer b { color: var(--tc); }
+.euro-banner { border-radius: 0.8rem; padding: 0.55rem 1rem; font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.04em; text-align: center; color: #fff; font-weight: 900;
+  background: linear-gradient(90deg, var(--euro-1), var(--euro-2), #ff9f1c, var(--euro-2), var(--euro-1)); background-size: 300% 100%; animation: slide 8s linear infinite; text-shadow: 0 2px 0 rgba(0,0,0,0.35); }
+.euro-banner small { display: block; font-family: var(--font-body); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em; opacity: 0.95; }
+
+.player { position: relative; border-radius: 1.1rem; background: var(--panel); border: 2px solid var(--line); padding: 1.1rem 1.3rem; display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; align-items: center; }
+.player .vinyl { width: 7.5rem; height: 7.5rem; border-radius: 50%;
+  background: radial-gradient(circle, var(--tc) 0 15%, var(--ink) 16% 19%, #232a57 20% 27%, #10142e 28% 41%, #232a57 42% 49%, #10142e 50% 63%, #232a57 64% 71%, #10142e 72% 100%);
+  box-shadow: 0 0 0 3px #39427d, 0 0.6rem 2rem rgba(0,0,0,0.5); }
+.player.is-playing .vinyl { animation: spin 2.2s linear infinite; }
+.player-main { min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.np-status { font-family: var(--font-display); font-weight: 900; font-size: 2rem; line-height: 1.1; }
+.np-help { color: var(--muted); font-size: 1rem; }
+.eq { display: flex; align-items: flex-end; gap: 0.32rem; height: 3rem; }
+.eq i { display: block; width: 0.55rem; height: 18%; border-radius: 0.2rem; background: var(--tc); opacity: 0.85; transform-origin: bottom; }
+.player.is-playing .eq i { animation: eq 0.9s ease-in-out infinite alternate; }
+.eq i:nth-child(2n) { animation-duration: 0.7s !important; }
+.eq i:nth-child(3n) { animation-duration: 1.15s !important; }
+.eq i:nth-child(4n+1) { animation-delay: -0.4s; }
+.eq i:nth-child(5n) { animation-delay: -0.2s; }
+.clipbar { height: 0.5rem; border-radius: 99px; background: var(--panel-2); overflow: hidden; }
+.clipbar > div { height: 100%; width: 0%; background: var(--tc); transition: width 0.2s linear; }
+.controls { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.controls .btn { font-size: 1.05rem; }
+.hint-badge { display: inline-block; background: var(--gold); color: #1b1300; font-weight: 800; border-radius: 0.6rem; padding: 0.25rem 0.8rem; font-size: 1.15rem; }
+.actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.actions .lead { color: var(--muted); font-size: 1.15rem; flex: 1 0 100%; }
+.actions .push { margin-left: auto; }
+.actions .lead b { color: var(--text); }
+
+.steal-banner { border-radius: 1rem; padding: 0.9rem 1.2rem; background: color-mix(in srgb, var(--tc) 22%, var(--panel)); border: 3px solid var(--tc); }
+.steal-banner .big { font-family: var(--font-display); font-weight: 900; font-size: 2.1rem; line-height: 1.1; }
+.steal-banner .miss { color: #ffb3bd; font-weight: 800; font-size: 1.15rem; }
+
+/* reveal card */
+.result { font-family: var(--font-display); font-weight: 900; font-size: 1.8rem; border-radius: 0.9rem; padding: 0.5rem 1rem; text-align: center; }
+.result--good { background: color-mix(in srgb, var(--good) 22%, var(--panel)); color: #b9ffd6; border: 2px solid var(--good); }
+.result--bad { background: color-mix(in srgb, var(--bad) 18%, var(--panel)); color: #ffc7cd; border: 2px solid var(--bad); }
+.reveal { display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; align-items: center; background: #fbf7ea; color: #14152a; border-radius: 1.3rem; padding: 1.3rem 1.6rem; border-top: 0.9rem solid var(--tc); box-shadow: 0 1rem 3rem rgba(0,0,0,0.5); animation: flipin 0.55s cubic-bezier(.2,.8,.2,1.1); }
+.reveal .r-year { font-family: var(--font-display); font-weight: 900; font-size: 6.5rem; line-height: 0.9; letter-spacing: -0.03em; color: #14152a; font-variant-numeric: tabular-nums; }
+.reveal .r-body { min-width: 0; }
+.reveal .r-title { font-family: var(--font-display); font-weight: 900; font-size: 2.1rem; line-height: 1.1; text-wrap: balance; }
+.reveal .r-artist { font-size: 1.5rem; font-weight: 700; color: #3b3f6b; margin-top: 0.2rem; }
+.reveal .r-he { font-family: var(--font-he); font-size: 1.05rem; color: #5a5e86; margin-top: 0.25rem; }
+.reveal .r-story { font-size: 1.2rem; margin: 0.7rem 0 0; max-width: 60ch; line-height: 1.4; }
+.reveal .r-euro { display: inline-block; margin-top: 0.5rem; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; padding: 0.15rem 0.6rem; border-radius: 99px; background: linear-gradient(90deg, var(--euro-1), var(--euro-2)); }
+.next-note { color: var(--gold); font-weight: 800; font-size: 1.1rem; }
+
+/* timeline */
+.tl-wrap { grid-column: 1 / -1; background: #0e1228; border-top: 2px solid var(--line); padding: 0.6rem 1rem 0.9rem; }
+.tl-label { font-size: 0.95rem; color: var(--muted); margin-bottom: 0.45rem; display: flex; gap: 0.6rem; align-items: baseline; }
+.tl-label b { color: var(--tc); font-size: 1.1rem; }
+.timeline { display: flex; align-items: stretch; justify-content: center; gap: 0; min-height: 8.6rem; overflow-x: auto; padding: 0.2rem 0; }
+.tcard { flex: 0 1 9.2rem; min-width: 5.6rem; border-radius: 0.8rem; background: var(--tc); color: #10122a; padding: 0.55rem 0.6rem; display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; gap: 0.15rem; box-shadow: 0 0.35rem 0 rgba(0,0,0,0.35); }
+.tcard .tc-year { font-family: var(--font-display); font-weight: 900; font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.tcard .tc-title { font-weight: 800; font-size: 0.8rem; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tcard .tc-artist { font-size: 0.72rem; opacity: 0.8; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.tcard.is-new { animation: pop 0.7s ease-out; box-shadow: 0 0 0 4px #fff, 0 0 2rem var(--tc); }
+.tcard--mystery { background: repeating-linear-gradient(135deg, var(--tc) 0 0.6rem, color-mix(in srgb, var(--tc) 70%, #fff) 0.6rem 1.2rem); outline: 4px solid #fff; cursor: pointer; }
+.tcard--mystery .tc-year { font-size: 3rem; }
+.gap { flex: 0 0 auto; width: 2.6rem; margin: 0 0.15rem; border-radius: 0.6rem; border: 2px dashed transparent; background: transparent; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 800; padding: 0; }
+.timeline.is-selectable .gap { border-color: color-mix(in srgb, var(--tc) 55%, transparent); color: var(--tc); background: color-mix(in srgb, var(--tc) 8%, transparent); }
+.timeline.is-selectable .gap:hover { background: color-mix(in srgb, var(--tc) 28%, transparent); border-style: solid; }
+.gap .gap-num { font-size: 1rem; }
+.timeline.is-selectable .gap--edge { width: 3.4rem; }
+.timeline:not(.is-selectable) .gap { width: 0.7rem; pointer-events: none; }
+
+/* ---------- win ---------- */
+.win { max-width: 90rem; margin: 0 auto; padding: 1.4rem max(16px, 1.5rem) 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.win-head { text-align: center; }
+.win-head .crown { font-size: 4rem; color: var(--gold); line-height: 1; }
+.win-head h1 { font-family: var(--font-display); font-weight: 900; font-size: 3.8rem; margin: 0.2rem 0; line-height: 1.05; text-wrap: balance; }
+.win-head p { color: var(--muted); font-size: 1.2rem; margin: 0; }
+.final-row { background: var(--panel); border-radius: var(--radius); padding: 0.7rem 0.9rem; border-left: 0.6rem solid var(--tc); }
+.final-row.is-winner { box-shadow: 0 0 0 3px var(--gold), 0 0 2.5rem rgba(255, 209, 102, 0.25); }
+.final-row h3 { margin: 0 0 0.4rem; display: flex; gap: 0.8rem; align-items: baseline; font-size: 1.25rem; }
+.final-row h3 small { color: var(--muted); font-weight: 600; font-size: 0.9rem; }
+.final-row .timeline { justify-content: flex-start; min-height: 0; }
+.final-row .tcard { flex-basis: 8rem; }
+.final-row .tcard .tc-year { font-size: 1.7rem; }
+.win-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- editor ---------- */
+.editor { padding: 1rem max(16px, 1.2rem) 2rem; font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.7rem; }
+.ed-head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+.ed-head h1 { margin: 0; font-family: var(--font-display); font-weight: 900; font-size: 1.8rem; }
+.ed-head .stats { color: var(--muted); }
+.ed-head input[type="search"] { background: var(--panel-2); border: 1px solid var(--line); border-radius: 0.5rem; padding: 0.4rem 0.6rem; min-width: 14rem; }
+.ed-head .spacer { flex: 1; }
+.editor .btn { font-size: 0.85rem; padding: 0.45rem 0.8rem; border-width: 1px; }
+.ed-note { margin: 0; color: var(--muted); max-width: 80rem; }
+.table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 0.7rem; max-height: calc(100vh - 14rem); }
+table.songs { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 118rem; }
+table.songs th { position: sticky; top: 0; background: var(--panel-2); text-align: left; padding: 0.45rem 0.4rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); z-index: 1; white-space: nowrap; }
+table.songs td { padding: 0.3rem 0.35rem; border-top: 1px solid var(--line); vertical-align: top; }
+table.songs tr.is-off td { opacity: 0.5; }
+table.songs tr.is-off td:first-child { opacity: 1; }
+table.songs input[type="text"], table.songs input[type="number"], table.songs textarea { width: 100%; background: var(--panel); border: 1px solid transparent; border-radius: 0.35rem; padding: 0.3rem 0.4rem; }
+table.songs input:hover, table.songs textarea:hover { border-color: var(--line); }
+table.songs input:focus, table.songs textarea:focus { border-color: var(--gold); outline: none; }
+table.songs textarea { resize: vertical; min-height: 2.4rem; line-height: 1.3; }
+table.songs input.bad { border-color: var(--bad); }
+table.songs input[type="checkbox"] { width: 1.15rem; height: 1.15rem; accent-color: var(--gold); }
+.flag { font-size: 1.05rem; text-align: center; }
+.flag .warn { color: #ffcf8a; }
+.flag .ok { color: var(--good); }
+.yt-note { display: block; font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; min-height: 0.9rem; }
+.yt-note.bad { color: var(--bad); }
+.yt-note.good { color: var(--good); }
+.rowbtn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 0.4rem; padding: 0.25rem 0.5rem; white-space: nowrap; }
+.rowbtn.is-on { background: var(--gold); color: #1b1300; }
+.rowbtn--del { color: #ffb3bd; }
+.rowbtn--confirm { background: var(--bad); color: #fff; }
+.c-year { width: 5rem; } .c-title { width: 14rem; } .c-he { width: 11rem; } .c-artist { width: 12rem; } .c-yt { width: 11rem; } .c-alt { width: 9rem; } .c-start { width: 4.6rem; } .c-story { width: 26rem; }
+
+/* ---------- modal / toast ---------- */
+.modal { background: var(--panel); border: 2px solid var(--line); border-radius: 1rem; padding: 1.2rem 1.4rem; max-width: 40rem; width: 100%; box-shadow: 0 1rem 4rem rgba(0,0,0,0.6); }
+.modal h2 { margin: 0 0 0.6rem; font-family: var(--font-display); font-weight: 900; font-size: 1.6rem; }
+.modal .body { color: var(--muted); font-size: 1.05rem; }
+.modal .body b { color: var(--text); }
+.modal .body ol, .modal .body ul { padding-left: 1.2rem; }
+.modal .m-actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+.keys { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 1rem; align-items: center; }
+.keys .kbd { font-size: 0.95rem; opacity: 1; text-align: center; }
+.toast { background: var(--text); color: var(--ink); font-weight: 800; padding: 0.55rem 1.1rem; border-radius: 0.7rem; box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.5); font-size: 1.05rem; animation: toastin 0.25s ease-out; text-align: right; }
+.toast--bad { background: var(--bad); color: #fff; }
+.toast--good { background: var(--good); color: #062512; }
+.toast--gold { background: var(--gold); color: #1b1300; }
+.sys-banner { background: #3a1d24; color: #ffd0d6; border: 2px solid var(--bad); border-radius: 0.8rem; padding: 0.6rem 0.9rem; font-size: 0.95rem; }
+.sys-banner b { color: #fff; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes eq { 0% { height: 15%; } 100% { height: 100%; } }
+@keyframes slide { to { background-position: 300% 0; } }
+@keyframes flipin { from { transform: perspective(60rem) rotateX(65deg) translateY(1rem); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes pop { 0% { transform: scale(0.6); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes toastin { from { transform: translateY(-0.6rem); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+}
+@media (max-width: 900px) {
+  .setup-grid { grid-template-columns: 1fr; }
+  .team-inputs { grid-template-columns: 1fr; }
+  .game { grid-template-columns: 1fr; grid-template-rows: auto auto auto; height: auto; }
+  .scoreboard { border-right: 0; border-bottom: 2px solid var(--line); }
+  .stage, .scoreboard { grid-row: auto; }
+  .player { grid-template-columns: 1fr; }
+  .reveal { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2.4rem; }
+}
+</style>
+</head>
+<body>
+<div id="ytDock" aria-hidden="true"><div id="ytPlayer"></div></div>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><div class="disc"></div>Israeli Hitster</div>
+    <span class="pill" id="tbMode" hidden></span>
+    <span class="pill" id="tbTurn" hidden></span>
+    <span class="spacer"></span>
+    <button class="tbtn" data-action="keys" title="Keyboard shortcuts (?)">Keys <span class="kbd">?</span></button>
+    <button class="tbtn" data-action="songs">Songs</button>
+    <button class="tbtn" data-action="fullscreen" title="Fullscreen (F)">Fullscreen <span class="kbd">F</span></button>
+    <button class="tbtn tbtn--danger" data-action="end-game" id="tbEnd" hidden>End game now</button>
+  </header>
+  <main class="screen" id="screen"></main>
+</div>
+<div id="modalRoot" role="dialog" aria-modal="true"></div>
+<div id="toastRoot" aria-live="polite"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+'use strict';
+
+/* =========================================================
+   Settings
+   ========================================================= */
+const CLIP_SECONDS = 20;
+const LS_SONGS = 'israeliHitster.songs.v1';
+const LS_GAME = 'israeliHitster.game.v1';
+const LS_SETUP = 'israeliHitster.setup.v1';
+const TEAM_COLORS = ['#ff6b5a', '#ffc23d', '#2ed3b7', '#4ea8ff', '#b47cff', '#ff7ac3'];
+const DEFAULT_TEAM_NAMES = ['Team Falafel', 'Team Hummus', 'Team Sabra', 'Team Shakshuka', 'Team Bamba', 'Team Rugelach'];
+const PLACER_PROMPTS = [
+  'a new student',
+  'someone who hasn\'t placed a card yet',
+  'a new student',
+  'the student sitting closest to the board',
+  'a new student',
+  'whoever has the next birthday',
+  'a new student',
+  'someone who hasn\'t spoken yet this game'
+];
+
+/* =========================================================
+   Built-in song list (researched October 2026).
+   y = year, t = English title, h = Hebrew title, a = artist,
+   yt = YouTube ID, alt = backup YouTube ID, s = clip start (seconds),
+   e = Eurovision entry, v = year verified, story = story card text.
+   ========================================================= */
+const DEFAULT_SONGS = [
+  { y: 1958, t: 'Erev Shel Shoshanim (Evening of Roses)', h: 'ערב של שושנים', a: 'HaDudaim', yt: 'rEdbgHeyncE', alt: 'Mx1UXlO3vsA', s: 8, e: false, v: true,
+    story: 'A love song whose images come from the biblical Song of Songs. Yafa Yarkoni recorded it first in 1957, but the duo HaDudaim made it a hit in 1958, and today it is played at Jewish weddings around the world.' },
+  { y: 1967, t: 'Yerushalayim Shel Zahav (Jerusalem of Gold)', h: 'ירושלים של זהב', a: 'Shuli Natan', yt: 'IUxt7faTExY', alt: 'O2RoCNeM9B0', s: 52, e: false, v: true,
+    story: 'Naomi Shemer wrote it for a song festival in May 1967, and 20-year-old Shuli Natan sang it. Three weeks later the Six-Day War reunited Jerusalem, and the song became like a second national anthem.' },
+  { y: 1969, t: 'Shir LaShalom (Song for Peace)', h: 'שיר לשלום', a: 'Lehakat HaNahal', yt: 'd4JyiXsta10', alt: '4-oxRVJc3Sg', s: 40, e: false, v: true,
+    story: 'An army entertainment troupe first sang this call for peace, and some army leaders did not like it at first. In 1995 Prime Minister Yitzhak Rabin sang it at a peace rally, minutes before he was assassinated.' },
+  { y: 1970, t: 'Ani Cholem Al Naomi (I Dream of Naomi)', h: 'אני חולם על נעמי', a: 'Hedva & David', yt: 'rTtiZ09HQJQ', alt: '8I2eE_Q_9Rw', s: 45, e: false, v: true,
+    story: 'This duo won the first World Popular Song Festival in Tokyo in 1970. Their Japanese version sold more than a million copies, making it one of Israel\'s biggest hits abroad.' },
+  { y: 1971, t: 'Ani Ve\'Ata (You and I)', h: 'אני ואתה', a: 'Arik Einstein', yt: 'oVOB0tJoIE8', alt: 'PixfMer7J5M', s: 30, e: false, v: true,
+    story: 'Arik Einstein wrote the words and Miki Gavrielov the music. It is a gentle song about two friends who believe they can change the world, and people often compare it to John Lennon\'s "Imagine."' },
+  { y: 1973, t: 'Lu Yehi (Let It Be)', h: 'לו יהי', a: 'Naomi Shemer', yt: '5Xyrr8XCmCY', alt: 'VVKc9WTAhnY', s: 45, e: false, v: true,
+    story: 'Naomi Shemer released this hopeful, prayer-like song in 1973, just before the Yom Kippur War. During the war it became the song that spoke for soldiers at the front and families at home.' },
+  { y: 1973, t: 'Ey Sham (Somewhere)', h: 'אי שם', a: 'Ilanit', yt: 'i1PWx0WFgbk', alt: 'VyVjY_ZGKj8', s: 60, e: true, v: true,
+    story: 'Israel\'s very first Eurovision entry. Ilanit finished fourth in Luxembourg, a strong start for the newest country in the contest.' },
+  { y: 1974, t: 'Natati La Chayai (I Gave Her My Life)', h: 'נתתי לה חיי', a: 'Kaveret', yt: 'Pc0A5a-lZGo', alt: 'tRGRXCDZJ9A', s: 50, e: true, v: true,
+    story: 'Kaveret was Israel\'s hugely popular, funny rock band of the 1970s. This was Israel\'s Eurovision entry in 1974, the same year ABBA won with "Waterloo."' },
+  { y: 1975, t: 'At Ve\'Ani (You and I)', h: 'את ואני', a: 'Shlomo Artzi', yt: 'DEENjob2l8A', alt: 'jtR1qM-rClg', s: 60, e: true, v: true,
+    story: 'Shlomo Artzi sang this at Eurovision 1975 in Stockholm and finished 11th. He went on to become one of Israel\'s best-selling singers for decades.' },
+  { y: 1975, t: 'Hi Kol Kach Yafa (She\'s So Beautiful)', h: 'היא כל כך יפה', a: 'Kaveret', yt: 'zAaHhoNMXS0', alt: 'vf9I1dT_umc', s: 45, e: false, v: true,
+    story: 'A soft love song from Kaveret\'s third and last studio album, sung by Ephraim Shamir. Fans expected jokes and were surprised at first, but it became one of the band\'s best-loved songs.' },
+  { y: 1976, t: 'Brosh (Cypress)', h: 'ברוש', a: 'Ariel Zilber', yt: 'mPJm3xpfxnU', alt: '', s: 40, e: false, v: true,
+    story: 'Words by Ehud Manor, music by Ariel Zilber. The song about a cypress tree was on Zilber\'s 1976 debut album, and two years later his band named itself "Brosh" after it.' },
+  { y: 1977, t: 'Erev Shel Yom Bahir (Evening of a Clear Day)', h: 'ערב של יום בהיר', a: 'Ephraim & Esther Shamir', yt: 'y3O3xSg_AIo', alt: 'AKrkg3AyV1Y', s: 40, e: false, v: false,
+    story: 'Words by poet Yehonatan Geffen, music by Ephraim Shamir, who had just left the band Kaveret. Ephraim and his wife Esther recorded it as a duo.' },
+  { y: 1978, t: 'A-Ba-Ni-Bi', h: 'אבניבי', a: 'Izhar Cohen & Alphabeta', yt: 'pXu5fXHDR_8', alt: 'HdmfwKUpDlg', s: 60, e: true, v: true,
+    story: 'Israel\'s first Eurovision win, in Paris. The title uses a children\'s secret language that adds a "B" sound to every syllable, so "ani" (I) becomes "a-ba-ni-bi."' },
+  { y: 1978, t: 'Re\'ach Shel Shokolad (Smell of Chocolate)', h: 'ריח של שוקולד', a: 'HaKeves HaShisha Asar (The Sixteenth Sheep)', yt: 'TS4HtlFLyl4', alt: 'ibOFtk5OoKQ', s: 30, e: false, v: true,
+    story: 'From "The Sixteenth Sheep," a children\'s album by poet Yehonatan Geffen with music by Yoni Rechter. Kids and parents both loved it, and it became one of the best-selling Israeli albums ever.' },
+  { y: 1979, t: 'Hallelujah', h: 'הללויה', a: 'Gali Atari & Milk and Honey', yt: 'OH5Ey-yvC7U', alt: 'SyvbkKjJ-1o', s: 60, e: true, v: true,
+    story: 'Israel hosted Eurovision in Jerusalem in 1979 and won again, the second win in a row. "Hallelujah" became one of the best-known Eurovision songs and is sung by choirs around the world.' },
+  { y: 1979, t: 'Shuv Hi Kan (She\'s Here Again)', h: 'שוב היא כאן', a: 'Yoni Rechter', yt: '_N9yWyyVd4Q', alt: 'yZrtlNOqygI', s: 45, e: false, v: true,
+    story: 'From Yoni Rechter\'s first solo album, "Hitkavnut," with words by Eli Mohar. It was written for a musical that never happened, but it became a hit on its own.' },
+  { y: 1979, t: 'Lakachta Et Yadi BeYadcha (You Took My Hand in Yours)', h: 'לקחת את ידי בידך', a: 'Yehudit Ravitz', yt: 'fC_O1BzhnBU', alt: 'EPvCAjKymoU', s: 40, e: false, v: true,
+    story: 'The opening song of Yehudit Ravitz\'s 1979 debut album. Matti Caspi wrote the music and produced much of the album; the words are by Yankele Rotblit, who also wrote "Shir LaShalom."' },
+  { y: 1979, t: 'Af Pa\'am Lo Tedi (You\'ll Never Know)', h: 'אף פעם לא תדעי', a: 'Shlomo Artzi', yt: 'f0359PUzXHo', alt: 'PMrS6VfqHvM', s: 50, e: false, v: true,
+    story: 'From Shlomo Artzi\'s album "Drachim" (Ways), which gave his career a fresh new sound. He wrote both the words and the music.' },
+  { y: 1981, t: 'Lo Ozev Et HaIr (Not Leaving the City)', h: 'לא עוזב את העיר', a: 'Shlomo Artzi', yt: 'BystAg_v-Do', alt: 'YT3sGGEcQp4', s: 45, e: false, v: true,
+    story: 'A number-one hit from the album "Chatzot" (Midnight). When missiles hit Tel Aviv in the 1991 Gulf War, radio stations played it constantly, and the title became a phrase for people who stay put in hard times.' },
+  { y: 1982, t: 'HaPerach BeGani (The Flower in My Garden)', h: 'הפרח בגני', a: 'Zohar Argov', yt: 'i9UEiER251g', alt: 'F7jROV_XRa8', s: 50, e: false, v: true,
+    story: 'Zohar Argov won the 1982 Mizrahi Music Festival with this song by Avihu Medina. It was the moment Mizrahi music, with roots in Jewish communities from the Middle East and North Africa, broke into the Israeli mainstream.' },
+  { y: 1982, t: 'Badad (Alone)', h: 'בדד', a: 'Zohar Argov', yt: '1uMNEJuQgeI', alt: 'uzgSWTrAJwI', s: 50, e: false, v: true,
+    story: 'An older song, first recorded in 1961, that Zohar Argov made famous on his 1982 album "Nachon LeHayom." Argov, known as "the King" of Mizrahi music, gave it new emotional power.' },
+  { y: 1983, t: 'Chai (Alive)', h: 'חי', a: 'Ofra Haza', yt: '_XMZJYxb5XU', alt: 'z81U2sLEtdY', s: 55, e: true, v: true,
+    story: 'Ofra Haza finished second at Eurovision 1983 in Munich. Singing a song about Jewish survival in Germany, less than 40 years after the Holocaust, made it especially powerful, and Haza later became an international star.' },
+  { y: 1983, t: 'Shavir (Fragile)', h: 'שביר', a: 'Arik Einstein & Yitzhak Klepter', yt: 'f5vnMhCttoM', alt: '6a6AFM7OEsg', s: 45, e: false, v: true,
+    story: 'Arik Einstein was badly hurt in a car accident in 1982. While he was recovering, he wrote all the words for the album "Shavir" with composer Yitzhak Klepter.' },
+  { y: 1985, t: 'Mechakim LaMashiach (Waiting for the Messiah)', h: 'מחכים למשיח', a: 'Shalom Hanoch', yt: 'FnMRB_G29Mc', alt: '-0i3mev5EvQ', s: 50, e: false, v: true,
+    story: 'The title song of Shalom Hanoch\'s most successful album, released during a severe economic crisis in Israel. It pokes fun at people who wait for someone else to come and fix everything.' },
+  { y: 1986, t: 'Shvil HaBricha (Escape Route)', h: 'שביל הבריחה', a: 'Rita', yt: 'thcsC9PpHvM', alt: '4iUS2vzCPnE', s: 50, e: false, v: true,
+    story: 'Music by Rami Kleinstein. Rita sang it in Israel\'s 1986 Eurovision selection and came fourth, but the song became a huge hit and launched her career.' },
+  { y: 1987, t: 'Shlach Li Malach (Send Me an Angel)', h: 'שלח לי מלאך', a: 'Mashina', yt: 'CYQ3WBi_n68', alt: '_t9O2XYO-Mw', s: 45, e: false, v: true,
+    story: 'Mashina was one of Israel\'s biggest rock bands of the 1980s and 90s. This song is from their second album, "Mashina 2," released in June 1987.' },
+  { y: 1988, t: 'Ben Adam (Human Being)', h: 'בן אדם', a: 'Yardena Arazi', yt: 'hyLn6KdA1bU', alt: 'vHDfViwCgX4', s: 60, e: true, v: true,
+    story: 'Yardena Arazi, already a big TV star, represented Israel at Eurovision 1988 in Dublin and finished seventh. That same night Céline Dion won for Switzerland.' },
+  { y: 1988, t: 'Ahuvati (My Beloved)', h: 'אהובתי', a: 'Mashina', yt: '2whRZFPszoA', alt: '8cq2mUevCb0', s: 45, e: false, v: true,
+    story: 'A love song from the band\'s third album, "Mashina 3." Lead singer Yuval Banai comes from a famous family of Israeli musicians and actors.' },
+  { y: 1990, t: 'Shara Barchovot (Singing in the Streets)', h: 'שרה ברחובות', a: 'Rita', yt: 'EdPxXRDy1yU', alt: 'N-bh5H43_QM', s: 60, e: true, v: true,
+    story: 'Rita represented Israel at Eurovision 1990 in Zagreb with this song by Rami Kleinstein, her husband at the time. Rita was born in Iran and moved to Israel as a child.' },
+  { y: 1975, t: 'Od Chozer HaNigun (The Melody Returns)', h: 'עוד חוזר הניגון', a: 'Nira Gal', yt: 'FZN2kBtIeEY', alt: 'VhfpBeMsgZE', s: 35, e: false, v: false,
+    story: 'The words are a 1938 poem by Natan Alterman, one of Israel\'s greatest poets, set to music by Naftali Alter. Nira Gal sang it on her first album.' },
+  { y: 1995, t: 'Maka Afora (Gray Blow)', h: 'מכה אפורה', a: 'Monica Sex', yt: 'DV55unut3oI', alt: 'MURUHwUZKfc', s: 40, e: false, v: true,
+    story: 'From the rock band\'s debut album, "Petza\'im VeNeshikot" (Wounds and Kisses). Two years later it became the theme song of "Florentin," a TV series about young people in Tel Aviv.' },
+  { y: 1997, t: 'Lo Yachol Lehorid Mimech Et HaEinayim (Can\'t Take My Eyes Off You)', h: 'לא יכול להוריד ממך את העיניים', a: 'Meir Ariel', yt: 'yenZ_NMSlws', alt: 'CnB0_XuctfM', s: 45, e: false, v: true,
+    story: 'From "Bernard and Louise," the last album Meir Ariel released before he died in 1999. Ariel was famous for his clever wordplay in Hebrew.' },
+  { y: 1998, t: 'Diva', h: 'דיווה', a: 'Dana International', yt: 'HAOza79e3f0', alt: 'Fv83u7-mNWQ', s: 60, e: true, v: true,
+    story: 'Israel\'s third Eurovision win, in Birmingham, England. Dana International became the contest\'s first openly transgender winner and a worldwide star.' },
+  { y: 1999, t: 'HaShir Shelanu (Our Song)', h: 'השיר שלנו', a: 'Aviv Geffen', yt: 'aaQAek0BFtc', alt: 'GfcSy9IPsa4', s: 45, e: false, v: false,
+    story: 'Aviv Geffen was the voice of a rebellious generation of Israeli teenagers in the 1990s. This breakup song appears on his album "Leilot Levanim" (White Nights).' },
+  { y: 2002, t: 'Bo\'ee (Come With Me)', h: 'בואי', a: 'The Idan Raichel Project', yt: 'dORu7UF9NtM', alt: '_uJLsc05ZE4', s: 50, e: false, v: true,
+    story: 'The first single of the Idan Raichel Project, which mixed Hebrew pop with Ethiopian-Jewish singers and music. Its chorus in Amharic sounded like nothing most Israelis had heard on the radio before.' },
+  { y: 2002, t: 'Light a Candle', h: 'נדליק ביחד נר', a: 'Sarit Hadad', yt: '7pZ6Z9Wm1Ac', alt: 'Xu9BfXQPztw', s: 50, e: true, v: true,
+    story: 'Sarit Hadad, a star of Mizrahi pop, sang this hopeful song at Eurovision 2002 in Tallinn, Estonia, during a violent time in Israel. It finished 12th.' },
+  { y: 2004, t: 'Shirat HaSticker (The Sticker Song)', h: 'שירת הסטיקר', a: 'Hadag Nahash', yt: 'GIbjpev6U5s', alt: 'qoc3JBDqfJ8', s: 45, e: false, v: true,
+    story: 'Author David Grossman built the words entirely from real political bumper stickers seen on Israeli cars. The hip-hop band Hadag Nahash turned them into a funny but serious song about a divided country.' },
+  { y: 2005, t: 'HaSheket SheNish\'ar (The Silence That Remains)', h: 'השקט שנשאר', a: 'Shiri Maimon', yt: 'MyChlzTADQY', alt: 'bzuqehoCcrs', s: 60, e: true, v: true,
+    story: 'Shiri Maimon, who first became known on a TV talent show, finished fourth at Eurovision 2005 in Kyiv. It was one of Israel\'s best results of the 2000s.' },
+  { y: 2005, t: 'Sigapo', h: 'סיגפו', a: 'Beit HaBubot', yt: 'VfmS30Yp7z8', alt: 'y_sHzgKo0i4', s: 45, e: false, v: true,
+    story: 'The breakout hit from the rock band\'s debut album "Madafim" (Shelves). The made-up title comes from the nickname of a friend of the band who had just come back from a trip to India.' },
+  { y: 2007, t: 'Becoming Insane', h: '', a: 'Infected Mushroom', yt: 'Z6hL6fkJ1_k', alt: 'LDszUGzpMa8', s: 60, e: false, v: true,
+    story: 'Infected Mushroom are Israeli pioneers of psychedelic trance, a style of electronic dance music. This track from the album "Vicious Delicious" became one of their biggest hits around the world.' },
+  { y: 2007, t: 'Push the Button', h: '', a: 'Teapacks', yt: 'zuz80AoXUI8', alt: 'm4sAem5t-nw', s: 50, e: true, v: true,
+    story: 'A quirky song in English, French and Hebrew about living with fear of nuclear threats. It did not reach the final in Helsinki, but people still remember it as one of Israel\'s boldest entries.' },
+  { y: 2009, t: 'There Must Be Another Way', h: 'עינייך', a: 'Noa & Mira Awad', yt: 'RN8B1xvCxI0', alt: 'CQ5e5nvhsWY', s: 55, e: true, v: true,
+    story: 'A Jewish singer (Noa) and an Arab citizen of Israel (Mira Awad) sang together in Hebrew, Arabic and English, hoping for peace. They placed 16th in Moscow.' },
+  { y: 2010, t: 'Milim (Words)', h: 'מילים', a: 'Harel Skaat', yt: 'GelsXCyV5Nk', alt: 'ShVFtlfX6mo', s: 55, e: true, v: true,
+    story: 'Harel Skaat, who became famous on the TV talent show "Kochav Nolad," sang this ballad in Oslo and finished 14th. He sang it entirely in Hebrew.' },
+  { y: 2013, t: 'Tel Aviv', h: 'תל אביב', a: 'Omer Adam ft. Arisa', yt: 'nMQw29nfzpg', alt: 'srOFki9PGM0', s: 50, e: false, v: true,
+    story: 'An upbeat party song about the city of Tel Aviv by pop star Omer Adam and the group Arisa. It was the official song of Tel Aviv Pride in 2013.' },
+  { y: 2015, t: 'Golden Boy', h: '', a: 'Nadav Guedj', yt: 'NdxOCTezeTg', alt: 'aoynyV1iAw0', s: 50, e: true, v: true,
+    story: '16-year-old Nadav Guedj sang this high-energy dance song in Vienna and finished ninth, Israel\'s best result in years at the time.' },
+  { y: 2017, t: 'Tudo Bom', h: 'טודו בום', a: 'Static & Ben El', yt: 'ayOuxyAFNkE', alt: 'dpQCaiD-L9Y', s: 45, e: false, v: true,
+    story: 'A summer hit that mixes Hebrew with Portuguese ("tudo bom" means "all good"). A later version with Colombian star J Balvin made the duo known outside Israel.' },
+  { y: 2018, t: 'Toy', h: '', a: 'Netta', yt: 'CziHrYYSyPc', alt: 'kgj425xnNsQ', s: 55, e: true, v: true,
+    story: 'Netta used a looper to build the song from her own voice, including chicken-like clucking sounds. Her win in Lisbon was Israel\'s fourth Eurovision victory, and the song became a message about self-confidence.' },
+  { y: 2019, t: 'Home', h: '', a: 'Kobi Marimi', yt: 'AoKrUij595Q', alt: 'E9ULsFjad74', s: 55, e: true, v: true,
+    story: 'Because Netta won in 2018, Israel hosted Eurovision 2019 in Tel Aviv. Kobi Marimi, a young actor, sang this ballad for the home crowd.' },
+  { y: 2021, t: 'Set Me Free', h: '', a: 'Eden Alene', yt: '9nss3FsrgJo', alt: 'Xmrj6G8JhyU', s: 60, e: true, v: true,
+    story: 'Eden Alene, whose parents came to Israel from Ethiopia, was the first Ethiopian-Israeli singer to represent Israel. In Rotterdam she became famous for hitting a super-high whistle note.' },
+  { y: 2023, t: 'Unicorn', h: '', a: 'Noa Kirel', yt: 'XwPEtD0_mx4', alt: 'Z3mIcCllJXY', s: 50, e: true, v: true,
+    story: 'Pop star Noa Kirel finished third in Liverpool with a powerful dance performance. The song is about being proud of who you are.' },
+  { y: 2024, t: 'Hurricane', h: '', a: 'Eden Golan', yt: 'K60BWlEhtAA', alt: 'BaBl8RJot9E', s: 55, e: true, v: true,
+    story: 'Written after the October 7, 2023 attack, the song had to change its words and title to meet Eurovision\'s rules against political messages. 20-year-old Eden Golan finished fifth in Malmö, Sweden.' },
+  { y: 2025, t: 'New Day Will Rise', h: '', a: 'Yuval Raphael', yt: 'Q3BELu4z6-U', alt: 'p0sqpVViN3c', s: 55, e: true, v: true,
+    story: 'Yuval Raphael survived the October 7 attack on the Nova music festival. Less than two years later she sang this song of hope in Basel, won the public vote and finished second overall.' },
+  { y: 2000, t: 'Noful VeKam (Falling and Getting Up)', h: 'נופל וקם', a: 'Shabak Samech', yt: 'cm7XzgZXRjg', alt: '8glXPD07-Zk', s: 50, e: false, v: true,
+    story: 'Shabak Samech were early stars of Israeli hip-hop. This song about failing and trying again, from the album "Kna\'an 2000," became their biggest hit.' },
+  { y: 1993, t: 'Nafalta Chazak (You Fell Hard)', h: 'נפלת חזק', a: 'Eifo HaYeled', yt: '6FiqLKCVR8k', alt: 'ZYEpWJzLjgE', s: 45, e: false, v: true,
+    story: 'The first single from "Zman Sukar," the debut album of the rock band Eifo HaYeled ("Where\'s the Kid?"). Singer Hemi Rodner wrote it, and it became the band\'s biggest hit.' },
+  { y: 2008, t: 'Rakevet LaTzafon (Train to the North)', h: 'רכבת לצפון', a: 'Assaf Amdursky', yt: 'ca6lBZToMgw', alt: '-oVlImTUDGU', s: 45, e: false, v: true,
+    story: 'From Assaf Amdursky\'s album "Harei At." His father, Benny Amdursky, sang in HaDudaim, the duo behind "Erev Shel Shoshanim."' },
+  { y: 1991, t: 'Chalaliyot (Spaceships)', h: 'חלליות', a: 'Berry Sakharof', yt: 'oMZ0vOhxlA4', alt: 'Xdv0M37kiu8', s: 50, e: false, v: true,
+    story: 'From "HaKol O Klum" (All or Nothing), Berry Sakharof\'s first solo album. The words are by his longtime musical partner Rami Fortis.' },
+  { y: 1983, t: 'Sigaliyot (Violets)', h: 'סיגליות', a: 'David Broza', yt: 'BDM03iOk3g8', alt: 'lKPMfZZpjbo', s: 45, e: false, v: true,
+    story: 'A Hebrew version of "Un ramito de violetas," a 1970s Spanish song by Cecilia, with new words by Yehonatan Geffen. Broza spent part of his childhood in Spain, and the song became one of his signature hits.' }
+];
+
+/* =========================================================
+   Small helpers
+   ========================================================= */
+const $ = (sel, root = document) => root.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const decadeOf = (y) => Math.floor(y / 10) * 10;
+const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } };
+const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } };
+
+function extractYouTubeId(input) {
+  const s = String(input || '').trim();
+  if (!s) return '';
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:[?&]v=|\/embed\/|youtu\.be\/|\/shorts\/|\/live\/|\/v\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : '';
+}
+function startFromUrl(input) {
+  const m = String(input || '').match(/[?&#](?:t|start)=([0-9hms]+)/);
+  if (!m) return null;
+  const v = m[1];
+  if (/^\d+$/.test(v)) return parseInt(v, 10);
+  const h = /(\d+)h/.exec(v), mi = /(\d+)m/.exec(v), se = /(\d+)s/.exec(v);
+  return (h ? +h[1] * 3600 : 0) + (mi ? +mi[1] * 60 : 0) + (se ? +se[1] : 0);
+}
+
+/* =========================================================
+   Songs (stored in this browser)
+   ========================================================= */
+function normalizeSong(s) {
+  const year = parseInt(s.year ?? s.y, 10);
+  return {
+    id: s.id || uid(),
+    year: Number.isFinite(year) ? year : '',
+    title: String(s.title ?? s.t ?? ''),
+    hebrew: String(s.hebrew ?? s.h ?? ''),
+    artist: String(s.artist ?? s.a ?? ''),
+    yt: extractYouTubeId(s.yt ?? ''),
+    alt: extractYouTubeId(s.alt ?? ''),
+    start: Math.max(0, parseInt(s.start ?? s.s, 10) || 0),
+    euro: !!(s.euro ?? s.e),
+    story: String(s.story ?? ''),
+    verified: !!(s.verified ?? s.v),
+    use: (s.use ?? true) !== false
+  };
+}
+function defaultSongs() {
+  return DEFAULT_SONGS.map((s, i) => normalizeSong({ ...s, id: 'b' + String(i + 1).padStart(2, '0') }))
+    .sort((a, b) => a.year - b.year);
+}
+function loadSongs() {
+  const raw = lsGet(LS_SONGS);
+  if (raw) {
+    try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr.map(normalizeSong); } catch (e) { /* fall through */ }
+  }
+  return defaultSongs();
+}
+let songs = loadSongs();
+let saveSongsTimer = null;
+function saveSongs(now) {
+  clearTimeout(saveSongsTimer);
+  const doSave = () => { if (!lsSet(LS_SONGS, JSON.stringify(songs))) toast('Could not save songs in this browser. Use Export to back them up.', 'bad'); };
+  if (now) doSave(); else saveSongsTimer = setTimeout(doSave, 300);
+}
+const isPlayable = (s) => s.use && !!s.yt && Number.isFinite(s.year) && s.title.trim() !== '';
+function poolStats() {
+  const playable = songs.filter(isPlayable);
+  return {
+    total: songs.length,
+    playable: playable.length,
+    euro: playable.filter((s) => s.euro).length,
+    noVideo: songs.filter((s) => s.use && !s.yt).length,
+    off: songs.filter((s) => !s.use).length
+  };
+}
+
+/* =========================================================
+   Sound effects (tiny synth, no files)
+   ========================================================= */
+const Sfx = {
+  ctx: null,
+  ensure() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { this.ctx = null; } } return this.ctx; },
+  tone(freq, start, dur, type = 'sine', gain = 0.12) {
+    const ctx = this.ensure(); if (!ctx) return;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, ctx.currentTime + start);
+    g.gain.linearRampToValueAtTime(gain, ctx.currentTime + start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + dur);
+    o.connect(g).connect(ctx.destination);
+    o.start(ctx.currentTime + start); o.stop(ctx.currentTime + start + dur + 0.05);
+  },
+  good() { [523, 659, 784, 1047].forEach((f, i) => this.tone(f, i * 0.09, 0.35, 'triangle')); },
+  bad() { this.tone(196, 0, 0.35, 'sawtooth', 0.07); this.tone(147, 0.18, 0.45, 'sawtooth', 0.07); },
+  coin() { this.tone(988, 0, 0.12, 'square', 0.06); this.tone(1319, 0.08, 0.3, 'square', 0.06); },
+  win() { [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => this.tone(f, i * 0.12, 0.4, 'triangle', 0.1)); }
+};
+
+/* =========================================================
+   Hidden YouTube audio player
+   ========================================================= */
+const Audio = {
+  player: null, ready: false, apiFailed: false,
+  song: null, vid: '', triedAlt: false,
+  start: 0, end: 0, state: 'idle', // idle | cued | playing | paused | ended | error
+  context: 'game', // game | preview
+  lastError: null, failsInARow: 0, tickTimer: null, listeners: [],
+  onFail: null,
+
+  init() {
+    if (this.player) return;
+    const vars = { autoplay: 0, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1, playsinline: 1, rel: 0 };
+    if (location.protocol.startsWith('http')) vars.origin = location.origin;
+    this.player = new YT.Player('ytPlayer', {
+      width: '320', height: '240', playerVars: vars,
+      events: {
+        onReady: () => { this.ready = true; if (this.song) this.cue(); this.emit(); },
+        onStateChange: (e) => this.handleState(e.data),
+        onError: (e) => this.handleError(e.data)
+      }
+    });
+    this.tickTimer = setInterval(() => this.tick(), 150);
+  },
+  on(fn) { this.listeners.push(fn); },
+  emit() { this.listeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } }); },
+
+  load(song, context = 'game') {
+    this.song = song; this.context = context;
+    this.vid = song.yt; this.triedAlt = false; this.lastError = null;
+    this.start = song.start || 0; this.end = this.start + CLIP_SECONDS;
+    this.state = 'cued';
+    if (this.ready) this.cue();
+    this.emit();
+  },
+  cue() {
+    try { this.player.cueVideoById({ videoId: this.vid, startSeconds: this.start }); } catch (e) { console.warn(e); }
+  },
+  now() { try { return this.player.getCurrentTime() || 0; } catch (e) { return 0; } },
+  requireReady() {
+    if (this.ready) return true;
+    toast(this.apiFailed ? 'YouTube did not load. Check the internet connection, then reload the page.' : 'The player is still loading. Try again in a second.', 'bad');
+    return false;
+  },
+  play() {
+    if (!this.song || this.state === 'error' || !this.requireReady()) return;
+    if (this.state === 'cued' || this.state === 'idle') {
+      this.player.seekTo(this.start, true); this.end = this.start + CLIP_SECONDS;
+    } else if (this.state === 'ended') {
+      this.end = this.now() + CLIP_SECONDS; // keep listening from where the clip stopped
+    }
+    this.player.setVolume(100);
+    this.player.playVideo();
+    this.state = 'playing'; this.emit();
+  },
+  pause() {
+    if (!this.ready || this.state !== 'playing') return;
+    this.player.pauseVideo(); this.state = 'paused'; this.emit();
+  },
+  toggle() { if (this.state === 'playing') this.pause(); else this.play(); },
+  replay() {
+    if (!this.song || this.state === 'error' || !this.requireReady()) return;
+    this.player.seekTo(this.start, true); this.end = this.start + CLIP_SECONDS;
+    this.player.setVolume(100); this.player.playVideo();
+    this.state = 'playing'; this.emit();
+  },
+  forward10() {
+    if (!this.song || this.state === 'error' || !this.requireReady()) return;
+    const from = (this.state === 'cued' || this.state === 'idle') ? this.start : this.now();
+    const remaining = this.state === 'playing' || this.state === 'paused' ? Math.max(8, this.end - from) : CLIP_SECONDS;
+    const to = from + 10;
+    this.player.seekTo(to, true); this.end = to + remaining;
+    this.player.setVolume(100); this.player.playVideo();
+    this.state = 'playing'; this.emit();
+  },
+  stop() {
+    if (this.ready) { try { this.player.stopVideo(); } catch (e) { /* ignore */ } }
+    if (this.state !== 'error') this.state = this.song ? 'cued' : 'idle';
+    this.emit();
+  },
+  progress() {
+    if (this.state === 'playing' || this.state === 'paused') {
+      const t = this.now(); const total = Math.max(1, this.end - this.start);
+      return Math.min(1, Math.max(0, (t - (this.end - total)) / total));
+    }
+    return this.state === 'ended' ? 1 : 0;
+  },
+  tick() {
+    if (!this.ready || this.state !== 'playing') return;
+    const t = this.now();
+    const left = this.end - t;
+    if (left <= 1.5 && left > 0) this.player.setVolume(Math.max(0, Math.round((left / 1.5) * 100)));
+    if (t >= this.end) {
+      this.player.pauseVideo(); this.player.setVolume(100);
+      this.state = 'ended';
+    }
+    this.emit();
+  },
+  handleState(s) {
+    if (s === YT.PlayerState.PLAYING) this.failsInARow = 0;
+    if (s === YT.PlayerState.ENDED) { this.state = 'ended'; this.emit(); }
+  },
+  handleError(code) {
+    this.lastError = code;
+    if (!this.triedAlt && this.song && this.song.alt && this.song.alt !== this.vid) {
+      const wasPlaying = this.state === 'playing';
+      this.triedAlt = true; this.vid = this.song.alt;
+      try {
+        if (wasPlaying) this.player.loadVideoById({ videoId: this.vid, startSeconds: this.start });
+        else this.player.cueVideoById({ videoId: this.vid, startSeconds: this.start });
+      } catch (e) { console.warn(e); }
+      return;
+    }
+    this.state = 'error'; this.failsInARow += 1; this.emit();
+    // Error 153 = YouTube wants to know which website embeds it. Opening the game as a file often causes it.
+    if (code === 153 || (location.protocol === 'file:' && this.failsInARow >= 3)) showFileProtocolHelp(code);
+    if (this.onFail) this.onFail(code);
+  }
+};
+window.onYouTubeIframeAPIReady = () => Audio.init();
+setTimeout(() => { if (!window.YT || !window.YT.Player) { Audio.apiFailed = true; render(); } }, 10000);
+
+/* =========================================================
+   Game state
+   ========================================================= */
+let game = null;
+let screen = 'setup';
+let returnScreen = 'setup';
+let setupCfg = (() => {
+  const def = { count: 4, names: DEFAULT_TEAM_NAMES.slice(), mode: 'quick' };
+  try { const s = JSON.parse(lsGet(LS_SETUP) || 'null'); if (s && Array.isArray(s.names)) return { ...def, ...s, names: DEFAULT_TEAM_NAMES.map((n, i) => s.names[i] || n) }; } catch (e) { /* ignore */ }
+  return def;
+})();
+function saveSetup() { lsSet(LS_SETUP, JSON.stringify(setupCfg)); }
+function saveGame() { if (game) lsSet(LS_GAME, JSON.stringify(game)); }
+function loadSavedGame() {
+  try { const g = JSON.parse(lsGet(LS_GAME) || 'null'); if (g && g.v === 1 && !g.over) return g; } catch (e) { /* ignore */ }
+  return null;
+}
+
+const snapOf = (s) => ({ id: s.id, year: s.year, title: s.title, hebrew: s.hebrew, artist: s.artist, story: s.story, euro: s.euro, yt: s.yt, alt: s.alt, start: s.start });
+const card = (id) => game.snap[id];
+const activeTeam = () => game.teams[game.turnIdx];
+
+function newGame() {
+  const n = setupCfg.count;
+  const pool = shuffle(songs.filter(isPlayable));
+  if (pool.length < n + 3) { toast('Not enough playable songs. Add songs or turn more on in the Songs screen.', 'bad'); return; }
+  game = {
+    v: 1, mode: setupCfg.mode, target: setupCfg.mode === 'full' ? 7 : 4,
+    teams: Array.from({ length: n }, (_, i) => ({ name: (setupCfg.names[i] || DEFAULT_TEAM_NAMES[i]).trim() || DEFAULT_TEAM_NAMES[i], color: TEAM_COLORS[i], cards: [], tokens: 0 })),
+    turnIdx: 0, turnCount: 0, used: [], broken: [], snap: {}, reserve: [],
+    euro: { state: 'none', left: 0 }, turn: null, over: false, ranking: null, endReason: '', startedAt: Date.now()
+  };
+  if (game.mode === 'full') {
+    const euroSongs = pool.filter((s) => s.euro);
+    game.reserve = euroSongs.slice(0, Math.min(euroSongs.length, n + 2)).map((s) => s.id);
+  }
+  // Anchors: one face-up song per team, from different decades when possible.
+  const anchorPool = pool.filter((s) => !game.reserve.includes(s.id));
+  const usedDecades = new Set();
+  game.teams.forEach((team) => {
+    let pick = anchorPool.find((s) => !game.used.includes(s.id) && !usedDecades.has(decadeOf(s.year)));
+    if (!pick) pick = anchorPool.find((s) => !game.used.includes(s.id));
+    if (!pick) return;
+    usedDecades.add(decadeOf(pick.year));
+    game.used.push(pick.id); game.snap[pick.id] = snapOf(pick);
+    team.cards.push(pick.id);
+  });
+  saveGame();
+  showScreen('game');
+  startTurn();
+}
+
+function drawSong() {
+  const used = new Set(game.used);
+  let pool = songs.filter((s) => isPlayable(s) && !used.has(s.id));
+  if (game.euro.state === 'active') {
+    const euroPool = pool.filter((s) => s.euro);
+    if (euroPool.length) pool = euroPool;
+    else { game.euro.state = 'done'; toast('No Eurovision songs left. Back to the regular mix.', 'gold'); }
+  } else if (game.mode === 'full' && (game.euro.state === 'none' || game.euro.state === 'pending')) {
+    const regular = pool.filter((s) => !game.reserve.includes(s.id));
+    if (regular.length) pool = regular;
+  }
+  if (!pool.length) return null;
+  const s = pool[Math.floor(Math.random() * pool.length)];
+  game.used.push(s.id); game.snap[s.id] = snapOf(s);
+  return s;
+}
+
+function startTurn() {
+  if (game.euro.state === 'pending') {
+    game.euro.state = 'active'; game.euro.left = game.teams.length;
+  }
+  const s = drawSong();
+  if (!s) { finishGame('The song list ran out.'); return; }
+  game.turn = {
+    songId: s.id, phase: 'listen', gap: null, stealIdx: null, missGap: null,
+    named: false, hint: false, result: null, receiver: null, win: null, euroNext: false,
+    placer: PLACER_PROMPTS[game.turnCount % PLACER_PROMPTS.length]
+  };
+  saveGame();
+  Audio.load(game.snap[s.id], 'game');
+  render();
+}
+
+function isCorrectSpot(cards, gap, year) {
+  const prev = gap > 0 ? card(cards[gap - 1]).year : -Infinity;
+  const next = gap < cards.length ? card(cards[gap]).year : Infinity;
+  return prev <= year && year <= next;
+}
+function correctGapFor(teamIdx) { // used by tests and the "where it belonged" note
+  const t = game.teams[teamIdx]; const y = card(game.turn.songId).year;
+  for (let g = 0; g <= t.cards.length; g++) if (isCorrectSpot(t.cards, g, y)) return g;
+  return -1;
+}
+
+function selectGap(g) {
+  const t = game.turn; if (!t || (t.phase !== 'listen' && t.phase !== 'steal')) return;
+  const team = game.teams[t.phase === 'steal' ? t.stealIdx : game.turnIdx];
+  if (g < 0 || g > team.cards.length) return;
+  t.gap = t.gap === g ? null : g;
+  saveGame(); renderTimelineOnly(); renderActions();
+}
+
+function lockIn() {
+  const t = game.turn; if (!t || t.gap == null) return;
+  const song = card(t.songId);
+  if (t.phase === 'listen') {
+    const team = activeTeam();
+    if (isCorrectSpot(team.cards, t.gap, song.year)) {
+      team.cards.splice(t.gap, 0, t.songId);
+      t.result = 'correct'; t.receiver = game.turnIdx; t.phase = 'reveal';
+      Sfx.good(); afterCardAdded(game.turnIdx);
+    } else {
+      t.missGap = t.gap; t.gap = null; t.phase = 'steal'; t.stealIdx = (game.turnIdx + 1) % game.teams.length;
+      Sfx.bad();
+    }
+  } else if (t.phase === 'steal') {
+    const team = game.teams[t.stealIdx];
+    if (isCorrectSpot(team.cards, t.gap, song.year)) {
+      team.cards.splice(t.gap, 0, t.songId);
+      t.result = 'stolen'; t.receiver = t.stealIdx; Sfx.good(); afterCardAdded(t.stealIdx);
+    } else {
+      t.result = 'discarded'; t.receiver = null; Sfx.bad();
+    }
+    t.phase = 'reveal';
+  }
+  if (t.phase === 'reveal') Audio.pause();
+  saveGame(); render();
+}
+function noSteal() {
+  const t = game.turn; if (!t || t.phase !== 'steal') return;
+  t.result = 'passed'; t.receiver = null; t.phase = 'reveal';
+  Audio.pause(); saveGame(); render();
+}
+function afterCardAdded(teamIdx) {
+  const t = game.turn;
+  if (game.mode === 'full' && game.euro.state === 'none' && game.teams.some((tm) => tm.cards.length >= 4)) {
+    game.euro.state = 'pending'; t.euroNext = true;
+  }
+  if (game.teams[teamIdx].cards.length >= game.target) t.win = teamIdx;
+}
+function nextTurn() {
+  const t = game.turn; if (!t || t.phase !== 'reveal') return;
+  if (t.win != null) { finishGame(''); return; }
+  if (game.euro.state === 'active') {
+    game.euro.left -= 1;
+    if (game.euro.left <= 0) { game.euro.state = 'done'; toast('The Eurovision Round is over. Back to the regular mix.', 'gold'); }
+  }
+  game.turnIdx = (game.turnIdx + 1) % game.teams.length;
+  game.turnCount += 1;
+  Audio.stop();
+  startTurn();
+}
+
+function namedIt() {
+  const t = game.turn; if (!t || t.phase !== 'listen' || t.named) return;
+  t.named = true; activeTeam().tokens += 1;
+  Sfx.coin(); toast(`+1 token for ${activeTeam().name}`, 'gold');
+  saveGame(); render();
+}
+function useHint() {
+  const t = game.turn; const team = activeTeam();
+  if (!t || t.phase !== 'listen' || t.hint || team.tokens < 1) return;
+  team.tokens -= 1; t.hint = true; Sfx.coin();
+  saveGame(); render();
+}
+function useSkip() {
+  const t = game.turn; const team = activeTeam();
+  if (!t || t.phase !== 'listen' || team.tokens < 1) return;
+  team.tokens -= 1;
+  replaceCurrentSong('Skipped! Here is a new song.');
+}
+function replaceCurrentSong(message) {
+  Audio.stop();
+  const s = drawSong();
+  if (!s) { finishGame('The song list ran out.'); return; }
+  Object.assign(game.turn, { songId: s.id, gap: null, named: false, hint: false });
+  if (message) toast(message, 'gold');
+  saveGame();
+  Audio.load(game.snap[s.id], 'game');
+  render();
+}
+Audio.onFail = (code) => {
+  if (Audio.context !== 'game' || screen !== 'game' || !game || !game.turn) {
+    if (Audio.context === 'preview') { toast(`YouTube can't play this video here (error ${code}). Try another link.`, 'bad'); renderEditorPreviewButtons(); }
+    return;
+  }
+  const t = game.turn;
+  if (Audio.song && Audio.song.id === t.songId) game.broken.push(t.songId);
+  if (t.phase === 'listen') {
+    if (t.hint) { activeTeam().tokens += 1; }
+    replaceCurrentSong('That clip can\'t play here, so here is a different song. No penalty.');
+  } else {
+    toast(`That clip can't play here (error ${code}). You can still finish this turn.`, 'bad');
+  }
+};
+
+function finishGame(reason) {
+  Audio.stop();
+  const ranking = game.teams.map((tm, i) => ({ i, cards: tm.cards.length, tokens: tm.tokens }))
+    .sort((a, b) => b.cards - a.cards || b.tokens - a.tokens);
+  const top = ranking[0];
+  game.winners = ranking.filter((r) => r.cards === top.cards && r.tokens === top.tokens).map((r) => r.i);
+  game.ranking = ranking.map((r) => r.i);
+  game.over = true; game.endReason = reason;
+  saveGame(); lsDel(LS_GAME);
+  showScreen('win');
+  Sfx.win(); Confetti.burst(game.winners.map((i) => game.teams[i].color));
+}
+
+function confirmEndGame() {
+  if (!game || game.over) return;
+  modal({
+    title: 'End the game now?',
+    body: '<p>The team with the <b>most songs</b> on its timeline wins. If teams are tied, the team with <b>more tokens</b> wins.</p>',
+    actions: [{ label: 'Keep playing' }, { label: 'End game', kind: 'primary', onClick: () => finishGame('The host ended the game.') }]
+  });
+}
+
+/* =========================================================
+   Rendering
+   ========================================================= */
+const screenEl = $('#screen');
+function showScreen(name) {
+  if (name === 'songs' && screen !== 'songs') returnScreen = screen;
+  if (screen === 'songs' && name !== 'songs' && Audio.context === 'preview') { Audio.stop(); Audio.context = 'game'; }
+  screen = name;
+  if (name === 'game' && game && game.turn && Audio.song && Audio.song.id !== game.turn.songId) Audio.load(game.snap[game.turn.songId], 'game');
+  if (name === 'game' && game && game.turn && !Audio.song) Audio.load(game.snap[game.turn.songId], 'game');
+  render();
+}
+function render() {
+  const inGame = screen === 'game' && game && !game.over;
+  $('#tbEnd').hidden = !inGame;
+  $('#tbMode').hidden = !inGame; $('#tbTurn').hidden = !inGame;
+  if (inGame) {
+    $('#tbMode').textContent = game.mode === 'full' ? `Full game · first to ${game.target}` : `Quick game · first to ${game.target}`;
+    $('#tbTurn').textContent = `Turn ${game.turnCount + 1}`;
+  }
+  if (screen === 'setup') renderSetup();
+  else if (screen === 'game') renderGame();
+  else if (screen === 'win') renderWin();
+  else if (screen === 'songs') renderEditor();
+}
+
+function sysBanner() {
+  if (Audio.apiFailed) return '<div class="sys-banner"><b>YouTube did not load.</b> Check the Wi-Fi, then reload the page. The game works, but there is no music until YouTube loads.</div>';
+  return '';
+}
+
+/* ---------- setup ---------- */
+function renderSetup() {
+  const st = poolStats();
+  const saved = loadSavedGame();
+  const n = setupCfg.count;
+  const teamInputs = Array.from({ length: n }, (_, i) => `
+    <label class="team-input" style="--tc:${TEAM_COLORS[i]}">
+      <input type="text" id="teamName${i}" data-team="${i}" maxlength="24" value="${esc(setupCfg.names[i])}" aria-label="Team ${i + 1} name">
+    </label>`).join('');
+  const euroWarn = setupCfg.mode === 'full' && st.euro < n ? `<div class="warn-line">Only ${st.euro} Eurovision songs are ready, so the Eurovision Round will be short.</div>` : '';
+  screenEl.innerHTML = `
+  <section class="setup">
+    ${sysBanner()}
+    <div class="hero">
+      <div class="disc"></div>
+      <div>
+        <h1>Israeli <span>Hitster</span></h1>
+        <p>Listen to a song, guess when it came out, and build your team's timeline of Israeli music from 1958 to today.</p>
+      </div>
+    </div>
+    <div class="setup-grid">
+      <div class="panel">
+        <h2>1 · Teams</h2>
+        <div class="seg" role="group" aria-label="Number of teams">
+          ${[2, 3, 4, 5, 6].map((k) => `<button data-action="team-count" data-n="${k}" aria-pressed="${k === n}">${k}</button>`).join('')}
+        </div>
+        <div class="team-inputs">${teamInputs}</div>
+      </div>
+      <div class="panel">
+        <h2>2 · Game length</h2>
+        <div class="modes">
+          <button class="mode" data-action="mode" data-mode="quick" aria-pressed="${setupCfg.mode === 'quick'}"><b>Quick · about 15 min</b><span>First team to 4 songs on its timeline wins.</span></button>
+          <button class="mode" data-action="mode" data-mode="full" aria-pressed="${setupCfg.mode === 'full'}"><b>Full · about 40 min</b><span>First team to 7 songs wins. When a team reaches 4, a Eurovision Round begins.</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="setup-actions">
+      <div class="stats"><strong>${st.playable} songs ready</strong> · ${st.euro} Eurovision${st.noVideo ? ` · ${st.noVideo} skipped (no YouTube link)` : ''}${st.off ? ` · ${st.off} turned off` : ''}${euroWarn}</div>
+      ${saved ? `<button class="btn" data-action="resume">Resume saved game</button>` : ''}
+      <button class="btn btn--primary btn--big" data-action="start">Start game</button>
+    </div>
+    <details class="howto">
+      <summary>How to play</summary>
+      <ol>
+        <li><b>Every team starts with one song face-up</b> on its timeline.</li>
+        <li><b>Press Play.</b> Only the music plays; the title, artist and video stay hidden.</li>
+        <li><b>The team picks a spot</b> on its timeline: before, between or after its cards. Click that gap, then press <b>Reveal</b>.</li>
+        <li><b>Right spot:</b> the card joins the timeline. A song from the same year as a neighbor counts as right.</li>
+        <li><b>Wrong spot:</b> the next team can steal it by placing it on its own timeline before the reveal.</li>
+        <li><b>Tokens:</b> name the artist or title before the reveal to earn a token. Spend one to see the decade, or to skip the song.</li>
+      </ol>
+    </details>
+  </section>`;
+}
+
+/* ---------- game ---------- */
+function renderGame() {
+  if (!game) { showScreen('setup'); return; }
+  const t = game.turn;
+  const team = activeTeam();
+  screenEl.innerHTML = `
+  <div class="game">
+    <aside class="scoreboard ${game.teams.length >= 5 ? 'is-crowded' : ''}" id="scoreboard">${renderScoreboard()}</aside>
+    <section class="stage" id="stage" style="--tc:${team.color}"></section>
+    <footer class="tl-wrap" id="tlWrap"></footer>
+  </div>`;
+  renderStage();
+  renderTimelineOnly();
+}
+function renderScoreboard() {
+  const t = game.turn;
+  return game.teams.map((tm, i) => {
+    const isActive = i === game.turnIdx;
+    const isSteal = t && t.phase === 'steal' && t.stealIdx === i;
+    const tag = isActive ? '<span class="sb-tag">Playing</span>' : isSteal ? '<span class="sb-tag">Steal</span>' : '';
+    const years = tm.cards.map((id) => `<span>${card(id).year}</span>`).join('');
+    const tokens = tm.tokens ? `<div class="sb-meta"><span class="tokens" title="${tm.tokens} tokens">${'<i class="token"></i>'.repeat(Math.min(tm.tokens, 6))}${tm.tokens > 6 ? ` ×${tm.tokens}` : ''} ${tm.tokens === 1 ? 'token' : 'tokens'}</span></div>` : '';
+    return `<div class="sb-team ${isActive ? 'is-active' : ''} ${isSteal ? 'is-steal' : ''}" style="--tc:${tm.color}">
+      <div class="sb-row"><span class="sb-name">${esc(tm.name)}</span>${tag}<span class="sb-score">${tm.cards.length}<small>/${game.target}</small></span></div>
+      ${tokens}
+      <div class="mini">${years}</div>
+    </div>`;
+  }).join('');
+}
+function renderScoreboardInto(el) {
+  el.classList.toggle('is-crowded', game.teams.length >= 5);
+  el.innerHTML = renderScoreboard();
+}
+function euroBannerHtml() {
+  if (game.euro.state !== 'active') return '';
+  const left = game.euro.left;
+  return `<div class="euro-banner">★ EUROVISION ROUND ★<small>Every song this round was an Israeli Eurovision entry · ${left} turn${left === 1 ? '' : 's'} left in the round</small></div>`;
+}
+function playerHtml() {
+  return `<div class="player" id="player">
+      <div class="vinyl" aria-hidden="true"></div>
+      <div class="player-main">
+        <div class="np-status" id="npStatus"></div>
+        <div class="eq" aria-hidden="true">${'<i></i>'.repeat(16)}</div>
+        <div class="clipbar" aria-hidden="true"><div id="clipFill"></div></div>
+        <div class="controls">
+          <button class="btn btn--primary" data-action="play" id="btnPlay">Play <span class="kbd">Space</span></button>
+          <button class="btn" data-action="replay">Replay clip <span class="kbd">R</span></button>
+          <button class="btn" data-action="forward">+10s <span class="kbd">T</span></button>
+        </div>
+      </div>
+    </div>`;
+}
+function renderStage() {
+  const el = $('#stage'); if (!el) return;
+  const t = game.turn; const team = activeTeam();
+  if (!t) { el.innerHTML = ''; return; }
+  let html = sysBanner() + euroBannerHtml();
+  if (t.phase === 'listen') {
+    html += `
+      <div class="turn-head">
+        <div>
+          <div class="turn-team">${esc(team.name)}</div>
+          <div class="turn-sub">It's your turn. Where does this song fit on <b>your</b> timeline?</div>
+        </div>
+        <div class="placer">Placer this turn: <b>${esc(t.placer)}</b></div>
+      </div>
+      ${playerHtml()}
+      <div class="actions" id="actions"></div>`;
+  } else if (t.phase === 'steal') {
+    const st = game.teams[t.stealIdx];
+    el.style.setProperty('--tc', st.color);
+    html += `
+      <div class="steal-banner" style="--tc:${st.color}">
+        <div class="miss">✗ Not quite, ${esc(team.name)}!</div>
+        <div class="big">${esc(st.name)}: steal chance!</div>
+        <div class="turn-sub">Where does this song go on <b>your</b> timeline? Steal placer: <b>${esc(PLACER_PROMPTS[(game.turnCount + 1) % PLACER_PROMPTS.length])}</b></div>
+      </div>
+      ${playerHtml()}
+      <div class="actions" id="actions"></div>`;
+  } else {
+    html += renderReveal();
+  }
+  el.innerHTML = html;
+  if (t.phase !== 'steal') el.style.setProperty('--tc', team.color);
+  renderActions();
+  updatePlayerUI();
+}
+function renderReveal() {
+  const t = game.turn; const s = card(t.songId); const team = activeTeam();
+  const rec = t.receiver != null ? game.teams[t.receiver] : null;
+  let banner;
+  if (t.result === 'correct') banner = `<div class="result result--good">✓ Correct! It locks into ${esc(team.name)}'s timeline.</div>`;
+  else if (t.result === 'stolen') banner = `<div class="result result--good">✓ Stolen! ${esc(rec.name)} placed it right.</div>`;
+  else if (t.result === 'passed') banner = `<div class="result result--bad">${esc(game.teams[t.stealIdx].name)} passed. The card is discarded.</div>`;
+  else banner = `<div class="result result--bad">✗ Nobody placed it right. The card is discarded.</div>`;
+  const color = rec ? rec.color : team.color;
+  let next = '';
+  if (t.win != null) next = `<div class="next-note">★ ${esc(game.teams[t.win].name)} reached ${game.target} songs!</div>`;
+  else if (t.euroNext) next = `<div class="next-note">★ A team reached 4 songs. The EUROVISION ROUND starts next turn!</div>`;
+  return `${banner}
+    <article class="reveal" style="--tc:${color}">
+      <div class="r-year">${s.year}</div>
+      <div class="r-body">
+        <div class="r-title">${esc(s.title)}</div>
+        <div class="r-artist">${esc(s.artist)}</div>
+        ${s.hebrew ? `<div class="r-he" dir="rtl" lang="he">${esc(s.hebrew)}</div>` : ''}
+        ${s.story ? `<p class="r-story">${esc(s.story)}</p>` : ''}
+        ${s.euro ? '<span class="r-euro">Eurovision entry</span>' : ''}
+      </div>
+    </article>
+    <div class="actions">
+      ${next}
+      <button class="btn btn--primary btn--big push" data-action="next">${t.win != null ? 'See the winner' : 'Next turn'} <span class="kbd">N</span></button>
+    </div>`;
+}
+function renderActions() {
+  const el = $('#actions'); if (!el || !game.turn) return;
+  const t = game.turn; const team = activeTeam();
+  if (t.phase === 'listen') {
+    const hint = t.hint ? `<span class="hint-badge">Hint: the ${decadeOf(card(t.songId).year)}s</span>` : '';
+    el.innerHTML = `
+      <span class="lead">${t.gap == null ? 'Click a gap in the timeline below (or press its number key).' : '<b>Spot chosen.</b> Press Reveal when the team is sure.'}</span>
+      ${hint}
+      <button class="btn" data-action="named" ${t.named ? 'disabled' : ''} title="The team named the artist or song title">${t.named ? 'Named it ✓ (token earned)' : 'Named it ✓ (+1 token)'}</button>
+      <button class="btn" data-action="hint" ${t.hint || team.tokens < 1 ? 'disabled' : ''}>Hint: decade (1 token)</button>
+      <button class="btn" data-action="skip" ${team.tokens < 1 ? 'disabled' : ''}>Skip song (1 token)</button>
+      <button class="btn btn--good btn--big push" data-action="lock" ${t.gap == null ? 'disabled' : ''}>Reveal <span class="kbd">Enter</span></button>`;
+  } else if (t.phase === 'steal') {
+    el.innerHTML = `
+      <span class="lead">${t.gap == null ? 'Click a gap in their timeline below.' : '<b>Spot chosen.</b> Press Reveal.'}</span>
+      <button class="btn" data-action="no-steal">No steal</button>
+      <button class="btn btn--good btn--big push" data-action="lock" ${t.gap == null ? 'disabled' : ''}>Reveal <span class="kbd">Enter</span></button>`;
+  }
+}
+function timelineHtml(teamIdx, opts = {}) {
+  const tm = game.teams[teamIdx];
+  const parts = [];
+  const sel = opts.selectable;
+  const gapBtn = (g) => {
+    if (sel && opts.selected === g) {
+      return `<div class="tcard tcard--mystery" data-action="gap" data-gap="${g}" role="button" tabindex="0" title="Click to undo"><div class="tc-year">?</div><div class="tc-title">This spot</div></div>`;
+    }
+    const edge = g === 0 || g === tm.cards.length;
+    return `<button class="gap ${edge ? 'gap--edge' : ''}" data-action="gap" data-gap="${g}" ${sel ? '' : 'tabindex="-1" disabled'} aria-label="Place in spot ${g + 1}"><span class="gap-num">${sel ? g + 1 : ''}</span></button>`;
+  };
+  tm.cards.forEach((id, i) => {
+    parts.push(gapBtn(i));
+    const c = card(id);
+    parts.push(`<div class="tcard ${opts.highlight === id ? 'is-new' : ''}"><div class="tc-year">${c.year}</div><div class="tc-title">${esc(c.title)}</div><div class="tc-artist">${esc(c.artist)}</div></div>`);
+  });
+  parts.push(gapBtn(tm.cards.length));
+  return `<div class="timeline ${sel ? 'is-selectable' : ''}" style="--tc:${tm.color}">${parts.join('')}</div>`;
+}
+function renderTimelineOnly() {
+  const el = $('#tlWrap'); if (!el || !game.turn) return;
+  const t = game.turn;
+  let idx = game.turnIdx, selectable = false, label = 'timeline', highlight = null;
+  if (t.phase === 'listen') { selectable = true; label = 'timeline · pick a spot'; }
+  else if (t.phase === 'steal') { idx = t.stealIdx; selectable = true; label = 'timeline · steal: pick a spot'; }
+  else if (t.receiver != null) { idx = t.receiver; highlight = t.songId; }
+  const tm = game.teams[idx];
+  el.style.setProperty('--tc', tm.color);
+  el.innerHTML = `<div class="tl-label" style="--tc:${tm.color}"><b>${esc(tm.name)}</b> ${label}</div>${timelineHtml(idx, { selectable, selected: t.gap, highlight })}`;
+  const sb = $('#scoreboard'); if (sb) renderScoreboardInto(sb);
+}
+function updatePlayerUI() {
+  const p = $('#player'); if (!p) return;
+  const st = Audio.state;
+  p.classList.toggle('is-playing', st === 'playing');
+  const status = $('#npStatus'); const btn = $('#btnPlay'); const fill = $('#clipFill');
+  const labels = {
+    idle: 'Loading the song…', cued: 'Ready. Press Play.', playing: 'Now playing…', paused: 'Paused', ended: 'Clip over. Replay or keep listening.', error: 'This clip can\'t play.'
+  };
+  if (status) status.textContent = Audio.ready ? labels[st] || '' : (Audio.apiFailed ? 'YouTube is not available.' : 'Connecting to YouTube…');
+  if (btn) btn.innerHTML = (st === 'playing' ? 'Pause' : st === 'ended' ? 'Keep listening' : 'Play') + ' <span class="kbd">Space</span>';
+  if (fill) fill.style.width = Math.round(Audio.progress() * 100) + '%';
+}
+Audio.on(() => { if (screen === 'game') updatePlayerUI(); if (screen === 'songs') renderEditorPreviewButtons(); });
+
+/* ---------- win ---------- */
+function renderWin() {
+  if (!game) { showScreen('setup'); return; }
+  const w = game.winners || [];
+  const names = w.map((i) => esc(game.teams[i].name));
+  const title = w.length > 1 ? `It's a tie: ${names.join(' & ')}!` : `${names[0]} wins!`;
+  const top = game.teams[w[0]];
+  const rows = (game.ranking || game.teams.map((_, i) => i)).map((i) => {
+    const tm = game.teams[i];
+    return `<div class="final-row ${w.includes(i) ? 'is-winner' : ''}" style="--tc:${tm.color}">
+      <h3>${esc(tm.name)} <small>${tm.cards.length} song${tm.cards.length === 1 ? '' : 's'} · ${tm.tokens} token${tm.tokens === 1 ? '' : 's'}</small></h3>
+      ${timelineHtml(i, {})}
+    </div>`;
+  }).join('');
+  screenEl.innerHTML = `
+  <section class="win">
+    <div class="win-head">
+      <div class="crown">★ ★ ★</div>
+      <h1 style="color:${top ? top.color : 'var(--gold)'}">${title}</h1>
+      <p>${game.endReason ? esc(game.endReason) + ' ' : ''}Most songs wins; ties go to the team with more tokens.</p>
+    </div>
+    ${rows}
+    <div class="win-actions">
+      <button class="btn btn--primary btn--big" data-action="play-again">Play again with the same teams</button>
+      <button class="btn btn--big" data-action="to-setup">Change teams</button>
+    </div>
+  </section>`;
+}
+
+/* ---------- song editor ---------- */
+let editorFilter = '';
+const pendingDelete = new Set();
+function renderEditor() {
+  const st = poolStats();
+  screenEl.innerHTML = `
+  <section class="editor">
+    <div class="ed-head">
+      <button class="btn" data-action="editor-back">← Back</button>
+      <h1>Songs</h1>
+      <span class="stats" id="edStats">${st.total} songs · ${st.playable} ready to play · ${st.euro} Eurovision</span>
+      <span class="spacer"></span>
+      <input type="search" id="edSearch" placeholder="Search title, artist, year…" value="${esc(editorFilter)}" aria-label="Search songs">
+      <button class="btn" data-action="add-song">+ Add song</button>
+      <button class="btn" data-action="sort-songs">Sort by year</button>
+      <button class="btn" data-action="export">Export JSON</button>
+      <button class="btn" data-action="import">Import JSON</button>
+      <button class="btn" data-action="reset-songs">Reset to built-in list</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+    <p class="ed-note">Changes save automatically in this browser. <span class="warn">⚠</span> means the year is not verified yet. Songs with no YouTube link, or with “Use” turned off, are never drawn. Paste a full YouTube link and the ID is pulled out for you. “Start” is where the 20-second clip begins; use ▶ to check it.</p>
+    <div class="table-wrap">
+      <table class="songs">
+        <thead><tr>
+          <th>Use</th><th title="Verified year">✓/⚠</th><th>Year</th><th>English title</th><th>Hebrew title</th><th>Artist</th><th>YouTube link or ID</th><th>Backup ID</th><th>Start (s)</th><th>Eurovision</th><th>Story card</th><th>Verified</th><th>Clip</th><th></th>
+        </tr></thead>
+        <tbody id="edBody">${songs.map(editorRow).join('')}</tbody>
+      </table>
+    </div>
+  </section>`;
+  applyEditorFilter();
+  renderEditorPreviewButtons();
+}
+function editorRow(s) {
+  const flag = s.verified ? '<span class="ok" title="Year verified">✓</span>' : '<span class="warn" title="Year not verified">⚠</span>';
+  const del = pendingDelete.has(s.id)
+    ? `<button class="rowbtn rowbtn--confirm" data-action="del-song">Confirm delete</button>`
+    : `<button class="rowbtn rowbtn--del" data-action="del-song">Delete</button>`;
+  return `<tr data-id="${s.id}" class="${s.use ? '' : 'is-off'}">
+    <td><input type="checkbox" data-f="use" ${s.use ? 'checked' : ''} aria-label="Use in game"></td>
+    <td class="flag">${flag}</td>
+    <td class="c-year"><input type="number" data-f="year" value="${esc(s.year)}" min="1900" max="2100" aria-label="Year"></td>
+    <td class="c-title"><input type="text" data-f="title" value="${esc(s.title)}" aria-label="English title"></td>
+    <td class="c-he"><input type="text" data-f="hebrew" value="${esc(s.hebrew)}" dir="rtl" lang="he" aria-label="Hebrew title"></td>
+    <td class="c-artist"><input type="text" data-f="artist" value="${esc(s.artist)}" aria-label="Artist"></td>
+    <td class="c-yt"><input type="text" data-f="yt" value="${esc(s.yt)}" placeholder="Paste link or ID" aria-label="YouTube link or ID" class="${s.yt ? '' : 'bad'}"><span class="yt-note ${s.yt ? '' : 'bad'}">${s.yt ? '' : 'No video: skipped'}</span></td>
+    <td class="c-alt"><input type="text" data-f="alt" value="${esc(s.alt)}" placeholder="Optional" aria-label="Backup YouTube ID"></td>
+    <td class="c-start"><input type="number" data-f="start" value="${esc(s.start)}" min="0" aria-label="Clip start in seconds"></td>
+    <td><input type="checkbox" data-f="euro" ${s.euro ? 'checked' : ''} aria-label="Eurovision song"></td>
+    <td class="c-story"><textarea data-f="story" rows="2" aria-label="Story card">${esc(s.story)}</textarea></td>
+    <td><input type="checkbox" data-f="verified" ${s.verified ? 'checked' : ''} aria-label="Year verified"></td>
+    <td><button class="rowbtn" data-action="preview" ${s.yt ? '' : 'disabled'}>▶ Test</button></td>
+    <td>${del}</td>
+  </tr>`;
+}
+function applyEditorFilter() {
+  const q = editorFilter.trim().toLowerCase();
+  document.querySelectorAll('#edBody tr').forEach((tr) => {
+    const s = songs.find((x) => x.id === tr.dataset.id);
+    const hay = s ? `${s.year} ${s.title} ${s.hebrew} ${s.artist}`.toLowerCase() : '';
+    tr.hidden = q !== '' && !hay.includes(q);
+  });
+}
+function updateEditorStats() {
+  const el = $('#edStats'); if (!el) return;
+  const st = poolStats();
+  el.textContent = `${st.total} songs · ${st.playable} ready to play · ${st.euro} Eurovision`;
+}
+function renderEditorPreviewButtons() {
+  document.querySelectorAll('#edBody tr').forEach((tr) => {
+    const b = tr.querySelector('[data-action="preview"]'); if (!b) return;
+    const on = Audio.context === 'preview' && Audio.song && Audio.song.id === tr.dataset.id && (Audio.state === 'playing');
+    b.classList.toggle('is-on', on);
+    b.textContent = on ? '■ Stop' : '▶ Test';
+  });
+}
+function onEditorInput(e) {
+  const input = e.target; const f = input.dataset.f; if (!f) return;
+  const tr = input.closest('tr'); const s = songs.find((x) => x.id === tr.dataset.id); if (!s) return;
+  if (input.type === 'checkbox') {
+    s[f] = input.checked;
+    if (f === 'use') tr.classList.toggle('is-off', !s.use);
+    if (f === 'verified') tr.querySelector('.flag').innerHTML = s.verified ? '<span class="ok" title="Year verified">✓</span>' : '<span class="warn" title="Year not verified">⚠</span>';
+  } else if (f === 'year') { const y = parseInt(input.value, 10); s.year = Number.isFinite(y) ? y : ''; }
+  else if (f === 'start') { s.start = Math.max(0, parseInt(input.value, 10) || 0); }
+  else if (f === 'yt' || f === 'alt') {
+    const raw = input.value; const id = extractYouTubeId(raw);
+    const note = tr.querySelector('.yt-note');
+    if (f === 'yt') {
+      if (raw.trim() === '') { s.yt = ''; input.classList.add('bad'); note.textContent = 'No video: skipped'; note.className = 'yt-note bad'; tr.querySelector('[data-action="preview"]').disabled = true; }
+      else if (id) {
+        s.yt = id; input.classList.remove('bad');
+        const t = startFromUrl(raw);
+        if (id !== raw.trim()) {
+          input.value = id; note.textContent = 'ID taken from the link'; note.className = 'yt-note good';
+          if (t != null) { s.start = t; tr.querySelector('[data-f="start"]').value = t; note.textContent = `ID and start time (${t}s) taken from the link`; }
+        } else { note.textContent = ''; note.className = 'yt-note'; }
+        tr.querySelector('[data-action="preview"]').disabled = false;
+      } else { input.classList.add('bad'); note.textContent = 'Not a YouTube link or ID'; note.className = 'yt-note bad'; }
+    } else {
+      if (raw.trim() === '') s.alt = '';
+      else if (id) { s.alt = id; if (id !== raw.trim()) input.value = id; input.classList.remove('bad'); }
+      else input.classList.add('bad');
+    }
+  } else { s[f] = input.value; }
+  saveSongs(); updateEditorStats();
+}
+function exportSongs() {
+  const data = JSON.stringify({ app: 'israeli-hitster', version: 1, exported: new Date().toISOString(), songs }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `israeli-hitster-songs-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Song list exported. Check your Downloads folder.', 'good');
+}
+function importSongs(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    let list;
+    try { const data = JSON.parse(reader.result); list = Array.isArray(data) ? data : data.songs; } catch (e) { list = null; }
+    if (!Array.isArray(list) || !list.length) { toast('That file is not an Israeli Hitster song list.', 'bad'); return; }
+    const incoming = list.map(normalizeSong);
+    modal({
+      title: `Import ${incoming.length} songs?`,
+      body: '<p><b>Replace</b> swaps your current list for the file. <b>Add</b> keeps your list and adds the songs from the file (songs with the same ID are updated).</p>',
+      actions: [
+        { label: 'Cancel' },
+        { label: 'Add to my list', onClick: () => { incoming.forEach((s) => { const i = songs.findIndex((x) => x.id === s.id); if (i >= 0) songs[i] = s; else songs.push(s); }); saveSongs(true); renderEditor(); toast('Songs added.', 'good'); } },
+        { label: 'Replace my list', kind: 'primary', onClick: () => { songs = incoming; saveSongs(true); renderEditor(); toast('Song list replaced.', 'good'); } }
+      ]
+    });
+  };
+  reader.readAsText(file);
+}
+
+/* =========================================================
+   Modal, toast, keys help, fullscreen
+   ========================================================= */
+const modalRoot = $('#modalRoot');
+let modalActions = [];
+function modal({ title, body, actions }) {
+  modalActions = actions || [{ label: 'OK', kind: 'primary' }];
+  modalRoot.innerHTML = `<div class="modal"><h2>${esc(title)}</h2><div class="body">${body || ''}</div><div class="m-actions">${modalActions.map((a, i) => `<button class="btn ${a.kind === 'primary' ? 'btn--primary' : ''}" data-modal="${i}">${esc(a.label)}</button>`).join('')}</div></div>`;
+  modalRoot.classList.add('open');
+  const primary = modalRoot.querySelector('.btn--primary') || modalRoot.querySelector('button');
+  if (primary) primary.focus();
+}
+function closeModal() { modalRoot.classList.remove('open'); modalRoot.innerHTML = ''; modalActions = []; }
+modalRoot.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-modal]');
+  if (b) { const a = modalActions[+b.dataset.modal]; closeModal(); if (a && a.onClick) a.onClick(); return; }
+  if (e.target === modalRoot) closeModal();
+});
+function toast(msg, kind) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' toast--' + kind : '');
+  el.textContent = msg;
+  $('#toastRoot').appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+function showKeys() {
+  modal({
+    title: 'Host keyboard shortcuts',
+    body: `<div class="keys">
+      <span class="kbd">Space</span><span>Play / pause the clip</span>
+      <span class="kbd">R</span><span>Replay the clip from its start</span>
+      <span class="kbd">T</span><span>Jump ahead 10 seconds (+10s)</span>
+      <span class="kbd">1</span><span>…<span class="kbd">9</span> choose a gap on the timeline (← → also move it)</span>
+      <span class="kbd">Enter</span><span>Reveal (lock in the chosen spot)</span>
+      <span class="kbd">N</span><span>Next turn</span>
+      <span class="kbd">F</span><span>Fullscreen on / off</span>
+      <span class="kbd">?</span><span>Show this list</span>
+    </div>`,
+    actions: [{ label: 'Got it', kind: 'primary' }]
+  });
+}
+function toggleFullscreen() {
+  if (!document.fullscreenElement) { const p = document.documentElement.requestFullscreen?.(); if (p && p.catch) p.catch(() => toast('Fullscreen is not available here.', 'bad')); }
+  else document.exitFullscreen?.();
+}
+let fileHelpShown = false;
+function showFileProtocolHelp(code) {
+  if (fileHelpShown || Audio.context !== 'game') return;
+  fileHelpShown = true;
+  modal({
+    title: 'YouTube refused to play',
+    body: `<p>YouTube sent error ${esc(code)}. This usually happens when the game is opened as a <b>local file</b>, because YouTube now asks every page that embeds a video to say which website it is on.</p>
+      <p><b>Fix:</b> open the game from a web address instead of a file. For example, upload the HTML file to free hosting such as GitHub Pages or Netlify, or run a small local web server on your laptop. Then open that address in Chrome.</p>
+      <p>The game skips clips that can't play, so it keeps working, but no music plays until this is fixed.</p>`,
+    actions: [{ label: 'OK', kind: 'primary' }]
+  });
+}
+
+/* =========================================================
+   Events
+   ========================================================= */
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-action]'); if (!el || el.disabled) return;
+  Sfx.ensure();
+  const a = el.dataset.action;
+  switch (a) {
+    case 'keys': showKeys(); break;
+    case 'fullscreen': toggleFullscreen(); break;
+    case 'songs':
+      if (screen === 'songs') break;
+      if (screen === 'game' && game && !game.over) {
+        modal({
+          title: 'Open the song list?',
+          body: '<p>The song list shows <b>every title and artist</b>. If the projector is on, freeze or blank it first so the class does not see the answers.</p>',
+          actions: [{ label: 'Cancel' }, { label: 'Open song list', kind: 'primary', onClick: () => { Audio.pause(); showScreen('songs'); } }]
+        });
+      } else showScreen('songs');
+      break;
+    case 'end-game': confirmEndGame(); break;
+    case 'team-count': setupCfg.count = +el.dataset.n; saveSetup(); renderSetup(); break;
+    case 'mode': setupCfg.mode = el.dataset.mode; saveSetup(); renderSetup(); break;
+    case 'start': newGame(); break;
+    case 'resume': { const g = loadSavedGame(); if (g) { game = g; showScreen('game'); Audio.load(game.snap[game.turn.songId], 'game'); } break; }
+    case 'play': Audio.toggle(); break;
+    case 'replay': Audio.replay(); break;
+    case 'forward': Audio.forward10(); break;
+    case 'gap': selectGap(+el.dataset.gap); break;
+    case 'lock': lockIn(); break;
+    case 'no-steal': noSteal(); break;
+    case 'next': nextTurn(); break;
+    case 'named': namedIt(); break;
+    case 'hint': useHint(); break;
+    case 'skip': useSkip(); break;
+    case 'play-again': newGame(); break;
+    case 'to-setup': game = null; showScreen('setup'); break;
+    case 'editor-back': showScreen(returnScreen === 'songs' ? 'setup' : (returnScreen === 'game' && (!game || game.over) ? 'setup' : returnScreen)); break;
+    case 'add-song': {
+      const s = normalizeSong({ year: '', title: '', use: true });
+      songs.unshift(s); saveSongs(true); editorFilter = ''; renderEditor();
+      const first = document.querySelector(`#edBody tr[data-id="${s.id}"] [data-f="year"]`); if (first) first.focus();
+      break;
+    }
+    case 'sort-songs': songs.sort((x, y) => (x.year || 9999) - (y.year || 9999)); saveSongs(true); renderEditor(); break;
+    case 'export': exportSongs(); break;
+    case 'import': $('#importFile').click(); break;
+    case 'reset-songs':
+      modal({
+        title: 'Reset to the built-in list?',
+        body: '<p>This replaces your current song list with the original researched list. <b>Your edits and added songs will be lost</b> unless you export them first.</p>',
+        actions: [{ label: 'Cancel' }, { label: 'Reset list', kind: 'primary', onClick: () => { songs = defaultSongs(); saveSongs(true); renderEditor(); toast('Built-in list restored.', 'good'); } }]
+      });
+      break;
+    case 'del-song': {
+      const id = el.closest('tr').dataset.id;
+      if (pendingDelete.has(id)) { songs = songs.filter((s) => s.id !== id); pendingDelete.delete(id); saveSongs(true); el.closest('tr').remove(); updateEditorStats(); toast('Song deleted.'); }
+      else { pendingDelete.add(id); el.outerHTML = '<button class="rowbtn rowbtn--confirm" data-action="del-song">Confirm delete</button>'; setTimeout(() => { if (pendingDelete.delete(id)) { const tr = document.querySelector(`#edBody tr[data-id="${id}"]`); const b = tr && tr.querySelector('[data-action="del-song"]'); if (b) b.outerHTML = '<button class="rowbtn rowbtn--del" data-action="del-song">Delete</button>'; } }, 4000); }
+      break;
+    }
+    case 'preview': {
+      const s = songs.find((x) => x.id === el.closest('tr').dataset.id); if (!s || !s.yt) break;
+      if (Audio.context === 'preview' && Audio.song && Audio.song.id === s.id && Audio.state === 'playing') { Audio.stop(); }
+      else { Audio.load(s, 'preview'); Audio.play(); }
+      renderEditorPreviewButtons();
+      break;
+    }
+  }
+});
+document.addEventListener('input', (e) => {
+  if (e.target.matches('[data-team]')) { setupCfg.names[+e.target.dataset.team] = e.target.value; saveSetup(); return; }
+  if (e.target.id === 'edSearch') { editorFilter = e.target.value; applyEditorFilter(); return; }
+  if (screen === 'songs' && e.target.closest('#edBody')) onEditorInput(e);
+});
+document.addEventListener('change', (e) => {
+  if (e.target.id === 'importFile' && e.target.files[0]) { importSongs(e.target.files[0]); e.target.value = ''; }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { if (modalRoot.classList.contains('open')) closeModal(); return; }
+  const tag = e.target.tagName;
+  const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable;
+  if (typing) return;
+  if (modalRoot.classList.contains('open')) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  if (k === 'f') { toggleFullscreen(); return; }
+  if (k === '?') { showKeys(); return; }
+  if (screen === 'win' && k === 'n') return;
+  if (screen !== 'game' || !game || !game.turn) return;
+  const t = game.turn;
+  if (k === ' ' || k === 'Spacebar') { e.preventDefault(); Sfx.ensure(); if (t.phase !== 'reveal') Audio.toggle(); return; }
+  if (k === 'r') { if (t.phase !== 'reveal') Audio.replay(); return; }
+  if (k === 't') { if (t.phase !== 'reveal') Audio.forward10(); return; }
+  if (k === 'Enter') { e.preventDefault(); if (t.phase === 'listen' || t.phase === 'steal') lockIn(); return; }
+  if (k === 'n') { if (t.phase === 'reveal') nextTurn(); return; }
+  if (/^[1-9]$/.test(k) && (t.phase === 'listen' || t.phase === 'steal')) { selectGap(+k - 1); return; }
+  if ((k === 'ArrowLeft' || k === 'ArrowRight') && (t.phase === 'listen' || t.phase === 'steal')) {
+    e.preventDefault();
+    const team = game.teams[t.phase === 'steal' ? t.stealIdx : game.turnIdx];
+    const max = team.cards.length;
+    let g = t.gap == null ? (k === 'ArrowLeft' ? max : 0) : t.gap + (k === 'ArrowLeft' ? -1 : 1);
+    g = Math.max(0, Math.min(max, g));
+    t.gap = g; saveGame(); renderTimelineOnly(); renderActions();
+  }
+});
+
+/* =========================================================
+   Confetti (win screen)
+   ========================================================= */
+const Confetti = {
+  canvas: $('#confetti'), raf: 0,
+  burst(colors) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const c = this.canvas; const ctx = c.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+    const palette = colors.concat(['#ffd166', '#ffffff', '#4ea8ff']);
+    const parts = Array.from({ length: 220 }, () => ({
+      x: Math.random() * innerWidth, y: -20 - Math.random() * innerHeight * 0.6,
+      vx: (Math.random() - 0.5) * 2.2, vy: 2 + Math.random() * 3.5, r: 5 + Math.random() * 7,
+      rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.25, col: palette[Math.floor(Math.random() * palette.length)]
+    }));
+    const startT = performance.now();
+    cancelAnimationFrame(this.raf);
+    const step = (now) => {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      parts.forEach((p) => {
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vx += Math.sin((now + p.r * 100) / 400) * 0.03;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.col; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore();
+      });
+      if (now - startT < 7000) this.raf = requestAnimationFrame(step);
+      else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    };
+    this.raf = requestAnimationFrame(step);
+  }
+};
+
+/* =========================================================
+   Debug hook for automated tests (harmless in class)
+   ========================================================= */
+window.hitsterDebug = {
+  get game() { return game; }, get songs() { return songs; }, get screen() { return screen; }, Audio,
+  correctGap: (teamIdx) => correctGapFor(teamIdx)
+};
+
+render();
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
