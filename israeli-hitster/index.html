@@ -369,7 +369,7 @@ const HISTORY_CHANCE = 0.25;  // about 1 card in 4 is a history card
 const LS_SEED = 'israeliHitster.seed';
 const SEED_VERSION = 2;       // 2 = history cards and Hebrew words were added to the built-in list
 const TWISTS = [
-  { id: 'exact', icon: 'YEAR', name: 'Exact year', rule: 'Before the reveal, the team says one exact year out loud. If it is exactly right, they win a bonus token.' },
+  { id: 'exact', icon: 'YEAR', name: 'Exact year', rule: 'Before the reveal, the team says one exact year out loud. This turn, the exact year is worth 2 bonus tokens instead of 1.' },
   { id: 'double', icon: '×2', name: 'Double or nothing', rule: 'The team may bet 1 token. Right spot: they get it back plus 2 more. Wrong spot: the token is gone.' },
   { id: 'lightning', icon: '5s', name: 'Lightning clip', rule: 'Only 5 seconds of music. No replays and no +10s, so listen carefully!' },
   { id: 'open', icon: 'ALL', name: 'Open steal', rule: 'If this team misses, ANY team can steal. The first team to raise a hand gets the chance.' },
@@ -1058,11 +1058,20 @@ function toggleBet() {
   else { if (team.tokens < 1) return; t.bet = true; team.tokens -= 1; Sfx.coin(); }
   saveGame(); render();
 }
+// Every reveal: the active team named the exact year before the reveal. The Exact year twist doubles it.
+const exactBonus = (t) => (t.twist === 'exact' ? 2 : 1);
 function awardExactYear() {
-  const t = game.turn; if (!t || t.twist !== 'exact' || t.phase !== 'reveal' || t.exactAwarded) return;
-  t.exactAwarded = true; activeTeam().tokens += 1;
-  Sfx.coin(); toast(`+1 token for ${activeTeam().name}`, 'gold');
+  const t = game.turn; if (!t || t.phase !== 'reveal' || t.exactAwarded) return;
+  const n = exactBonus(t);
+  t.exactAwarded = true; activeTeam().tokens += n;
+  Sfx.coin(); toast(`+${n} token${n > 1 ? 's' : ''} for ${activeTeam().name}`, 'gold');
   saveGame(); render();
+}
+function exactYearHtml() {
+  const t = game.turn; const team = activeTeam(); const n = exactBonus(t);
+  return t.exactAwarded
+    ? `<div class="next-note">✓ Exact year! +${n} token${n > 1 ? 's' : ''} for ${esc(team.name)}.</div>`
+    : `<button class="btn" data-action="exact-year" title="The team said this exact year before the reveal">${esc(team.name)} said exactly ${card(t.songId).year} ✓ (+${n} token${n > 1 ? 's' : ''})</button>`;
 }
 function claimWord(i) {
   const w = (game.words || [])[i]; if (!w || w.by != null) return;
@@ -1249,7 +1258,7 @@ function renderSetup() {
         <li><b>The team picks a spot</b> on its timeline: before, between or after its cards. Click that gap, then press <b>Reveal</b>.</li>
         <li><b>Right spot:</b> the card joins the timeline. A song from the same year as a neighbor counts as right.</li>
         <li><b>Wrong spot:</b> the next team can steal it by placing it on its own timeline before the reveal.</li>
-        <li><b>Tokens:</b> name the artist or title before the reveal to earn a token. Spend one to see the decade, or to skip the song.</li>
+        <li><b>Tokens:</b> name the artist or title before the reveal to earn a token, and earn another for naming the exact year. Spend one to see the decade, or to skip the song.</li>
         <li><b>Twist cards</b> (if on): every 3rd turn starts with a surprise rule that is shown before the music plays.</li>
         <li><b>History cards</b> (if on): sometimes the card is a moment in Israeli history instead of a song. Place it by year, just like a song.</li>
       </ol>
@@ -1419,6 +1428,7 @@ function renderReveal() {
       </div>
     </article>
     <div class="actions">
+      ${exactYearHtml()}
       ${twistRevealHtml()}
       ${next}
       <button class="btn btn--primary btn--big push" data-action="next">${t.win != null ? 'See the winner' : 'Next turn'} <span class="kbd">N</span></button>
@@ -1431,11 +1441,6 @@ function twistRevealHtml() {
     parts.push(t.betResult === 'won'
       ? `<div class="next-note">×2 The bet paid off! ${esc(team.name)} gets its token back plus 2 more.</div>`
       : `<div class="next-note is-bad">×2 The bet is lost.</div>`);
-  }
-  if (t.twist === 'exact') {
-    parts.push(t.exactAwarded
-      ? `<div class="next-note">✓ Exact year! +1 token for ${esc(team.name)}.</div>`
-      : `<button class="btn" data-action="exact-year">${esc(team.name)} said exactly ${card(t.songId).year} ✓ (+1 token)</button>`);
   }
   if (t.twist === 'word' && t.word) {
     parts.push(`<div class="word-card"><span class="wc-tag">Hebrew word</span><span class="wc-word">${esc(t.word)}</span><span class="wc-help">Use it later in the game to earn a token.</span></div>`);

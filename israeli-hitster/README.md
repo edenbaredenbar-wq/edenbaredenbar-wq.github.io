@@ -10,7 +10,7 @@ A projector music game for one class (middle school to grade 12, 15–30 student
 ## How to host
 
 1. Open the link in Chrome, press **F** for fullscreen, choose 2–6 teams and **Quick** (first to 4 songs) or **Full** (first to 7, with a Eurovision Round), then **Start game**.
-2. Press **Space** to play the 20-second clip. Only the music plays; the title, artist and video stay hidden. If the team names the artist or title, click **Named it ✓** to give them a token.
+2. Press **Space** to play the 20-second clip. Only the music plays; the title, artist and video stay hidden. If the team names the artist or title, click **Named it ✓** to give them a token. If they also say the exact year before the reveal, click **said exactly … ✓** on the reveal screen for another token.
 3. Click the gap the placer chooses (or press its number key), then press **Enter** to reveal.
 4. If the spot is wrong, the next team can steal: pick a gap on its own timeline and press **Enter**, or click **No steal**. Read the story card aloud.
 5. Press **N** for the next turn. **End game now** is always in the top bar.
@@ -21,7 +21,7 @@ A projector music game for one class (middle school to grade 12, 15–30 student
 
 | Twist | What happens |
 |---|---|
-| **Exact year** | The team says one exact year out loud before the reveal. If it's right, click the bonus button on the reveal screen: +1 token. |
+| **Exact year** | The exact-year bonus on the reveal screen is worth 2 tokens instead of 1 this turn. |
 | **Double or nothing** | The team may bet 1 token. Right spot: the token comes back plus 2 more. Wrong spot: the token is lost. Only drawn when the team has a token. |
 | **Lightning clip** | Only 5 seconds of music. No replay and no +10s. |
 | **Open steal** | If the team misses, any team can steal. Click the team that raised a hand first. Only with 3 or more teams. |
