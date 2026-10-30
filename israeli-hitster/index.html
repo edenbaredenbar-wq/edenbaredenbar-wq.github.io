@@ -37,7 +37,7 @@ button { cursor: pointer; }
 #app { position: fixed; inset: 0; z-index: 1; background: var(--ink); display: flex; flex-direction: column; overflow: hidden; }
 #modalRoot { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; background: rgba(5, 7, 18, 0.78); padding: 1rem; }
 #modalRoot.open { display: flex; }
-#toastRoot { position: fixed; right: 1.2rem; bottom: 11.5rem; z-index: 60; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; pointer-events: none; max-width: min(36rem, 90vw); }
+#toastRoot { position: fixed; left: 1rem; bottom: 11.5rem; z-index: 60; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; pointer-events: none; max-width: min(22rem, 90vw); }
 #confetti { position: fixed; inset: 0; z-index: 40; pointer-events: none; width: 100%; height: 100%; }
 
 /* ---------- top bar ---------- */
@@ -160,7 +160,8 @@ button { cursor: pointer; }
 .result { font-family: var(--font-display); font-weight: 900; font-size: 1.8rem; border-radius: 0.9rem; padding: 0.5rem 1rem; text-align: center; }
 .result--good { background: color-mix(in srgb, var(--good) 22%, var(--panel)); color: #b9ffd6; border: 2px solid var(--good); }
 .result--bad { background: color-mix(in srgb, var(--bad) 18%, var(--panel)); color: #ffc7cd; border: 2px solid var(--bad); }
-.reveal { display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; align-items: center; background: #fbf7ea; color: #14152a; border-radius: 1.3rem; padding: 1.3rem 1.6rem; border-top: 0.9rem solid var(--tc); box-shadow: 0 1rem 3rem rgba(0,0,0,0.5); animation: flipin 0.55s cubic-bezier(.2,.8,.2,1.1); }
+.reveal { display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; align-items: center; background: #fbf7ea; color: #14152a; border-radius: 1.3rem; padding: 1.3rem 1.6rem; border-top: 0.9rem solid var(--tc); box-shadow: 0 1rem 3rem rgba(0,0,0,0.5); }
+.reveal.anim, .twist.anim, .history-panel.anim { animation: flipin 0.55s cubic-bezier(.2,.8,.2,1.1); }
 .reveal .r-year { font-family: var(--font-display); font-weight: 900; font-size: 6.5rem; line-height: 0.9; letter-spacing: -0.03em; color: #14152a; font-variant-numeric: tabular-nums; }
 .reveal .r-body { min-width: 0; }
 .reveal .r-title { font-family: var(--font-display); font-weight: 900; font-size: 2.1rem; line-height: 1.1; text-wrap: balance; }
@@ -214,7 +215,7 @@ button { cursor: pointer; }
 .editor .btn { font-size: 0.85rem; padding: 0.45rem 0.8rem; border-width: 1px; }
 .ed-note { margin: 0; color: var(--muted); max-width: 80rem; }
 .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 0.7rem; max-height: calc(100vh - 14rem); }
-table.songs { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 118rem; }
+table.songs { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 134rem; }
 table.songs th { position: sticky; top: 0; background: var(--panel-2); text-align: left; padding: 0.45rem 0.4rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); z-index: 1; white-space: nowrap; }
 table.songs td { padding: 0.3rem 0.35rem; border-top: 1px solid var(--line); vertical-align: top; }
 table.songs tr.is-off td { opacity: 0.5; }
@@ -237,6 +238,51 @@ table.songs input[type="checkbox"] { width: 1.15rem; height: 1.15rem; accent-col
 .rowbtn--confirm { background: var(--bad); color: #fff; }
 .c-year { width: 5rem; } .c-title { width: 14rem; } .c-he { width: 11rem; } .c-artist { width: 12rem; } .c-yt { width: 11rem; } .c-alt { width: 9rem; } .c-start { width: 4.6rem; } .c-story { width: 26rem; }
 
+/* ---------- twist cards, history cards, Hebrew words ---------- */
+.twist { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; border-radius: 1rem; padding: 0.7rem 1.1rem; background: color-mix(in srgb, var(--gold) 13%, var(--panel)); border: 3px solid var(--gold); }
+.twist-icon { flex: 0 0 auto; width: 3.6rem; height: 3.6rem; border-radius: 50%; background: var(--gold); color: #1b1300; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 1.15rem; letter-spacing: -0.02em; }
+.twist-main { flex: 1 1 20rem; min-width: 0; }
+.twist-name { font-family: var(--font-display); font-weight: 900; font-size: 1.6rem; color: var(--gold); line-height: 1.1; }
+.twist-name small { display: block; font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.twist-rule { font-size: 1.12rem; margin-top: 0.15rem; }
+.twist-ctl { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.twist-state { font-weight: 800; color: var(--gold); }
+.twist--compact { padding: 0.45rem 0.9rem; }
+.twist--compact .twist-icon { width: 2.6rem; height: 2.6rem; font-size: 0.9rem; }
+.twist--compact .twist-name { font-size: 1.2rem; }
+.history-panel { border-radius: 1.1rem; background: #fbf7ea; color: #14152a; padding: 1.2rem 1.6rem; border-left: 0.9rem solid var(--tc); box-shadow: 0 0.8rem 2.5rem rgba(0,0,0,0.45); }
+.hp-tag { font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.85rem; color: #7a5b0c; }
+.hp-title { font-family: var(--font-display); font-weight: 900; font-size: 2.4rem; line-height: 1.12; text-wrap: balance; margin: 0.3rem 0 0.4rem; }
+.hp-help { font-size: 1.15rem; color: #3b3f6b; }
+.tcard--history { background: #fbf7ea; color: #14152a; box-shadow: inset 0 0 0 0.3rem var(--tc), 0 0.35rem 0 rgba(0,0,0,0.35); }
+.tcard--history .tc-artist { text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; font-size: 0.65rem; opacity: 0.65; }
+.tcard--history.is-new { box-shadow: inset 0 0 0 0.3rem var(--tc), 0 0 0 4px #fff, 0 0 2rem var(--tc); }
+.reveal .r-hist { display: inline-block; margin-top: 0.5rem; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1b1300; padding: 0.15rem 0.6rem; border-radius: 99px; background: var(--gold); }
+.next-note.is-bad { color: #ffb3bd; }
+.word-card { flex: 1 0 100%; display: flex; align-items: baseline; gap: 0.4rem 1rem; flex-wrap: wrap; background: var(--panel); border: 2px dashed var(--gold); border-radius: 1rem; padding: 0.55rem 1rem; }
+.wc-tag { font-size: 0.8rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+.wc-word { font-family: var(--font-he); font-size: 1.9rem; font-weight: 800; }
+.wc-help { color: var(--muted); font-size: 1rem; }
+.words { border-top: 1px solid var(--line); padding-top: 0.5rem; margin-top: 0.2rem; }
+.words-h { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem; }
+.word-chip { margin: 0 0.3rem 0.35rem 0; background: var(--panel-2); border: 1px solid var(--gold); border-radius: 99px; padding: 0.15rem 0.65rem; font-size: 0.85rem; font-family: var(--font-he); }
+.word-chip:hover:not(:disabled) { background: color-mix(in srgb, var(--gold) 25%, var(--panel-2)); }
+.word-chip:disabled { border-color: var(--tc); color: var(--tc); cursor: default; }
+.steal-pick { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.steal-pick .btn { border-color: var(--tc); color: var(--tc); font-size: 1.15rem; }
+.extras { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.toggle { text-align: left; border: 2px solid var(--line); background: var(--panel-2); border-radius: 0.8rem; padding: 0.75rem 1rem; display: flex; gap: 0.9rem; align-items: flex-start; }
+.toggle .sw { flex: 0 0 auto; width: 2.6rem; height: 1.5rem; border-radius: 99px; background: var(--line); position: relative; margin-top: 0.15rem; }
+.toggle .sw::after { content: ""; position: absolute; top: 0.2rem; left: 0.2rem; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--muted); transition: left 0.15s; }
+.toggle[aria-pressed="true"] { border-color: var(--gold); }
+.toggle[aria-pressed="true"] .sw { background: var(--gold); }
+.toggle[aria-pressed="true"] .sw::after { left: 1.3rem; background: #1b1300; }
+.toggle b { display: block; font-size: 1.15rem; font-family: var(--font-display); font-weight: 900; }
+.toggle .d { color: var(--muted); font-size: 0.95rem; }
+table.songs select { background: var(--panel); border: 1px solid var(--line); border-radius: 0.35rem; padding: 0.3rem; }
+table.songs tr.is-history td.c-title input { font-weight: 700; }
+.c-word { width: 13rem; }
+
 /* ---------- modal / toast ---------- */
 .modal { background: var(--panel); border: 2px solid var(--line); border-radius: 1rem; padding: 1.2rem 1.4rem; max-width: 40rem; width: 100%; box-shadow: 0 1rem 4rem rgba(0,0,0,0.6); }
 .modal h2 { margin: 0 0 0.6rem; font-family: var(--font-display); font-weight: 900; font-size: 1.6rem; }
@@ -246,7 +292,7 @@ table.songs input[type="checkbox"] { width: 1.15rem; height: 1.15rem; accent-col
 .modal .m-actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
 .keys { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 1rem; align-items: center; }
 .keys .kbd { font-size: 0.95rem; opacity: 1; text-align: center; }
-.toast { background: var(--text); color: var(--ink); font-weight: 800; padding: 0.55rem 1.1rem; border-radius: 0.7rem; box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.5); font-size: 1.05rem; animation: toastin 0.25s ease-out; text-align: right; }
+.toast { background: var(--text); color: var(--ink); font-weight: 800; padding: 0.55rem 1.1rem; border-radius: 0.7rem; box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.5); font-size: 1.05rem; animation: toastin 0.25s ease-out; text-align: left; }
 .toast--bad { background: var(--bad); color: #fff; }
 .toast--good { background: var(--good); color: #062512; }
 .toast--gold { background: var(--gold); color: #1b1300; }
@@ -265,6 +311,7 @@ table.songs input[type="checkbox"] { width: 1.15rem; height: 1.15rem; accent-col
 @media (max-width: 900px) {
   .setup-grid { grid-template-columns: 1fr; }
   .team-inputs { grid-template-columns: 1fr; }
+  .extras { grid-template-columns: 1fr; }
   .game { grid-template-columns: 1fr; grid-template-rows: auto auto auto; height: auto; }
   .scoreboard { border-right: 0; border-bottom: 2px solid var(--line); }
   .stage, .scoreboard { grid-row: auto; }
@@ -314,6 +361,24 @@ const PLACER_PROMPTS = [
   'whoever has the next birthday',
   'a new student',
   'someone who hasn\'t spoken yet this game'
+];
+
+const LIGHTNING_SECONDS = 5;
+const TWIST_EVERY = 3;        // a twist card on every 3rd turn
+const HISTORY_CHANCE = 0.25;  // about 1 card in 4 is a history card
+const LS_SEED = 'israeliHitster.seed';
+const SEED_VERSION = 2;       // 2 = history cards and Hebrew words were added to the built-in list
+const TWISTS = [
+  { id: 'exact', icon: 'YEAR', name: 'Exact year', rule: 'Before the reveal, the team says one exact year out loud. If it is exactly right, they win a bonus token.' },
+  { id: 'double', icon: '×2', name: 'Double or nothing', rule: 'The team may bet 1 token. Right spot: they get it back plus 2 more. Wrong spot: the token is gone.' },
+  { id: 'lightning', icon: '5s', name: 'Lightning clip', rule: 'Only 5 seconds of music. No replays and no +10s, so listen carefully!' },
+  { id: 'open', icon: 'ALL', name: 'Open steal', rule: 'If this team misses, ANY team can steal. The first team to raise a hand gets the chance.' },
+  { id: 'word', icon: 'א', name: 'Hebrew word', rule: 'After the reveal, the class learns one Hebrew word. Any team that uses it correctly later in the game earns a token.' }
+];
+const GLOSSARY = [
+  'תודה · toda = thank you', 'סבבה · sababa = cool, all good', 'יאללה · yalla = let\'s go', 'בוקר טוב · boker tov = good morning',
+  'חבר · chaver = friend', 'לחיים · l\'chaim = to life! (cheers)', 'בבקשה · bevakasha = please', 'מים · mayim = water',
+  'ים · yam = sea', 'שמש · shemesh = sun', 'אוכל · ochel = food', 'כן · ken = yes'
 ];
 
 /* =========================================================
@@ -439,6 +504,107 @@ const DEFAULT_SONGS = [
     story: 'A Hebrew version of "Un ramito de violetas," a 1970s Spanish song by Cecilia, with new words by Yehonatan Geffen. Broza spent part of his childhood in Spain, and the song became one of his signature hits.' }
 ];
 
+/* Hebrew word for the "Hebrew word" twist, taken from each song's title. */
+const DEFAULT_WORDS = {
+  'Erev Shel Shoshanim (Evening of Roses)': 'ערב · erev = evening',
+  'Yerushalayim Shel Zahav (Jerusalem of Gold)': 'זהב · zahav = gold',
+  'Shir LaShalom (Song for Peace)': 'שלום · shalom = peace (also hello and goodbye)',
+  'Ani Cholem Al Naomi (I Dream of Naomi)': 'חולם · cholem = dreaming',
+  'Ani Ve\'Ata (You and I)': 'אני · ani = I, me',
+  'Lu Yehi (Let It Be)': 'לו · lu = if only',
+  'Ey Sham (Somewhere)': 'שם · sham = there',
+  'Natati La Chayai (I Gave Her My Life)': 'חיים · chayim = life',
+  'At Ve\'Ani (You and I)': 'את · at = you (to a girl)',
+  'Hi Kol Kach Yafa (She\'s So Beautiful)': 'יפה · yafa = beautiful',
+  'Brosh (Cypress)': 'ברוש · brosh = cypress tree',
+  'Erev Shel Yom Bahir (Evening of a Clear Day)': 'יום · yom = day',
+  'Re\'ach Shel Shokolad (Smell of Chocolate)': 'ריח · re\'ach = smell',
+  'Hallelujah': 'הללויה · hallelujah = praise God',
+  'Shuv Hi Kan (She\'s Here Again)': 'כאן · kan = here',
+  'Lakachta Et Yadi BeYadcha (You Took My Hand in Yours)': 'יד · yad = hand',
+  'Af Pa\'am Lo Tedi (You\'ll Never Know)': 'פעם · pa\'am = once, one time',
+  'Lo Ozev Et HaIr (Not Leaving the City)': 'עיר · ir = city',
+  'HaPerach BeGani (The Flower in My Garden)': 'פרח · perach = flower',
+  'Badad (Alone)': 'בדד · badad = alone',
+  'Chai (Alive)': 'חי · chai = alive',
+  'Shavir (Fragile)': 'שביר · shavir = fragile',
+  'Mechakim LaMashiach (Waiting for the Messiah)': 'משיח · mashiach = messiah',
+  'Shvil HaBricha (Escape Route)': 'שביל · shvil = path, trail',
+  'Shlach Li Malach (Send Me an Angel)': 'מלאך · malach = angel',
+  'Ben Adam (Human Being)': 'בן אדם · ben adam = human being (literally "son of Adam")',
+  'Ahuvati (My Beloved)': 'אהובה · ahuva = beloved',
+  'Shara Barchovot (Singing in the Streets)': 'רחוב · rechov = street',
+  'Od Chozer HaNigun (The Melody Returns)': 'ניגון · nigun = melody',
+  'Maka Afora (Gray Blow)': 'אפור · afor = gray',
+  'Lo Yachol Lehorid Mimech Et HaEinayim (Can\'t Take My Eyes Off You)': 'עיניים · einayim = eyes',
+  'HaShir Shelanu (Our Song)': 'שיר · shir = song',
+  'Bo\'ee (Come With Me)': 'בואי · bo\'i = come (to a girl)',
+  'Light a Candle': 'נר · ner = candle',
+  'HaSheket SheNish\'ar (The Silence That Remains)': 'שקט · sheket = quiet, silence',
+  'Milim (Words)': 'מילים · milim = words',
+  'Tel Aviv': 'תל · tel = hill (Tel Aviv means "hill of spring")',
+  'Home': 'בית · bayit = home, house',
+  'Set Me Free': 'חופשי · chofshi = free',
+  'New Day Will Rise': 'יום חדש · yom chadash = new day',
+  'Noful VeKam (Falling and Getting Up)': 'נופל · nofel = falling',
+  'Nafalta Chazak (You Fell Hard)': 'חזק · chazak = strong, hard',
+  'Rakevet LaTzafon (Train to the North)': 'רכבת · rakevet = train',
+  'Chalaliyot (Spaceships)': 'חלל · chalal = outer space',
+  'Sigaliyot (Violets)': 'סיגלית · sigalit = violet'
+};
+
+/* History cards: no music. The title is shown before the reveal; year and story after. */
+const DEFAULT_HISTORY = [
+  { y: 1909, t: 'Tel Aviv is founded on the sand dunes north of Jaffa', h: 'ייסוד תל אביב',
+    story: '66 families divided the land with a lottery using seashells. Their small neighborhood grew into Israel\'s biggest city and cultural center.' },
+  { y: 1910, t: 'Degania, the first kibbutz, is founded by the Sea of Galilee', h: 'דגניה',
+    story: 'A small group of young pioneers decided to share all their work and property. The kibbutz idea spread, and today there are more than 250 kibbutzim.' },
+  { y: 1925, t: 'The Hebrew University of Jerusalem opens on Mount Scopus', h: 'האוניברסיטה העברית',
+    story: 'Albert Einstein helped found it and later left it his personal papers. It became one of the first universities to teach in Hebrew.' },
+  { y: 1948, t: 'David Ben-Gurion declares the independence of the State of Israel', h: 'הכרזת העצמאות',
+    story: 'He read the Declaration of Independence in a Tel Aviv museum on May 14. Israelis celebrate Yom HaAtzmaut, Independence Day, every spring.' },
+  { y: 1950, t: 'The Knesset passes the Law of Return', h: 'חוק השבות',
+    story: 'The law gives every Jew in the world the right to move to Israel and become a citizen. Since then, millions of people have made aliyah.' },
+  { y: 1953, t: 'The Knesset creates Yad Vashem, Israel\'s Holocaust memorial', h: 'יד ושם',
+    story: 'Yad Vashem in Jerusalem remembers the six million Jews murdered in the Holocaust and honors non-Jews who risked their lives to save Jews.' },
+  { y: 1964, t: 'The National Water Carrier starts bringing water from the Sea of Galilee to the south', h: 'המוביל הארצי',
+    story: 'Pipes, canals and tunnels carry water across the country, helping farms grow in the dry Negev desert.' },
+  { y: 1966, t: 'S.Y. Agnon becomes the first Israeli to win a Nobel Prize', h: 'ש״י עגנון',
+    story: 'Agnon won the Nobel Prize in Literature for stories he wrote in Hebrew. His picture was later printed on Israel\'s 50-shekel bill.' },
+  { y: 1967, t: 'The Six-Day War: Jerusalem is reunited', h: 'מלחמת ששת הימים',
+    story: 'In six days in June, Israel fought Egypt, Jordan and Syria. For the first time since 1948, Jews could pray at the Western Wall.' },
+  { y: 1968, t: 'Israeli television broadcasts for the first time', h: 'הטלוויזיה הישראלית',
+    story: 'The first broadcast showed the Independence Day parade in Jerusalem. For many years Israel had only one TV channel.' },
+  { y: 1969, t: 'Golda Meir becomes Israel\'s first female Prime Minister', h: 'גולדה מאיר',
+    story: 'Golda Meir grew up in Milwaukee, Wisconsin, and trained as a teacher before moving to a kibbutz. She was one of the first women in the world to lead a country.' },
+  { y: 1973, t: 'The Yom Kippur War begins with a surprise attack', h: 'מלחמת יום הכיפורים',
+    story: 'Egypt and Syria attacked on Yom Kippur, the holiest day of the Jewish year. The war shocked Israel and later led to peace talks with Egypt.' },
+  { y: 1976, t: 'Operation Entebbe rescues hostages in Uganda', h: 'מבצע אנטבה',
+    story: 'Israeli commandos flew about 4,000 km to free the passengers of a hijacked plane. Yoni Netanyahu, the commander of the rescue force, was killed in the operation.' },
+  { y: 1977, t: 'Maccabi Tel Aviv wins the European basketball championship for the first time', h: 'מכבי תל אביב',
+    story: 'The win in Belgrade set off huge celebrations, and team captain Tal Brody famously said Israel was "on the map." Brody was born in New Jersey.' },
+  { y: 1979, t: 'Israel and Egypt sign a peace treaty', h: 'הסכם השלום עם מצרים',
+    story: 'Prime Minister Menachem Begin and President Anwar Sadat signed it at the White House with President Jimmy Carter. It was Israel\'s first peace treaty with an Arab country.' },
+  { y: 1984, t: 'Operation Moses brings thousands of Ethiopian Jews to Israel', h: 'מבצע משה',
+    story: 'Ethiopian Jews walked for weeks to camps in Sudan, and secret flights carried about 8,000 of them to Israel.' },
+  { y: 1990, t: 'Nearly 200,000 immigrants arrive from the Soviet Union in one year', h: 'העלייה מברית המועצות',
+    story: 'When the Soviet Union opened its gates, about a million Jews moved to Israel over the next ten years, including many scientists, engineers, musicians and athletes.' },
+  { y: 1991, t: 'Operation Solomon flies more than 14,000 Ethiopian Jews to Israel in 36 hours', h: 'מבצע שלמה',
+    story: 'Dozens of planes flew nonstop. One El Al jumbo jet carried more than 1,000 passengers, a world record.' },
+  { y: 1994, t: 'Israel and Jordan sign a peace treaty', h: 'הסכם השלום עם ירדן',
+    story: 'Prime Minister Yitzhak Rabin and King Hussein signed it in the desert at the Arava border crossing. Jordan became the second Arab country at peace with Israel.' },
+  { y: 2003, t: 'Ilan Ramon becomes the first Israeli astronaut', h: 'אילן רמון',
+    story: 'Ramon flew on the space shuttle Columbia and took with him a drawing by a boy who died in the Holocaust. The shuttle broke apart on its way home, and all seven astronauts were killed.' },
+  { y: 2004, t: 'Windsurfer Gal Fridman wins Israel\'s first Olympic gold medal', h: 'גל פרידמן',
+    story: 'He won at the Athens Olympics. Israel had won Olympic medals before, but never a gold.' },
+  { y: 2013, t: 'Google buys the Israeli navigation app Waze', h: 'וייז',
+    story: 'Waze was built in Israel and uses drivers\' phones to report traffic in real time. Google paid about one billion dollars, a sign of Israel\'s booming tech industry.' },
+  { y: 2019, t: 'Beresheet, a small Israeli spacecraft, tries to land on the Moon', h: 'בראשית',
+    story: 'Built by a nonprofit and Israel Aerospace Industries, it reached the Moon but crashed while landing. Israel still became the seventh country to orbit the Moon.' },
+  { y: 2020, t: 'Israel signs the Abraham Accords with the UAE and Bahrain', h: 'הסכמי אברהם',
+    story: 'The agreements were signed at the White House. They were Israel\'s first peace deals with Arab countries in 26 years, and Morocco and Sudan joined later.' }
+];
+
 /* =========================================================
    Small helpers
    ========================================================= */
@@ -484,18 +650,39 @@ function normalizeSong(s) {
     euro: !!(s.euro ?? s.e),
     story: String(s.story ?? ''),
     verified: !!(s.verified ?? s.v),
-    use: (s.use ?? true) !== false
+    use: (s.use ?? true) !== false,
+    kind: s.kind === 'history' ? 'history' : 'song',
+    word: String(s.word ?? s.w ?? '')
   };
 }
 function defaultSongs() {
-  return DEFAULT_SONGS.map((s, i) => normalizeSong({ ...s, id: 'b' + String(i + 1).padStart(2, '0') }))
+  const list = DEFAULT_SONGS.map((s, i) => normalizeSong({ ...s, w: DEFAULT_WORDS[s.t] || '', id: 'b' + String(i + 1).padStart(2, '0') }))
     .sort((a, b) => a.year - b.year);
+  const history = DEFAULT_HISTORY.map((s, i) => normalizeSong({ ...s, v: true, kind: 'history', id: 'h' + String(i + 1).padStart(2, '0') }));
+  return list.concat(history);
 }
 function loadSongs() {
   const raw = lsGet(LS_SONGS);
   if (raw) {
-    try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr.map(normalizeSong); } catch (e) { /* fall through */ }
+    try {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        const list = arr.map(normalizeSong);
+        // A list saved by an older version: add the new history cards and Hebrew words once, keep every edit.
+        if ((parseInt(lsGet(LS_SEED), 10) || 1) < SEED_VERSION) {
+          defaultSongs().forEach((d) => {
+            const mine = list.find((x) => x.id === d.id);
+            if (!mine && d.kind === 'history') list.push(d);
+            else if (mine && !mine.word && d.word) mine.word = d.word;
+          });
+          lsSet(LS_SONGS, JSON.stringify(list));
+        }
+        lsSet(LS_SEED, String(SEED_VERSION));
+        return list;
+      }
+    } catch (e) { /* fall through */ }
   }
+  lsSet(LS_SEED, String(SEED_VERSION));
   return defaultSongs();
 }
 let songs = loadSongs();
@@ -505,14 +692,17 @@ function saveSongs(now) {
   const doSave = () => { if (!lsSet(LS_SONGS, JSON.stringify(songs))) toast('Could not save songs in this browser. Use Export to back them up.', 'bad'); };
   if (now) doSave(); else saveSongsTimer = setTimeout(doSave, 300);
 }
-const isPlayable = (s) => s.use && !!s.yt && Number.isFinite(s.year) && s.title.trim() !== '';
+const isSong = (s) => s.kind !== 'history';
+const isPlayable = (s) => s.use && Number.isFinite(s.year) && s.title.trim() !== '' && (!isSong(s) || !!s.yt);
 function poolStats() {
-  const playable = songs.filter(isPlayable);
+  const songList = songs.filter(isSong);
+  const playable = songList.filter(isPlayable);
   return {
     total: songs.length,
     playable: playable.length,
     euro: playable.filter((s) => s.euro).length,
-    noVideo: songs.filter((s) => s.use && !s.yt).length,
+    history: songs.filter((s) => !isSong(s) && isPlayable(s)).length,
+    noVideo: songList.filter((s) => s.use && !s.yt).length,
     off: songs.filter((s) => !s.use).length
   };
 }
@@ -545,7 +735,7 @@ const Sfx = {
 const Audio = {
   player: null, ready: false, apiFailed: false,
   song: null, vid: '', triedAlt: false,
-  start: 0, end: 0, state: 'idle', // idle | cued | playing | paused | ended | error
+  start: 0, end: 0, clipLen: CLIP_SECONDS, state: 'idle', // idle | cued | playing | paused | ended | error
   context: 'game', // game | preview
   lastError: null, failsInARow: 0, tickTimer: null, listeners: [],
   onFail: null,
@@ -567,12 +757,17 @@ const Audio = {
   on(fn) { this.listeners.push(fn); },
   emit() { this.listeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } }); },
 
-  load(song, context = 'game') {
-    this.song = song; this.context = context;
+  load(song, context = 'game', clipLen = CLIP_SECONDS) {
+    this.song = song; this.context = context; this.clipLen = clipLen;
     this.vid = song.yt; this.triedAlt = false; this.lastError = null;
-    this.start = song.start || 0; this.end = this.start + CLIP_SECONDS;
+    this.start = song.start || 0; this.end = this.start + clipLen;
     this.state = 'cued';
     if (this.ready) this.cue();
+    this.emit();
+  },
+  clear() { // history cards: no music this turn
+    if (this.ready) { try { this.player.stopVideo(); } catch (e) { /* ignore */ } }
+    this.song = null; this.state = 'idle'; this.context = 'game';
     this.emit();
   },
   cue() {
@@ -587,9 +782,9 @@ const Audio = {
   play() {
     if (!this.song || this.state === 'error' || !this.requireReady()) return;
     if (this.state === 'cued' || this.state === 'idle') {
-      this.player.seekTo(this.start, true); this.end = this.start + CLIP_SECONDS;
+      this.player.seekTo(this.start, true); this.end = this.start + this.clipLen;
     } else if (this.state === 'ended') {
-      this.end = this.now() + CLIP_SECONDS; // keep listening from where the clip stopped
+      this.end = this.now() + this.clipLen; // keep listening from where the clip stopped
     }
     this.player.setVolume(100);
     this.player.playVideo();
@@ -602,14 +797,14 @@ const Audio = {
   toggle() { if (this.state === 'playing') this.pause(); else this.play(); },
   replay() {
     if (!this.song || this.state === 'error' || !this.requireReady()) return;
-    this.player.seekTo(this.start, true); this.end = this.start + CLIP_SECONDS;
+    this.player.seekTo(this.start, true); this.end = this.start + this.clipLen;
     this.player.setVolume(100); this.player.playVideo();
     this.state = 'playing'; this.emit();
   },
   forward10() {
     if (!this.song || this.state === 'error' || !this.requireReady()) return;
     const from = (this.state === 'cued' || this.state === 'idle') ? this.start : this.now();
-    const remaining = this.state === 'playing' || this.state === 'paused' ? Math.max(8, this.end - from) : CLIP_SECONDS;
+    const remaining = this.state === 'playing' || this.state === 'paused' ? Math.max(8, this.end - from) : this.clipLen;
     const to = from + 10;
     this.player.seekTo(to, true); this.end = to + remaining;
     this.player.setVolume(100); this.player.playVideo();
@@ -669,7 +864,7 @@ let game = null;
 let screen = 'setup';
 let returnScreen = 'setup';
 let setupCfg = (() => {
-  const def = { count: 4, names: DEFAULT_TEAM_NAMES.slice(), mode: 'quick' };
+  const def = { count: 4, names: DEFAULT_TEAM_NAMES.slice(), mode: 'quick', twists: true, history: true };
   try { const s = JSON.parse(lsGet(LS_SETUP) || 'null'); if (s && Array.isArray(s.names)) return { ...def, ...s, names: DEFAULT_TEAM_NAMES.map((n, i) => s.names[i] || n) }; } catch (e) { /* ignore */ }
   return def;
 })();
@@ -680,19 +875,21 @@ function loadSavedGame() {
   return null;
 }
 
-const snapOf = (s) => ({ id: s.id, year: s.year, title: s.title, hebrew: s.hebrew, artist: s.artist, story: s.story, euro: s.euro, yt: s.yt, alt: s.alt, start: s.start });
+const snapOf = (s) => ({ id: s.id, kind: s.kind, year: s.year, title: s.title, hebrew: s.hebrew, artist: s.artist, story: s.story, euro: s.euro, yt: s.yt, alt: s.alt, start: s.start, word: s.word });
+const forceNext = { twist: null, history: null }; // set by tests only
 const card = (id) => game.snap[id];
 const activeTeam = () => game.teams[game.turnIdx];
 
 function newGame() {
   const n = setupCfg.count;
-  const pool = shuffle(songs.filter(isPlayable));
+  const pool = shuffle(songs.filter((s) => isSong(s) && isPlayable(s)));
   if (pool.length < n + 3) { toast('Not enough playable songs. Add songs or turn more on in the Songs screen.', 'bad'); return; }
   game = {
     v: 1, mode: setupCfg.mode, target: setupCfg.mode === 'full' ? 7 : 4,
     teams: Array.from({ length: n }, (_, i) => ({ name: (setupCfg.names[i] || DEFAULT_TEAM_NAMES[i]).trim() || DEFAULT_TEAM_NAMES[i], color: TEAM_COLORS[i], cards: [], tokens: 0 })),
     turnIdx: 0, turnCount: 0, used: [], broken: [], snap: {}, reserve: [],
-    euro: { state: 'none', left: 0 }, turn: null, over: false, ranking: null, endReason: '', startedAt: Date.now()
+    euro: { state: 'none', left: 0 }, turn: null, over: false, ranking: null, endReason: '', startedAt: Date.now(),
+    opts: { twists: !!setupCfg.twists, history: !!setupCfg.history }, words: [], lastTwist: null, lastWasHistory: false
   };
   if (game.mode === 'full') {
     const euroSongs = pool.filter((s) => s.euro);
@@ -714,10 +911,11 @@ function newGame() {
   startTurn();
 }
 
-function drawSong() {
+function drawCard(wantHistory) {
   const used = new Set(game.used);
-  let pool = songs.filter((s) => isPlayable(s) && !used.has(s.id));
-  if (game.euro.state === 'active') {
+  let pool = songs.filter((s) => isPlayable(s) && !used.has(s.id) && (wantHistory ? !isSong(s) : isSong(s)));
+  if (wantHistory) { /* history cards ignore the Eurovision rules */ }
+  else if (game.euro.state === 'active') {
     const euroPool = pool.filter((s) => s.euro);
     if (euroPool.length) pool = euroPool;
     else { game.euro.state = 'done'; toast('No Eurovision songs left. Back to the regular mix.', 'gold'); }
@@ -735,16 +933,49 @@ function startTurn() {
   if (game.euro.state === 'pending') {
     game.euro.state = 'active'; game.euro.left = game.teams.length;
   }
-  const s = drawSong();
+  const opts = game.opts || {};
+  const historyLeft = songs.some((x) => !isSong(x) && isPlayable(x) && !game.used.includes(x.id));
+  let wantHistory = !!opts.history && historyLeft && game.euro.state !== 'active' && !game.lastWasHistory && Math.random() < HISTORY_CHANCE;
+  if (forceNext.history != null) { wantHistory = forceNext.history && historyLeft; forceNext.history = null; }
+  const s = drawCard(wantHistory) || (wantHistory ? drawCard(false) : null);
   if (!s) { finishGame('The song list ran out.'); return; }
+  game.lastWasHistory = !isSong(s);
+  const twist = chooseTwist(game.snap[s.id]);
+  if (twist) game.lastTwist = twist;
   game.turn = {
     songId: s.id, phase: 'listen', gap: null, stealIdx: null, missGap: null,
     named: false, hint: false, result: null, receiver: null, win: null, euroNext: false,
-    placer: PLACER_PROMPTS[game.turnCount % PLACER_PROMPTS.length]
+    placer: PLACER_PROMPTS[game.turnCount % PLACER_PROMPTS.length],
+    twist, bet: false, betResult: null, lightningDone: false, exactAwarded: false, word: null
   };
   saveGame();
-  Audio.load(game.snap[s.id], 'game');
+  loadTurnAudio();
   render();
+}
+function chooseTwist(c) {
+  if (forceNext.twist) { const id = forceNext.twist; forceNext.twist = null; return id; }
+  if (!(game.opts || {}).twists || game.turnCount % TWIST_EVERY !== TWIST_EVERY - 1) return null;
+  const team = activeTeam();
+  const ok = TWISTS.filter((tw) => tw.id !== game.lastTwist
+    && !(tw.id === 'double' && team.tokens < 1)
+    && !(tw.id === 'lightning' && !isSong(c))
+    && !(tw.id === 'open' && game.teams.length < 3));
+  return ok.length ? ok[Math.floor(Math.random() * ok.length)].id : null;
+}
+function loadTurnAudio() {
+  const t = game.turn; const c = card(t.songId);
+  if (!isSong(c)) Audio.clear();
+  else Audio.load(c, 'game', t.twist === 'lightning' ? LIGHTNING_SECONDS : CLIP_SECONDS);
+}
+// Play / replay / +10s go through here so history cards and the lightning clip can block them.
+function doAudio(action) {
+  const t = game && game.turn; if (!t || t.phase === 'reveal') return;
+  if (!isSong(card(t.songId))) return;
+  if (t.twist === 'lightning') {
+    if (action !== 'toggle') { toast('Lightning clip: no replays and no skipping ahead.', 'gold'); return; }
+    if (t.lightningDone) { toast('The lightning clip is over. No replays!', 'gold'); return; }
+  }
+  if (action === 'toggle') Audio.toggle(); else if (action === 'replay') Audio.replay(); else if (action === 'forward') Audio.forward10();
 }
 
 function isCorrectSpot(cards, gap, year) {
@@ -760,6 +991,7 @@ function correctGapFor(teamIdx) { // used by tests and the "where it belonged" n
 
 function selectGap(g) {
   const t = game.turn; if (!t || (t.phase !== 'listen' && t.phase !== 'steal')) return;
+  if (t.phase === 'steal' && t.stealIdx == null) return;
   const team = game.teams[t.phase === 'steal' ? t.stealIdx : game.turnIdx];
   if (g < 0 || g > team.cards.length) return;
   t.gap = t.gap === g ? null : g;
@@ -774,12 +1006,16 @@ function lockIn() {
     if (isCorrectSpot(team.cards, t.gap, song.year)) {
       team.cards.splice(t.gap, 0, t.songId);
       t.result = 'correct'; t.receiver = game.turnIdx; t.phase = 'reveal';
+      if (t.bet) { team.tokens += 3; t.betResult = 'won'; } // the bet token comes back plus 2 more
       Sfx.good(); afterCardAdded(game.turnIdx);
     } else {
-      t.missGap = t.gap; t.gap = null; t.phase = 'steal'; t.stealIdx = (game.turnIdx + 1) % game.teams.length;
+      if (t.bet) t.betResult = 'lost';
+      t.missGap = t.gap; t.gap = null; t.phase = 'steal';
+      t.stealIdx = t.twist === 'open' ? null : (game.turnIdx + 1) % game.teams.length;
       Sfx.bad();
     }
   } else if (t.phase === 'steal') {
+    if (t.stealIdx == null) return;
     const team = game.teams[t.stealIdx];
     if (isCorrectSpot(team.cards, t.gap, song.year)) {
       team.cards.splice(t.gap, 0, t.songId);
@@ -789,13 +1025,55 @@ function lockIn() {
     }
     t.phase = 'reveal';
   }
-  if (t.phase === 'reveal') Audio.pause();
+  if (t.phase === 'reveal') { Audio.pause(); enterReveal(); }
   saveGame(); render();
 }
 function noSteal() {
   const t = game.turn; if (!t || t.phase !== 'steal') return;
-  t.result = 'passed'; t.receiver = null; t.phase = 'reveal';
-  Audio.pause(); saveGame(); render();
+  t.result = t.stealIdx == null ? 'discarded' : 'passed'; t.receiver = null; t.phase = 'reveal';
+  Audio.pause(); enterReveal(); saveGame(); render();
+}
+function enterReveal() {
+  const t = game.turn;
+  if (t.twist === 'word' && !t.word) {
+    t.word = pickWord(card(t.songId));
+    game.words = game.words || [];
+    game.words.push({ text: t.word, by: null });
+  }
+}
+function pickWord(c) {
+  const taken = new Set((game.words || []).map((w) => w.text));
+  if (c.word && !taken.has(c.word)) return c.word;
+  return GLOSSARY.find((w) => !taken.has(w)) || GLOSSARY[0];
+}
+function chooseStealer(i) {
+  const t = game.turn; if (!t || t.phase !== 'steal' || t.stealIdx != null || i === game.turnIdx || !game.teams[i]) return;
+  t.stealIdx = i; t.gap = null;
+  saveGame(); render();
+}
+function toggleBet() {
+  const t = game.turn; const team = activeTeam();
+  if (!t || t.twist !== 'double' || t.phase !== 'listen') return;
+  if (t.bet) { t.bet = false; team.tokens += 1; }
+  else { if (team.tokens < 1) return; t.bet = true; team.tokens -= 1; Sfx.coin(); }
+  saveGame(); render();
+}
+function awardExactYear() {
+  const t = game.turn; if (!t || t.twist !== 'exact' || t.phase !== 'reveal' || t.exactAwarded) return;
+  t.exactAwarded = true; activeTeam().tokens += 1;
+  Sfx.coin(); toast(`+1 token for ${activeTeam().name}`, 'gold');
+  saveGame(); render();
+}
+function claimWord(i) {
+  const w = (game.words || [])[i]; if (!w || w.by != null) return;
+  modal({
+    title: `Who used “${w.text}”?`,
+    body: '<p>The team that used the word correctly earns 1 token.</p>',
+    actions: [{ label: 'Cancel' }].concat(game.teams.map((tm, ti) => ({
+      label: tm.name,
+      onClick: () => { w.by = ti; tm.tokens += 1; Sfx.coin(); toast(`+1 token for ${tm.name}`, 'gold'); saveGame(); render(); }
+    })))
+  });
 }
 function afterCardAdded(teamIdx) {
   const t = game.turn;
@@ -818,7 +1096,7 @@ function nextTurn() {
 }
 
 function namedIt() {
-  const t = game.turn; if (!t || t.phase !== 'listen' || t.named) return;
+  const t = game.turn; if (!t || t.phase !== 'listen' || t.named || !isSong(card(t.songId))) return;
   t.named = true; activeTeam().tokens += 1;
   Sfx.coin(); toast(`+1 token for ${activeTeam().name}`, 'gold');
   saveGame(); render();
@@ -837,12 +1115,15 @@ function useSkip() {
 }
 function replaceCurrentSong(message) {
   Audio.stop();
-  const s = drawSong();
+  const t = game.turn;
+  const s = drawCard(!isSong(card(t.songId))) || drawCard(false);
   if (!s) { finishGame('The song list ran out.'); return; }
-  Object.assign(game.turn, { songId: s.id, gap: null, named: false, hint: false });
+  Object.assign(t, { songId: s.id, gap: null, named: false, hint: false, lightningDone: false });
+  if (t.twist === 'lightning' && !isSong(s)) t.twist = null;
+  game.lastWasHistory = !isSong(s);
   if (message) toast(message, 'gold');
   saveGame();
-  Audio.load(game.snap[s.id], 'game');
+  loadTurnAudio();
   render();
 }
 Audio.onFail = (code) => {
@@ -890,8 +1171,7 @@ function showScreen(name) {
   if (name === 'songs' && screen !== 'songs') returnScreen = screen;
   if (screen === 'songs' && name !== 'songs' && Audio.context === 'preview') { Audio.stop(); Audio.context = 'game'; }
   screen = name;
-  if (name === 'game' && game && game.turn && Audio.song && Audio.song.id !== game.turn.songId) Audio.load(game.snap[game.turn.songId], 'game');
-  if (name === 'game' && game && game.turn && !Audio.song) Audio.load(game.snap[game.turn.songId], 'game');
+  if (name === 'game' && game && game.turn && (!Audio.song || Audio.song.id !== game.turn.songId || Audio.context !== 'game')) loadTurnAudio();
   render();
 }
 function render() {
@@ -949,8 +1229,15 @@ function renderSetup() {
         </div>
       </div>
     </div>
+    <div class="panel">
+      <h2>3 · Extras</h2>
+      <div class="extras">
+        <button class="toggle" data-action="toggle-opt" data-opt="twists" aria-pressed="${!!setupCfg.twists}"><span class="sw" aria-hidden="true"></span><span><b>Twist cards</b><span class="d">Every 3rd turn brings a surprise rule: exact year, double or nothing, lightning clip, open steal or a Hebrew word.</span></span></button>
+        <button class="toggle" data-action="toggle-opt" data-opt="history" aria-pressed="${!!setupCfg.history}"><span class="sw" aria-hidden="true"></span><span><b>History cards</b><span class="d">About 1 card in 4 is a moment in Israeli history instead of a song. No music: teams place it by year.</span></span></button>
+      </div>
+    </div>
     <div class="setup-actions">
-      <div class="stats"><strong>${st.playable} songs ready</strong> · ${st.euro} Eurovision${st.noVideo ? ` · ${st.noVideo} skipped (no YouTube link)` : ''}${st.off ? ` · ${st.off} turned off` : ''}${euroWarn}</div>
+      <div class="stats"><strong>${st.playable} songs ready</strong> · ${st.euro} Eurovision · ${st.history} history cards${st.noVideo ? ` · ${st.noVideo} skipped (no YouTube link)` : ''}${st.off ? ` · ${st.off} turned off` : ''}${euroWarn}</div>
       ${saved ? `<button class="btn" data-action="resume">Resume saved game</button>` : ''}
       <button class="btn btn--primary btn--big" data-action="start">Start game</button>
     </div>
@@ -963,6 +1250,8 @@ function renderSetup() {
         <li><b>Right spot:</b> the card joins the timeline. A song from the same year as a neighbor counts as right.</li>
         <li><b>Wrong spot:</b> the next team can steal it by placing it on its own timeline before the reveal.</li>
         <li><b>Tokens:</b> name the artist or title before the reveal to earn a token. Spend one to see the decade, or to skip the song.</li>
+        <li><b>Twist cards</b> (if on): every 3rd turn starts with a surprise rule that is shown before the music plays.</li>
+        <li><b>History cards</b> (if on): sometimes the card is a moment in Israeli history instead of a song. Place it by year, just like a song.</li>
       </ol>
     </details>
   </section>`;
@@ -995,7 +1284,14 @@ function renderScoreboard() {
       ${tokens}
       <div class="mini">${years}</div>
     </div>`;
-  }).join('');
+  }).join('') + wordsWallHtml();
+}
+function wordsWallHtml() {
+  const words = game.words || []; if (!words.length) return '';
+  return `<div class="words"><div class="words-h">Hebrew words · click one when a team uses it</div>${words.map((w, i) => {
+    const tm = w.by != null ? game.teams[w.by] : null;
+    return `<button class="word-chip" data-action="word-claim" data-i="${i}" ${tm ? `disabled style="--tc:${tm.color}" title="Used by ${esc(tm.name)}"` : ''}>${esc(w.text)}${tm ? ' ✓' : ''}</button>`;
+  }).join('')}</div>`;
 }
 function renderScoreboardInto(el) {
   el.classList.toggle('is-crowded', game.teams.length >= 5);
@@ -1015,27 +1311,68 @@ function playerHtml() {
         <div class="clipbar" aria-hidden="true"><div id="clipFill"></div></div>
         <div class="controls">
           <button class="btn btn--primary" data-action="play" id="btnPlay">Play <span class="kbd">Space</span></button>
-          <button class="btn" data-action="replay">Replay clip <span class="kbd">R</span></button>
-          <button class="btn" data-action="forward">+10s <span class="kbd">T</span></button>
+          <button class="btn" data-action="replay" id="btnReplay">Replay clip <span class="kbd">R</span></button>
+          <button class="btn" data-action="forward" id="btnFwd">+10s <span class="kbd">T</span></button>
         </div>
       </div>
+    </div>`;
+}
+// Entrance animations play once per turn, not on every re-render (betting, tokens, gap clicks).
+const animShown = new Set();
+function animOnce(part) {
+  const key = `${game.startedAt}:${game.turnCount}:${game.turn.songId}:${part}`;
+  if (animShown.has(key)) return '';
+  animShown.add(key); return 'anim';
+}
+function twistBannerHtml(compact) {
+  const t = game.turn; const tw = t && TWISTS.find((x) => x.id === t.twist); if (!tw) return '';
+  let ctl = '';
+  if (tw.id === 'double' && t.phase === 'listen') {
+    ctl = t.bet
+      ? '<span class="twist-state">Bet placed: 1 token</span><button class="btn" data-action="bet">Cancel bet</button>'
+      : `<button class="btn btn--primary" data-action="bet" ${activeTeam().tokens < 1 ? 'disabled' : ''}>Bet 1 token</button>`;
+  }
+  return `<div class="twist ${compact ? 'twist--compact' : animOnce('twist')}">
+      <div class="twist-icon" aria-hidden="true">${tw.icon}</div>
+      <div class="twist-main"><div class="twist-name"><small>Twist card</small>${esc(tw.name)}</div>${compact ? '' : `<div class="twist-rule">${esc(tw.rule)}</div>`}</div>
+      ${ctl ? `<div class="twist-ctl">${ctl}</div>` : ''}
+    </div>`;
+}
+function historyPanelHtml(c) {
+  return `<div class="history-panel ${animOnce('history')}">
+      <div class="hp-tag">History card · no music this turn</div>
+      <div class="hp-title">${esc(c.title)}</div>
+      <div class="hp-help">When did this happen? Place it on the timeline, just like a song.</div>
     </div>`;
 }
 function renderStage() {
   const el = $('#stage'); if (!el) return;
   const t = game.turn; const team = activeTeam();
   if (!t) { el.innerHTML = ''; return; }
+  const c = card(t.songId); const hist = !isSong(c);
+  const what = hist ? 'this moment' : 'this song';
   let html = sysBanner() + euroBannerHtml();
+  el.style.setProperty('--tc', team.color);
   if (t.phase === 'listen') {
     html += `
       <div class="turn-head">
         <div>
           <div class="turn-team">${esc(team.name)}</div>
-          <div class="turn-sub">It's your turn. Where does this song fit on <b>your</b> timeline?</div>
+          <div class="turn-sub">It's your turn. Where does ${what} fit on <b>your</b> timeline?</div>
         </div>
         <div class="placer">Placer this turn: <b>${esc(t.placer)}</b></div>
       </div>
-      ${playerHtml()}
+      ${twistBannerHtml(false)}
+      ${hist ? historyPanelHtml(c) : playerHtml()}
+      <div class="actions" id="actions"></div>`;
+  } else if (t.phase === 'steal' && t.stealIdx == null) {
+    html += `
+      <div class="steal-banner" style="--tc:var(--gold)">
+        <div class="miss">✗ Not quite, ${esc(team.name)}!</div>
+        <div class="big">Open steal! Which team raised a hand first?</div>
+        <div class="steal-pick">${game.teams.map((tm, i) => (i === game.turnIdx ? '' : `<button class="btn" style="--tc:${tm.color}" data-action="steal-team" data-i="${i}">${esc(tm.name)}</button>`)).join('')}</div>
+      </div>
+      ${hist ? historyPanelHtml(c) : playerHtml()}
       <div class="actions" id="actions"></div>`;
   } else if (t.phase === 'steal') {
     const st = game.teams[t.stealIdx];
@@ -1044,20 +1381,21 @@ function renderStage() {
       <div class="steal-banner" style="--tc:${st.color}">
         <div class="miss">✗ Not quite, ${esc(team.name)}!</div>
         <div class="big">${esc(st.name)}: steal chance!</div>
-        <div class="turn-sub">Where does this song go on <b>your</b> timeline? Steal placer: <b>${esc(PLACER_PROMPTS[(game.turnCount + 1) % PLACER_PROMPTS.length])}</b></div>
+        <div class="turn-sub">Where does ${what} go on <b>your</b> timeline? Steal placer: <b>${esc(PLACER_PROMPTS[(game.turnCount + 1) % PLACER_PROMPTS.length])}</b></div>
       </div>
-      ${playerHtml()}
+      ${twistBannerHtml(true)}
+      ${hist ? historyPanelHtml(c) : playerHtml()}
       <div class="actions" id="actions"></div>`;
   } else {
     html += renderReveal();
   }
   el.innerHTML = html;
-  if (t.phase !== 'steal') el.style.setProperty('--tc', team.color);
   renderActions();
   updatePlayerUI();
 }
 function renderReveal() {
   const t = game.turn; const s = card(t.songId); const team = activeTeam();
+  const hist = !isSong(s);
   const rec = t.receiver != null ? game.teams[t.receiver] : null;
   let banner;
   if (t.result === 'correct') banner = `<div class="result result--good">✓ Correct! It locks into ${esc(team.name)}'s timeline.</div>`;
@@ -1069,33 +1407,58 @@ function renderReveal() {
   if (t.win != null) next = `<div class="next-note">★ ${esc(game.teams[t.win].name)} reached ${game.target} songs!</div>`;
   else if (t.euroNext) next = `<div class="next-note">★ A team reached 4 songs. The EUROVISION ROUND starts next turn!</div>`;
   return `${banner}
-    <article class="reveal" style="--tc:${color}">
+    <article class="reveal ${animOnce('reveal')}" style="--tc:${color}">
       <div class="r-year">${s.year}</div>
       <div class="r-body">
         <div class="r-title">${esc(s.title)}</div>
-        <div class="r-artist">${esc(s.artist)}</div>
+        ${hist ? '' : `<div class="r-artist">${esc(s.artist)}</div>`}
         ${s.hebrew ? `<div class="r-he" dir="rtl" lang="he">${esc(s.hebrew)}</div>` : ''}
         ${s.story ? `<p class="r-story">${esc(s.story)}</p>` : ''}
-        ${s.euro ? '<span class="r-euro">Eurovision entry</span>' : ''}
+        ${hist ? '<span class="r-hist">History card</span>' : ''}
+        ${s.euro && !hist ? '<span class="r-euro">Eurovision entry</span>' : ''}
       </div>
     </article>
     <div class="actions">
+      ${twistRevealHtml()}
       ${next}
       <button class="btn btn--primary btn--big push" data-action="next">${t.win != null ? 'See the winner' : 'Next turn'} <span class="kbd">N</span></button>
     </div>`;
 }
+function twistRevealHtml() {
+  const t = game.turn; if (!t.twist) return '';
+  const team = activeTeam(); const parts = [];
+  if (t.twist === 'double' && t.bet) {
+    parts.push(t.betResult === 'won'
+      ? `<div class="next-note">×2 The bet paid off! ${esc(team.name)} gets its token back plus 2 more.</div>`
+      : `<div class="next-note is-bad">×2 The bet is lost.</div>`);
+  }
+  if (t.twist === 'exact') {
+    parts.push(t.exactAwarded
+      ? `<div class="next-note">✓ Exact year! +1 token for ${esc(team.name)}.</div>`
+      : `<button class="btn" data-action="exact-year">${esc(team.name)} said exactly ${card(t.songId).year} ✓ (+1 token)</button>`);
+  }
+  if (t.twist === 'word' && t.word) {
+    parts.push(`<div class="word-card"><span class="wc-tag">Hebrew word</span><span class="wc-word">${esc(t.word)}</span><span class="wc-help">Use it later in the game to earn a token.</span></div>`);
+  }
+  return parts.join('');
+}
 function renderActions() {
   const el = $('#actions'); if (!el || !game.turn) return;
   const t = game.turn; const team = activeTeam();
+  const hist = !isSong(card(t.songId));
   if (t.phase === 'listen') {
     const hint = t.hint ? `<span class="hint-badge">Hint: the ${decadeOf(card(t.songId).year)}s</span>` : '';
     el.innerHTML = `
       <span class="lead">${t.gap == null ? 'Click a gap in the timeline below (or press its number key).' : '<b>Spot chosen.</b> Press Reveal when the team is sure.'}</span>
       ${hint}
-      <button class="btn" data-action="named" ${t.named ? 'disabled' : ''} title="The team named the artist or song title">${t.named ? 'Named it ✓ (token earned)' : 'Named it ✓ (+1 token)'}</button>
+      ${hist ? '' : `<button class="btn" data-action="named" ${t.named ? 'disabled' : ''} title="The team named the artist or song title">${t.named ? 'Named it ✓ (token earned)' : 'Named it ✓ (+1 token)'}</button>`}
       <button class="btn" data-action="hint" ${t.hint || team.tokens < 1 ? 'disabled' : ''}>Hint: decade (1 token)</button>
-      <button class="btn" data-action="skip" ${team.tokens < 1 ? 'disabled' : ''}>Skip song (1 token)</button>
+      <button class="btn" data-action="skip" ${team.tokens < 1 ? 'disabled' : ''}>Skip ${hist ? 'card' : 'song'} (1 token)</button>
       <button class="btn btn--good btn--big push" data-action="lock" ${t.gap == null ? 'disabled' : ''}>Reveal <span class="kbd">Enter</span></button>`;
+  } else if (t.phase === 'steal' && t.stealIdx == null) {
+    el.innerHTML = `
+      <span class="lead">Click the team that raised a hand first.</span>
+      <button class="btn push" data-action="no-steal">No steal</button>`;
   } else if (t.phase === 'steal') {
     el.innerHTML = `
       <span class="lead">${t.gap == null ? 'Click a gap in their timeline below.' : '<b>Spot chosen.</b> Press Reveal.'}</span>
@@ -1116,8 +1479,8 @@ function timelineHtml(teamIdx, opts = {}) {
   };
   tm.cards.forEach((id, i) => {
     parts.push(gapBtn(i));
-    const c = card(id);
-    parts.push(`<div class="tcard ${opts.highlight === id ? 'is-new' : ''}"><div class="tc-year">${c.year}</div><div class="tc-title">${esc(c.title)}</div><div class="tc-artist">${esc(c.artist)}</div></div>`);
+    const c = card(id); const h = !isSong(c);
+    parts.push(`<div class="tcard ${h ? 'tcard--history' : ''} ${opts.highlight === id ? 'is-new' : ''}"><div class="tc-year">${c.year}</div><div class="tc-title">${esc(c.title)}</div><div class="tc-artist">${h ? 'History' : esc(c.artist)}</div></div>`);
   });
   parts.push(gapBtn(tm.cards.length));
   return `<div class="timeline ${sel ? 'is-selectable' : ''}" style="--tc:${tm.color}">${parts.join('')}</div>`;
@@ -1127,6 +1490,7 @@ function renderTimelineOnly() {
   const t = game.turn;
   let idx = game.turnIdx, selectable = false, label = 'timeline', highlight = null;
   if (t.phase === 'listen') { selectable = true; label = 'timeline · pick a spot'; }
+  else if (t.phase === 'steal' && t.stealIdx == null) { label = 'timeline · waiting for a team to steal'; }
   else if (t.phase === 'steal') { idx = t.stealIdx; selectable = true; label = 'timeline · steal: pick a spot'; }
   else if (t.receiver != null) { idx = t.receiver; highlight = t.songId; }
   const tm = game.teams[idx];
@@ -1142,11 +1506,19 @@ function updatePlayerUI() {
   const labels = {
     idle: 'Loading the song…', cued: 'Ready. Press Play.', playing: 'Now playing…', paused: 'Paused', ended: 'Clip over. Replay or keep listening.', error: 'This clip can\'t play.'
   };
+  const t = game && game.turn; const light = !!(t && t.twist === 'lightning'); const done = light && t.lightningDone;
+  if (light) { labels.cued = 'Ready. Only 5 seconds!'; labels.ended = 'Lightning clip over. No replays!'; }
   if (status) status.textContent = Audio.ready ? labels[st] || '' : (Audio.apiFailed ? 'YouTube is not available.' : 'Connecting to YouTube…');
-  if (btn) btn.innerHTML = (st === 'playing' ? 'Pause' : st === 'ended' ? 'Keep listening' : 'Play') + ' <span class="kbd">Space</span>';
+  if (btn) { btn.innerHTML = (done ? 'Clip over' : st === 'playing' ? 'Pause' : st === 'ended' ? 'Keep listening' : 'Play') + ' <span class="kbd">Space</span>'; btn.disabled = !!done; }
+  const r = $('#btnReplay'), f = $('#btnFwd'); if (r) r.disabled = light; if (f) f.disabled = light;
   if (fill) fill.style.width = Math.round(Audio.progress() * 100) + '%';
 }
-Audio.on(() => { if (screen === 'game') updatePlayerUI(); if (screen === 'songs') renderEditorPreviewButtons(); });
+Audio.on(() => {
+  const t = game && game.turn;
+  if (t && t.twist === 'lightning' && Audio.context === 'game' && Audio.state === 'ended' && !t.lightningDone) { t.lightningDone = true; saveGame(); }
+  if (screen === 'game') updatePlayerUI();
+  if (screen === 'songs') renderEditorPreviewButtons();
+});
 
 /* ---------- win ---------- */
 function renderWin() {
@@ -1186,22 +1558,23 @@ function renderEditor() {
   <section class="editor">
     <div class="ed-head">
       <button class="btn" data-action="editor-back">← Back</button>
-      <h1>Songs</h1>
-      <span class="stats" id="edStats">${st.total} songs · ${st.playable} ready to play · ${st.euro} Eurovision</span>
+      <h1>Songs &amp; history</h1>
+      <span class="stats" id="edStats">${editorStatsText(st)}</span>
       <span class="spacer"></span>
       <input type="search" id="edSearch" placeholder="Search title, artist, year…" value="${esc(editorFilter)}" aria-label="Search songs">
       <button class="btn" data-action="add-song">+ Add song</button>
+      <button class="btn" data-action="add-history">+ Add history card</button>
       <button class="btn" data-action="sort-songs">Sort by year</button>
       <button class="btn" data-action="export">Export JSON</button>
       <button class="btn" data-action="import">Import JSON</button>
       <button class="btn" data-action="reset-songs">Reset to built-in list</button>
       <input type="file" id="importFile" accept="application/json,.json" hidden>
     </div>
-    <p class="ed-note">Changes save automatically in this browser. <span class="warn">⚠</span> means the year is not verified yet. Songs with no YouTube link, or with “Use” turned off, are never drawn. Paste a full YouTube link and the ID is pulled out for you. “Start” is where the 20-second clip begins; use ▶ to check it.</p>
+    <p class="ed-note">Changes save automatically in this browser. <span class="warn">⚠</span> means the year is not verified yet. Songs with no YouTube link, or with “Use” turned off, are never drawn. Paste a full YouTube link and the ID is pulled out for you. “Start” is where the 20-second clip begins; use ▶ to check it. History cards need no video: their title is shown before the reveal, and the year and story after. “Hebrew word” is used by the Hebrew word twist card.</p>
     <div class="table-wrap">
       <table class="songs">
         <thead><tr>
-          <th>Use</th><th title="Verified year">✓/⚠</th><th>Year</th><th>English title</th><th>Hebrew title</th><th>Artist</th><th>YouTube link or ID</th><th>Backup ID</th><th>Start (s)</th><th>Eurovision</th><th>Story card</th><th>Verified</th><th>Clip</th><th></th>
+          <th>Use</th><th>Type</th><th title="Verified year">✓/⚠</th><th>Year</th><th>English title</th><th>Hebrew title</th><th>Artist</th><th>YouTube link or ID</th><th>Backup ID</th><th>Start (s)</th><th>Eurovision</th><th>Story card</th><th>Hebrew word</th><th>Verified</th><th>Clip</th><th></th>
         </tr></thead>
         <tbody id="edBody">${songs.map(editorRow).join('')}</tbody>
       </table>
@@ -1215,20 +1588,26 @@ function editorRow(s) {
   const del = pendingDelete.has(s.id)
     ? `<button class="rowbtn rowbtn--confirm" data-action="del-song">Confirm delete</button>`
     : `<button class="rowbtn rowbtn--del" data-action="del-song">Delete</button>`;
-  return `<tr data-id="${s.id}" class="${s.use ? '' : 'is-off'}">
-    <td><input type="checkbox" data-f="use" ${s.use ? 'checked' : ''} aria-label="Use in game"></td>
-    <td class="flag">${flag}</td>
-    <td class="c-year"><input type="number" data-f="year" value="${esc(s.year)}" min="1900" max="2100" aria-label="Year"></td>
-    <td class="c-title"><input type="text" data-f="title" value="${esc(s.title)}" aria-label="English title"></td>
-    <td class="c-he"><input type="text" data-f="hebrew" value="${esc(s.hebrew)}" dir="rtl" lang="he" aria-label="Hebrew title"></td>
-    <td class="c-artist"><input type="text" data-f="artist" value="${esc(s.artist)}" aria-label="Artist"></td>
-    <td class="c-yt"><input type="text" data-f="yt" value="${esc(s.yt)}" placeholder="Paste link or ID" aria-label="YouTube link or ID" class="${s.yt ? '' : 'bad'}"><span class="yt-note ${s.yt ? '' : 'bad'}">${s.yt ? '' : 'No video: skipped'}</span></td>
+  const h = !isSong(s);
+  const songCells = h
+    ? `<td class="c-yt"><span class="yt-note">No video needed for history cards</span></td><td></td><td></td><td></td>`
+    : `<td class="c-yt"><input type="text" data-f="yt" value="${esc(s.yt)}" placeholder="Paste link or ID" aria-label="YouTube link or ID" class="${s.yt ? '' : 'bad'}"><span class="yt-note ${s.yt ? '' : 'bad'}">${s.yt ? '' : 'No video: skipped'}</span></td>
     <td class="c-alt"><input type="text" data-f="alt" value="${esc(s.alt)}" placeholder="Optional" aria-label="Backup YouTube ID"></td>
     <td class="c-start"><input type="number" data-f="start" value="${esc(s.start)}" min="0" aria-label="Clip start in seconds"></td>
-    <td><input type="checkbox" data-f="euro" ${s.euro ? 'checked' : ''} aria-label="Eurovision song"></td>
+    <td><input type="checkbox" data-f="euro" ${s.euro ? 'checked' : ''} aria-label="Eurovision song"></td>`;
+  return `<tr data-id="${s.id}" class="${s.use ? '' : 'is-off'} ${h ? 'is-history' : ''}">
+    <td><input type="checkbox" data-f="use" ${s.use ? 'checked' : ''} aria-label="Use in game"></td>
+    <td><select data-f="kind" aria-label="Card type"><option value="song" ${h ? '' : 'selected'}>Song</option><option value="history" ${h ? 'selected' : ''}>History</option></select></td>
+    <td class="flag">${flag}</td>
+    <td class="c-year"><input type="number" data-f="year" value="${esc(s.year)}" min="1800" max="2100" aria-label="Year"></td>
+    <td class="c-title"><input type="text" data-f="title" value="${esc(s.title)}" placeholder="${h ? 'What happened (shown before the reveal)' : ''}" aria-label="${h ? 'What happened' : 'English title'}"></td>
+    <td class="c-he"><input type="text" data-f="hebrew" value="${esc(s.hebrew)}" dir="rtl" lang="he" aria-label="Hebrew title"></td>
+    <td class="c-artist">${h ? '' : `<input type="text" data-f="artist" value="${esc(s.artist)}" aria-label="Artist">`}</td>
+    ${songCells}
     <td class="c-story"><textarea data-f="story" rows="2" aria-label="Story card">${esc(s.story)}</textarea></td>
+    <td class="c-word"><input type="text" data-f="word" value="${esc(s.word)}" placeholder="זהב · zahav = gold" aria-label="Hebrew word"></td>
     <td><input type="checkbox" data-f="verified" ${s.verified ? 'checked' : ''} aria-label="Year verified"></td>
-    <td><button class="rowbtn" data-action="preview" ${s.yt ? '' : 'disabled'}>▶ Test</button></td>
+    <td>${h ? '' : `<button class="rowbtn" data-action="preview" ${s.yt ? '' : 'disabled'}>▶ Test</button>`}</td>
     <td>${del}</td>
   </tr>`;
 }
@@ -1236,14 +1615,16 @@ function applyEditorFilter() {
   const q = editorFilter.trim().toLowerCase();
   document.querySelectorAll('#edBody tr').forEach((tr) => {
     const s = songs.find((x) => x.id === tr.dataset.id);
-    const hay = s ? `${s.year} ${s.title} ${s.hebrew} ${s.artist}`.toLowerCase() : '';
+    const hay = s ? `${s.year} ${s.title} ${s.hebrew} ${s.artist} ${s.kind} ${s.word}`.toLowerCase() : '';
     tr.hidden = q !== '' && !hay.includes(q);
   });
 }
 function updateEditorStats() {
   const el = $('#edStats'); if (!el) return;
-  const st = poolStats();
-  el.textContent = `${st.total} songs · ${st.playable} ready to play · ${st.euro} Eurovision`;
+  el.textContent = editorStatsText(poolStats());
+}
+function editorStatsText(st) {
+  return `${st.playable} songs ready · ${st.euro} Eurovision · ${st.history} history cards`;
 }
 function renderEditorPreviewButtons() {
   document.querySelectorAll('#edBody tr').forEach((tr) => {
@@ -1256,6 +1637,7 @@ function renderEditorPreviewButtons() {
 function onEditorInput(e) {
   const input = e.target; const f = input.dataset.f; if (!f) return;
   const tr = input.closest('tr'); const s = songs.find((x) => x.id === tr.dataset.id); if (!s) return;
+  if (f === 'kind') { s.kind = input.value === 'history' ? 'history' : 'song'; saveSongs(true); renderEditor(); return; }
   if (input.type === 'checkbox') {
     s[f] = input.checked;
     if (f === 'use') tr.classList.toggle('is-off', !s.use);
@@ -1395,11 +1777,16 @@ document.addEventListener('click', (e) => {
     case 'end-game': confirmEndGame(); break;
     case 'team-count': setupCfg.count = +el.dataset.n; saveSetup(); renderSetup(); break;
     case 'mode': setupCfg.mode = el.dataset.mode; saveSetup(); renderSetup(); break;
+    case 'toggle-opt': setupCfg[el.dataset.opt] = !setupCfg[el.dataset.opt]; saveSetup(); renderSetup(); break;
     case 'start': newGame(); break;
-    case 'resume': { const g = loadSavedGame(); if (g) { game = g; showScreen('game'); Audio.load(game.snap[game.turn.songId], 'game'); } break; }
-    case 'play': Audio.toggle(); break;
-    case 'replay': Audio.replay(); break;
-    case 'forward': Audio.forward10(); break;
+    case 'resume': { const g = loadSavedGame(); if (g) { game = g; Audio.song = null; showScreen('game'); } break; }
+    case 'play': doAudio('toggle'); break;
+    case 'replay': doAudio('replay'); break;
+    case 'forward': doAudio('forward'); break;
+    case 'bet': toggleBet(); break;
+    case 'exact-year': awardExactYear(); break;
+    case 'steal-team': chooseStealer(+el.dataset.i); break;
+    case 'word-claim': claimWord(+el.dataset.i); break;
     case 'gap': selectGap(+el.dataset.gap); break;
     case 'lock': lockIn(); break;
     case 'no-steal': noSteal(); break;
@@ -1410,8 +1797,9 @@ document.addEventListener('click', (e) => {
     case 'play-again': newGame(); break;
     case 'to-setup': game = null; showScreen('setup'); break;
     case 'editor-back': showScreen(returnScreen === 'songs' ? 'setup' : (returnScreen === 'game' && (!game || game.over) ? 'setup' : returnScreen)); break;
-    case 'add-song': {
-      const s = normalizeSong({ year: '', title: '', use: true });
+    case 'add-song':
+    case 'add-history': {
+      const s = normalizeSong({ year: '', title: '', use: true, kind: a === 'add-history' ? 'history' : 'song' });
       songs.unshift(s); saveSongs(true); editorFilter = ''; renderEditor();
       const first = document.querySelector(`#edBody tr[data-id="${s.id}"] [data-f="year"]`); if (first) first.focus();
       break;
@@ -1462,14 +1850,15 @@ document.addEventListener('keydown', (e) => {
   if (screen === 'win' && k === 'n') return;
   if (screen !== 'game' || !game || !game.turn) return;
   const t = game.turn;
-  if (k === ' ' || k === 'Spacebar') { e.preventDefault(); Sfx.ensure(); if (t.phase !== 'reveal') Audio.toggle(); return; }
-  if (k === 'r') { if (t.phase !== 'reveal') Audio.replay(); return; }
-  if (k === 't') { if (t.phase !== 'reveal') Audio.forward10(); return; }
+  if (k === ' ' || k === 'Spacebar') { e.preventDefault(); Sfx.ensure(); doAudio('toggle'); return; }
+  if (k === 'r') { doAudio('replay'); return; }
+  if (k === 't') { doAudio('forward'); return; }
   if (k === 'Enter') { e.preventDefault(); if (t.phase === 'listen' || t.phase === 'steal') lockIn(); return; }
   if (k === 'n') { if (t.phase === 'reveal') nextTurn(); return; }
   if (/^[1-9]$/.test(k) && (t.phase === 'listen' || t.phase === 'steal')) { selectGap(+k - 1); return; }
   if ((k === 'ArrowLeft' || k === 'ArrowRight') && (t.phase === 'listen' || t.phase === 'steal')) {
     e.preventDefault();
+    if (t.phase === 'steal' && t.stealIdx == null) return;
     const team = game.teams[t.phase === 'steal' ? t.stealIdx : game.turnIdx];
     const max = team.cards.length;
     let g = t.gap == null ? (k === 'ArrowLeft' ? max : 0) : t.gap + (k === 'ArrowLeft' ? -1 : 1);
@@ -1513,7 +1902,7 @@ const Confetti = {
    Debug hook for automated tests (harmless in class)
    ========================================================= */
 window.hitsterDebug = {
-  get game() { return game; }, get songs() { return songs; }, get screen() { return screen; }, Audio,
+  get game() { return game; }, get songs() { return songs; }, get screen() { return screen; }, Audio, force: forceNext,
   correctGap: (teamIdx) => correctGapFor(teamIdx)
 };
 
