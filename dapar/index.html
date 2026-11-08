@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="A mini mock Dapar class game.">
+<title>Beat the Dapar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Hebrew:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Saira+Stencil+One&display=swap">
+<script src="qrcode.min.js"></script>
+<style>
+/* Layout: a mock answer sheet lying on a manila folder. Answers are filled bubbles, and the score lands as a stencil stamp. Single-theme by choice. */
+:root {
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --manila: #E3C484;
+  --manila-deep: #CFAA62;
+  --paper: #FBF4DF;
+  --ink: #1F2A18;
+  --olive: #48562A;
+  --rule: #CDB98A;
+  --stamp: #A3211B;
+  --on-dark: #FBF4DF;
+  --font-stamp: "Saira Stencil One", Impact, "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", "IBM Plex Sans Hebrew", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  background: var(--manila);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--font-body);
+  padding-block: 20px 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--stamp); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2 { text-wrap: balance; }
+
+#app { max-width: 620px; margin-inline: auto; }
+#app.wide { max-width: 1120px; }
+
+.tab {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--olive); color: var(--on-dark);
+  padding: 7px 16px 9px; border-radius: 8px 8px 0 0;
+  font: 500 .78rem/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase;
+}
+.tab .he { font: 600 .95rem/1 "IBM Plex Sans Hebrew", var(--font-body); letter-spacing: 0; text-transform: none; }
+.sheet {
+  background: var(--paper);
+  border: 1px solid var(--manila-deep);
+  border-radius: 0 8px 8px 8px;
+  padding: clamp(20px, 5vw, 34px);
+  display: grid; gap: 22px;
+  box-shadow: 0 2px 0 var(--manila-deep);
+}
+.stencil-title {
+  font: 400 clamp(2.6rem, 13vw, 4.4rem)/.95 var(--font-stamp);
+  letter-spacing: .01em; color: var(--olive);
+}
+.lede { font-size: 1.08rem; max-width: 34em; }
+.small { font-size: .875rem; }
+.muted { color: #54593F; }
+
+.spec { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 2px solid var(--ink); }
+.spec div { padding: 10px 6px; display: grid; gap: 2px; justify-items: start; min-width: 0; }
+.spec div + div { border-inline-start: 1px solid var(--rule); padding-inline-start: 12px; }
+.spec b { font: 600 1.45rem/1.1 var(--font-mono); }
+.spec span { font: 500 .72rem/1.25 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
+.rules { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 6px; }
+
+.btn {
+  min-height: 52px; padding: 12px 22px; border-radius: 6px;
+  border: 2px solid var(--ink); background: transparent; font-weight: 600;
+}
+.btn:hover { background: #F1E5C2; }
+.btn.primary { background: var(--olive); border-color: var(--olive); color: var(--on-dark); }
+.btn.primary:hover { background: var(--ink); border-color: var(--ink); }
+.btn.full { width: 100%; font-size: 1.12rem; }
+.btn[disabled] { opacity: .45; cursor: default; }
+.link {
+  background: none; border: 0; padding: 8px 2px; text-decoration: underline;
+  text-underline-offset: 3px; font-size: .875rem; color: #54593F;
+}
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; }
+
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 12px;
+  background: var(--ink); color: var(--on-dark);
+  padding: 8px 14px 10px; border-radius: 6px; margin-bottom: 12px;
+}
+.topbar .count { font: 500 .85rem/1.2 var(--font-mono); }
+.clock { font: 600 1.6rem/1 var(--font-mono); font-variant-numeric: tabular-nums; text-align: end; }
+.clock.low { color: #FFB4A8; }
+.qtrack { grid-column: 1 / -1; height: 5px; background: #3C4A2E; border-radius: 3px; overflow: hidden; }
+.qtrack i { display: block; height: 100%; background: var(--on-dark); transform-origin: left; }
+.qtrack.low i { background: #FFB4A8; }
+
+.level { display: inline-flex; align-items: center; gap: 8px; font: 500 .78rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
+.bars { display: inline-flex; align-items: flex-end; gap: 3px; height: 16px; }
+.bars span { width: 6px; border: 1.5px solid currentColor; border-radius: 1px; }
+.bars span:nth-child(1) { height: 6px; }
+.bars span:nth-child(2) { height: 11px; }
+.bars span:nth-child(3) { height: 16px; }
+.bars span.on { background: currentColor; }
+
+.section-label { display: flex; align-items: baseline; gap: 10px; font: 500 .8rem/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--olive); }
+.section-label .he { font: 600 1.05rem/1 "IBM Plex Sans Hebrew", var(--font-body); letter-spacing: 0; text-transform: none; }
+.qhead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.qhead .level { color: var(--olive); }
+.q-prompt { font-size: clamp(1.25rem, 5vw, 1.55rem); font-weight: 600; line-height: 1.3; outline: none; }
+.q-seq { font: 600 clamp(1.3rem, 6vw, 1.8rem)/1.2 var(--font-mono); letter-spacing: .01em; overflow-wrap: anywhere; }
+
+.figure-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.frame { width: 64px; height: 64px; border: 1.5px solid var(--ink); border-radius: 4px; display: grid; place-items: center; background: #FFFBEF; flex: none; }
+.frame svg { width: 50px; height: 50px; display: block; }
+.frame.mystery { font: 400 2rem/1 var(--font-stamp); color: var(--stamp); border-style: dashed; border-color: var(--stamp); }
+.matrix { display: grid; grid-template-columns: repeat(3, 64px); gap: 6px; }
+
+.options { display: grid; gap: 10px; }
+.options.shapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.opt {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 58px; min-width: 0;
+  padding: 10px 14px; text-align: start; background: #FFFBEF;
+  border: 1.5px solid var(--ink); border-radius: 6px; font-size: 1.08rem; font-weight: 500;
+}
+.opt:hover { background: #F1E5C2; }
+.bubble {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--ink);
+  display: grid; place-items: center; font: 600 .82rem/1 var(--font-mono);
+}
+.opt.picked .bubble { background: var(--ink); color: var(--on-dark); }
+.opt svg { width: 52px; height: 52px; flex: none; }
+.opt .opt-text { min-width: 0; overflow-wrap: anywhere; }
+
+.score-wrap { display: grid; justify-items: center; gap: 4px; padding-block: 8px; text-align: center; }
+.score-label { font: 500 .8rem/1.2 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.score {
+  font: 400 clamp(6rem, 34vw, 9rem)/1 var(--font-stamp); color: var(--stamp);
+  border: 6px solid var(--stamp); border-radius: 12px; padding: 4px 22px 0;
+  transform: rotate(-5deg); margin-block: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .score { animation: thud .34s cubic-bezier(.2, 1.4, .4, 1) both; }
+  @keyframes thud { from { transform: rotate(-5deg) scale(1.9); opacity: 0; } to { transform: rotate(-5deg) scale(1); opacity: 1; } }
+}
+.verdict { font-size: 1.15rem; font-weight: 600; max-width: 26em; text-wrap: balance; }
+.path { display: grid; gap: 8px; }
+.path h3 { font: 500 .8rem/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.path-box { overflow-x: auto; }
+.path-box svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.legend svg { flex: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .85rem; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.fineprint { border-top: 1px solid var(--rule); padding-top: 14px; }
+
+.gate { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.field { display: grid; gap: 5px; min-width: 0; flex: 1 1 180px; }
+.field label { font: 500 .78rem/1.2 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
+.field input, .field select { min-height: 48px; width: 100%; padding: 8px 12px; border: 1.5px solid var(--ink); border-radius: 6px; background: #FFFBEF; }
+.err { color: var(--stamp); font-weight: 600; }
+
+.steps { display: flex; flex-wrap: wrap; gap: 4px; }
+.step {
+  border: 0; background: var(--manila-deep); color: var(--ink); padding: 9px 14px 11px;
+  border-radius: 8px 8px 0 0; font-weight: 600; font-size: .95rem;
+}
+.step[aria-current="step"] { background: var(--olive); color: var(--on-dark); }
+.wide .sheet { border-radius: 0 8px 8px 8px; min-height: 480px; align-content: start; }
+.join { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: start; }
+@media (max-width: 760px) { .join { grid-template-columns: minmax(0, 1fr); } }
+.join h2, .wide h2 { font: 400 clamp(1.9rem, 5vw, 3.2rem)/1.02 var(--font-stamp); color: var(--olive); }
+.join ol { margin: 0; padding-inline-start: 1.3em; font-size: clamp(1.05rem, 2vw, 1.4rem); display: grid; gap: 8px; }
+.qr { width: 284px; max-width: 100%; aspect-ratio: 1; background: #fff; border: 2px solid var(--ink); border-radius: 6px; display: grid; place-items: center; padding: 10px; text-align: center; font-size: .9rem; color: #54593F; }
+.qr img, .qr canvas { max-width: 100%; height: auto; }
+.bigclock { font: 600 clamp(5rem, 22vw, 15rem)/1 var(--font-mono); text-align: center; font-variant-numeric: tabular-nums; }
+.bigclock.low { color: var(--stamp); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.versus { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 520px) { .versus { grid-template-columns: minmax(0, 1fr); } }
+.versus > div { display: grid; gap: 10px; justify-items: center; border: 1.5px solid var(--ink); border-radius: 6px; padding: 16px; min-width: 0; }
+.versus input { width: 100%; text-align: center; font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 600; background: transparent; border: 0; border-bottom: 1.5px solid var(--rule); padding: 4px; min-width: 0; }
+.versus select { font: 400 clamp(3.6rem, 11vw, 8rem)/1 var(--font-stamp); color: var(--stamp); border: 5px solid var(--stamp); border-radius: 10px; background: transparent; padding: 4px 8px; max-width: 100%; text-align: center; }
+.review-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; }
+.lvl-tabs { display: inline-flex; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
+.lvl-tabs button { border: 0; background: transparent; padding: 8px 16px; font-weight: 600; min-height: 44px; }
+.lvl-tabs button + button { border-inline-start: 2px solid var(--ink); }
+.lvl-tabs button[aria-pressed="true"] { background: var(--ink); color: var(--on-dark); }
+.review-num { font: 600 1rem/1 var(--font-mono); }
+.wide .q-prompt { font-size: clamp(1.4rem, 3.2vw, 2.4rem); }
+.wide .q-seq { font-size: clamp(1.6rem, 4vw, 3rem); }
+.review-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 620px) { .review-opts { grid-template-columns: minmax(0, 1fr); } }
+.review-opts .opt { cursor: default; font-size: clamp(1.05rem, 2vw, 1.4rem); }
+.review-opts .opt:hover { background: #FFFBEF; }
+.review-opts .opt.correct, .review-opts .opt.correct:hover { background: var(--olive); border-color: var(--olive); color: var(--on-dark); }
+.review-opts .opt.correct .bubble { border-color: var(--on-dark); background: var(--on-dark); color: var(--olive); }
+.review-opts .opt.dim { opacity: .5; }
+.why { font-size: clamp(1.05rem, 2vw, 1.35rem); font-weight: 500; border-inline-start: 4px solid var(--stamp); padding-inline-start: 12px; }
+</style>
+</head>
+<body>
+
+<main id="app"></main>
+
+<script>
+(function () {
+  "use strict";
+
+  var TOTAL = 15;
+  var PER_Q = 30;
+  var GUIDE_SECONDS = TOTAL * PER_Q;
+  var LEADER_CODE = "9090";
+  var LETTERS = ["A", "B", "C", "D"];
+  var LEVELS = ["easy", "medium", "hard"];
+  var LEVEL_NAMES = { easy: "Easy", medium: "Medium", hard: "Hard" };
+  var POINTS = { easy: 1, medium: 2, hard: 3 };
+  var ORDER = ["numbers", "words", "shapes"];
+  var SECTIONS = {
+    numbers: { en: "Numbers", he: "מספרים" },
+    words: { en: "Words", he: "מילים" },
+    shapes: { en: "Shapes", he: "צורות" }
+  };
+
+  /* ---------- Drawings. Everything uses currentColor so it follows the button state. ---------- */
+  function svg(inner, label) {
+    return '<svg viewBox="0 0 60 60" role="img" aria-label="' + label + '" fill="none" stroke="currentColor" stroke-width="3">' + inner + "</svg>";
+  }
+  function arrow(deg, solid) {
+    deg = ((deg % 360) + 360) % 360;
+    var name = { 0: "up", 90: "right", 180: "down", 270: "left" }[deg];
+    return svg('<path transform="rotate(' + deg + ' 30 30)" d="M30 7 L51 30 H39 V53 H21 V30 H9 Z" fill="' + (solid ? "currentColor" : "none") + '"/>',
+      (solid ? "Solid" : "Outline") + " arrow pointing " + name);
+  }
+  var SPOTS = {
+    1: [[30, 30]],
+    2: [[18, 30], [42, 30]],
+    3: [[30, 17], [17, 42], [43, 42]],
+    4: [[17, 17], [43, 17], [17, 43], [43, 43]],
+    5: [[15, 15], [45, 15], [30, 30], [15, 45], [45, 45]]
+  };
+  function circles(count, solid) {
+    var inner = SPOTS[count].map(function (p) {
+      return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="9" fill="' + (solid ? "currentColor" : "none") + '"/>';
+    }).join("");
+    return svg(inner, count + (solid ? " solid" : " outline") + (count === 1 ? " circle" : " circles"));
+  }
+  function dots(count) {
+    var inner = "";
+    for (var i = 0; i < count; i++) {
+      var col = i % 4, row = Math.floor(i / 4);
+      inner += '<circle cx="' + (12 + col * 12) + '" cy="' + (16 + row * 14) + '" r="4.5" fill="currentColor" stroke="none"/>';
+    }
+    return svg(inner, count + " dots");
+  }
+  var QUADS = { TL: [6, 6], TR: [30, 6], BR: [30, 30], BL: [6, 30] };
+  var QUAD_NAMES = { TL: "top left", TR: "top right", BR: "bottom right", BL: "bottom left" };
+  function quad(dark, dot) {
+    var d = QUADS[dark];
+    var inner = '<rect x="' + d[0] + '" y="' + d[1] + '" width="24" height="24" fill="currentColor" stroke="none"/>' +
+      '<rect x="6" y="6" width="48" height="48"/><path d="M30 6 V54 M6 30 H54"/>';
+    var label = "Grid with dark square " + QUAD_NAMES[dark];
+    if (dot) {
+      var p = QUADS[dot];
+      inner += '<circle cx="' + (p[0] + 12) + '" cy="' + (p[1] + 12) + '" r="6" fill="currentColor" stroke="none"/>';
+      label += " and dot " + QUAD_NAMES[dot];
+    }
+    return svg(inner, label);
+  }
+  function piece(kind, finish) {
+    var fill = finish === "solid" ? "currentColor" : "none";
+    var body = {
+      circle: '<circle cx="30" cy="30" r="20" fill="' + fill + '"/>',
+      square: '<rect x="11" y="11" width="38" height="38" fill="' + fill + '"/>',
+      triangle: '<path d="M30 8 L52 50 H8 Z" fill="' + fill + '"/>'
+    }[kind];
+    var dot = finish === "dot" ? '<circle cx="30" cy="' + (kind === "triangle" ? 35 : 30) + '" r="5" fill="currentColor" stroke="none"/>' : "";
+    var word = finish === "solid" ? "Solid " : finish === "dot" ? "Dotted " : "Empty ";
+    return svg(body + dot, word + kind);
+  }
+  function frames(list) {
+    return '<div class="figure-row">' + list.map(function (f) { return '<div class="frame">' + f + "</div>"; }).join("") +
+      '<div class="frame mystery" aria-label="Missing picture">?</div></div>';
+  }
+  function matrix(cells) {
+    return '<div class="matrix">' + cells.map(function (c) { return '<div class="frame">' + c + "</div>"; }).join("") +
+      '<div class="frame mystery" aria-label="Missing picture">?</div></div>';
+  }
+  function P(k, f) { return piece(k, f); }
+
+  /* ---------- 45 original questions: 5 per section per level. ---------- */
+  function T(prompt, options, answer, why, seq) { return { prompt: prompt, seq: seq, options: options, answer: answer, why: why }; }
+  function D(prompt, figure, options, answer, why) { return { prompt: prompt, figure: figure, options: options, answer: answer, why: why, drawn: true }; }
+  var NEXT = "Which picture comes next?";
+  var BANK = {
+    numbers: {
+      easy: [
+        T("What comes next?", ["25", "30", "24", "22"], 0, "Each number goes up by 5.", "5, 10, 15, 20, ?"),
+        T("What comes next?", ["24", "32", "20", "30"], 1, "Each number doubles.", "2, 4, 8, 16, ?"),
+        T("What comes next?", ["9", "7", "8", "10"], 2, "Each number goes down by 3.", "20, 17, 14, 11, ?"),
+        T("A notebook costs $3. How much do 6 notebooks cost?", ["$9", "$15", "$18", "$21"], 2, "6 × $3 = $18."),
+        T("What comes next?", ["20", "25", "24", "36"], 1, "These are 1×1, 2×2, 3×3, and 4×4, so next is 5×5.", "1, 4, 9, 16, ?")
+      ],
+      medium: [
+        T("What comes next?", ["26", "28", "30", "32"], 2, "The gaps grow by 2 each time: +4, +6, +8, +10.", "2, 6, 12, 20, ?"),
+        T("What comes next?", ["36", "17", "19", "16"], 1, "The pattern repeats: double it, then subtract 1.", "3, 6, 5, 10, 9, 18, ?"),
+        T("Three pens cost $4.50. How much do seven pens cost?", ["$10.50", "$9.00", "$12.00", "$13.50"], 0, "One pen costs $1.50, and 7 × $1.50 = $10.50."),
+        T("A movie starts at 7:40 and lasts 1 hour 35 minutes. When does it end?", ["9:05", "9:15", "9:25", "8:55"], 1, "7:40 plus 1 hour is 8:40, and 35 more minutes is 9:15."),
+        T("What comes next?", ["11", "12", "13", "16"], 2, "Each number is the sum of the two before it: 5 + 8 = 13.", "1, 1, 2, 3, 5, 8, ?")
+      ],
+      hard: [
+        T("One bus leaves every 12 minutes and another every 18 minutes. Both just left. When do they next leave together?", ["30 minutes", "54 minutes", "72 minutes", "36 minutes"], 3, "36 is the smallest number that both 12 and 18 divide into."),
+        T("What comes next?", ["25", "31", "33", "34"], 2, "The gaps double each time: +1, +2, +4, +8, +16.", "2, 3, 5, 9, 17, ?"),
+        T("A shirt costs $40. The price goes up 25%, then down 20%. What does it cost now?", ["$38", "$40", "$42", "$45"], 1, "Up 25% makes it $50. Down 20% of $50 brings it back to $40."),
+        T("4 workers paint a fence in 6 hours. How long would 3 workers take?", ["4.5 hours", "7 hours", "8 hours", "9 hours"], 2, "The job takes 24 worker-hours, and 24 ÷ 3 = 8."),
+        T("What comes next?", ["59", "78", "79", "80"], 2, "Each number is doubled, then 1 is added: 39 × 2 + 1 = 79.", "4, 9, 19, 39, ?")
+      ]
+    },
+    words: {
+      easy: [
+        T("Hot is to cold as up is to ___.", ["over", "down", "high", "sky"], 1, "Hot and cold are opposites, and so are up and down."),
+        T("Which word does not belong?", ["Monday", "Friday", "April", "Sunday"], 2, "April is a month. The others are days of the week."),
+        T("Bird is to nest as bee is to ___.", ["honey", "hive", "flower", "sting"], 1, "A bird lives in a nest, and a bee lives in a hive."),
+        T("Which word means the same as \"huge\"?", ["tiny", "enormous", "quick", "heavy"], 1, "Huge and enormous both mean very big."),
+        T("Glove is to hand as sock is to ___.", ["shoe", "foot", "leg", "wool"], 1, "A glove covers a hand, and a sock covers a foot.")
+      ],
+      medium: [
+        T("Author is to book as composer is to ___.", ["orchestra", "piano", "symphony", "concert"], 2, "An author writes a book, and a composer writes a symphony."),
+        T("Which word does not belong?", ["Carrot", "Potato", "Onion", "Apple"], 3, "Apple is a fruit. The others are vegetables."),
+        T("Which word is the opposite of \"scarce\"?", ["rare", "plentiful", "small", "expensive"], 1, "Scarce means there's very little. Plentiful means there's a lot."),
+        T("Thermometer is to temperature as scale is to ___.", ["kitchen", "heavy", "weight", "number"], 2, "A thermometer measures temperature, and a scale measures weight."),
+        T("Tom is taller than Dan. Dan is taller than Ron. Who is the shortest?", ["Tom", "Dan", "Ron", "Can't tell"], 2, "Tom is taller than Dan, and Dan is taller than Ron, so Ron is the shortest.")
+      ],
+      hard: [
+        T("All bloops are razzies. Some razzies are lazzies. Which statement must be true?", ["None of these must be true", "All bloops are lazzies", "Some bloops are lazzies", "All razzies are bloops"], 0, "The lazzies could all be razzies that aren't bloops, so nothing is certain about bloops and lazzies."),
+        T("Some students are athletes. All athletes wake up early. Which statement must be true?", ["All students wake up early", "Some students wake up early", "All early risers are athletes", "No students wake up early"], 1, "The students who are athletes wake up early, so at least some students do."),
+        T("Ignore is to notice as forget is to ___.", ["lose", "remember", "mind", "neglect"], 1, "Ignore is the opposite of notice, and forget is the opposite of remember."),
+        T("If yesterday was Thursday, what day is two days after tomorrow?", ["Sunday", "Monday", "Tuesday", "Saturday"], 1, "Today is Friday, so tomorrow is Saturday. Two days after that is Monday."),
+        T("In a race, you pass the runner in 2nd place. What place are you in now?", ["1st", "2nd", "3rd", "Can't tell"], 1, "You take the place of the runner you passed, so you're 2nd.")
+      ]
+    },
+    shapes: {
+      easy: [
+        D(NEXT, frames([circles(1, true), circles(2, true), circles(3, true)]),
+          [circles(4, true), circles(3, true), circles(5, true), circles(4, false)], 0, "Each step adds one solid circle."),
+        D(NEXT, frames([arrow(0, true), arrow(90, true), arrow(180, true)]),
+          [arrow(0, true), arrow(270, true), arrow(90, true), arrow(180, true)], 1, "The arrow turns 90° clockwise each step."),
+        D(NEXT, frames([P("circle", "solid"), P("square", "solid"), P("circle", "solid")]),
+          [P("circle", "solid"), P("triangle", "solid"), P("square", "solid"), P("square", "empty")], 2, "The shapes switch between circle and square."),
+        D(NEXT, frames([P("triangle", "empty"), P("triangle", "solid"), P("triangle", "empty")]),
+          [P("triangle", "empty"), P("triangle", "dot"), P("circle", "solid"), P("triangle", "solid")], 3, "The triangle switches between empty and solid."),
+        D(NEXT, frames([quad("TL"), quad("TR"), quad("BR")]),
+          [quad("TL"), quad("BL"), quad("BR"), quad("TR")], 1, "The dark square moves one box clockwise each step.")
+      ],
+      medium: [
+        D(NEXT, frames([arrow(0, true), arrow(90, false), arrow(180, true)]),
+          [arrow(270, true), arrow(0, false), arrow(270, false), arrow(90, false)], 2, "The arrow turns 90° clockwise each step and switches between solid and outline."),
+        D(NEXT, frames([circles(1, true), circles(2, false), circles(3, true)]),
+          [circles(4, true), circles(4, false), circles(3, false), circles(5, true)], 1, "Each step adds one circle and switches between solid and outline."),
+        D(NEXT, frames([circles(5, false), circles(4, true), circles(3, false)]),
+          [circles(2, false), circles(3, true), circles(1, true), circles(2, true)], 3, "Each step removes one circle and switches between outline and solid."),
+        D(NEXT, frames([P("circle", "empty"), P("square", "solid"), P("triangle", "dot"), P("circle", "empty"), P("square", "solid")]),
+          [P("triangle", "solid"), P("triangle", "dot"), P("circle", "dot"), P("triangle", "empty")], 1, "The same three pictures repeat in order: empty circle, solid square, dotted triangle."),
+        D(NEXT, frames([quad("TL", "BR"), quad("TR", "BL"), quad("BR", "TL")]),
+          [quad("BL", "TR"), quad("BL", "BR"), quad("TL", "BR"), quad("TR", "BL")], 0, "The dark square moves clockwise, and the dot always sits in the opposite corner.")
+      ],
+      hard: [
+        D(NEXT, frames([quad("TL", "TR"), quad("TR", "TL"), quad("BR", "BL")]),
+          [quad("BL", "TR"), quad("TL", "BR"), quad("BR", "BL"), quad("BL", "BR")], 3, "The dark square moves clockwise while the dot moves counterclockwise."),
+        D("Which picture fills the empty box?", matrix([P("circle", "empty"), P("square", "solid"), P("triangle", "dot"), P("square", "dot"), P("triangle", "empty"), P("circle", "solid"), P("triangle", "solid"), P("circle", "dot")]),
+          [P("square", "solid"), P("circle", "dot"), P("square", "empty"), P("triangle", "empty")], 2, "Every row and column has one circle, one square, and one triangle. Each also has one empty, one solid, and one dotted shape."),
+        D(NEXT, frames([arrow(0, true), arrow(90, true), arrow(270, true)]),
+          [arrow(0, true), arrow(90, true), arrow(270, true), arrow(180, true)], 3, "The turns get bigger: 90°, then 180°, then 270°. Turning 270° clockwise from left points down."),
+        D("How many dots come next?", frames([dots(1), dots(3), dots(6)]),
+          [dots(9), dots(10), dots(12), dots(8)], 1, "Add 2, then 3, then 4. So 6 + 4 = 10."),
+        D("Which picture fills the empty box?", matrix([circles(1, true), circles(2, true), circles(3, true), circles(2, false), circles(3, false), circles(4, false), circles(3, true), circles(4, true)]),
+          [circles(5, false), circles(4, true), circles(5, true), circles(3, true)], 2, "Each row adds one circle, and the rows switch between solid and outline. Row 3 is solid, so the last box has 5 solid circles.")
+      ]
+    }
+  };
+
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function fmt(s) {
+    s = Math.max(0, Math.ceil(s));
+    return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  }
+  function store(key, val) {
+    try {
+      if (val === undefined) return localStorage.getItem(key);
+      localStorage.setItem(key, val);
+    } catch (e) { return null; }
+  }
+  function bars(level) {
+    var n = LEVELS.indexOf(level) + 1;
+    return '<span class="bars" aria-hidden="true">' + [1, 2, 3].map(function (i) { return '<span class="' + (i <= n ? "on" : "") + '"></span>'; }).join("") + "</span>";
+  }
+
+  /* ---------- Adaptive engine ---------- */
+  /* Start on medium. A right answer moves up a level, a wrong answer or a timeout moves down. */
+  function newTest() {
+    var decks = {};
+    ORDER.forEach(function (s) {
+      decks[s] = {};
+      LEVELS.forEach(function (l) { decks[s][l] = shuffle(BANK[s][l]); });
+    });
+    return { n: 0, level: 1, decks: decks, log: [], current: null };
+  }
+  function drawQuestion(t) {
+    var section = ORDER[t.n % ORDER.length];
+    var level = LEVELS[t.level];
+    var q = t.decks[section][level].shift();
+    var order = shuffle([0, 1, 2, 3]);
+    t.current = { q: q, section: section, level: level, order: order, endAt: Date.now() + PER_Q * 1000 };
+  }
+  function answer(t, shownIndex) {
+    var c = t.current;
+    var right = shownIndex !== null && c.order[shownIndex] === c.q.answer;
+    t.log.push({ level: c.level, right: right, timeout: shownIndex === null });
+    t.level = right ? Math.min(2, t.level + 1) : Math.max(0, t.level - 1);
+    t.n += 1;
+    t.current = null;
+  }
+  /* The best possible run is medium first, then hard every time: 2 + 14 × 3 = 44 points. */
+  var MAX_POINTS = POINTS.medium + (TOTAL - 1) * POINTS.hard;
+  function scoreFor(log) {
+    var pts = log.reduce(function (s, e) { return s + (e.right ? POINTS[e.level] : 0); }, 0);
+    return { points: pts, score: Math.min(90, 10 + Math.round(pts * 8 / MAX_POINTS) * 10) };
+  }
+  function verdictFor(score) {
+    if (score >= 90) return "Top of the scale. Your friends will hear about this for years.";
+    if (score >= 70) return "Strong score. You may act a little smug until the bell.";
+    if (score >= 50) return "Right in the middle, and you did it on a phone with people watching.";
+    if (score >= 30) return "Thirty seconds goes fast, right? Now you know why Israeli teens stress about this.";
+    return "The clock won this round. Nobody will ever know unless you tell them.";
+  }
+
+  var app = document.getElementById("app");
+  var ticker = null;
+  var test = null;
+  var result = null;
+  var gateError = false;
+  var leaderUnlockedThisLoad = false;
+  var leader = { step: "join", link: "https://edenbaredenbar-wq.github.io/dapar/", endAt: null, left: GUIDE_SECONDS, level: "hard", idx: 0, reveal: false,
+    a: { name: "Eden", score: "?" }, b: { name: "Almog", score: "?" } };
+
+  function stopTicker() { if (ticker) { clearInterval(ticker); ticker = null; } }
+  function isLeader() { return location.hash === "#leader"; }
+  function unlocked() { return leaderUnlockedThisLoad || store("dapar-leader") === "yes"; }
+
+  function render() {
+    stopTicker();
+    if (isLeader()) {
+      app.className = "wide";
+      return unlocked() ? renderLeader() : renderGate();
+    }
+    app.className = "";
+    if (test) return renderQuestion();
+    if (result) return renderResult();
+    renderStart();
+  }
+
+  /* ---------- Student: start ---------- */
+  function renderStart() {
+    app.innerHTML =
+      '<div class="tab"><span class="he">דפ״ר</span> Mock test · Class game</div>' +
+      '<section class="sheet">' +
+        '<h1 class="stencil-title">Beat the Dapar</h1>' +
+        '<p class="lede">Israeli teens take an aptitude test called the Dapar before the army. This is a mini version with questions we made up. See how you do.</p>' +
+        '<div class="spec"><div><b>' + TOTAL + '</b><span>Questions</span></div><div><b>0:' + PER_Q + '</b><span>Per question</span></div><div><b>3</b><span>Levels</span></div></div>' +
+        '<ul class="rules">' +
+          "<li>You start on medium.</li>" +
+          "<li>Get one right and the next one is harder. Get one wrong and it gets easier.</li>" +
+          "<li>Hard questions are worth more points.</li>" +
+          "<li>If time runs out, it counts as wrong. You can't go back.</li>" +
+        "</ul>" +
+        '<p>Your score stays on your phone, and nobody else sees it.</p>' +
+        '<button class="btn primary full" id="start" type="button">Start the test</button>' +
+        '<p class="small muted">Wait until Eden and Almog say go.</p>' +
+        '<div class="foot"><span></span><button class="link" id="leaderLink" type="button">Leader screen</button></div>' +
+      "</section>";
+    document.getElementById("start").onclick = function () {
+      test = newTest();
+      drawQuestion(test);
+      result = null;
+      render();
+    };
+    document.getElementById("leaderLink").onclick = function () { location.hash = "leader"; render(); };
+  }
+
+  /* ---------- Student: question ---------- */
+  function renderQuestion() {
+    var c = test.current, q = c.q, sec = SECTIONS[c.section];
+    var opts = c.order.map(function (orig, i) {
+      var body = q.drawn ? q.options[orig] : '<span class="opt-text"></span>';
+      return '<button class="opt" type="button" data-i="' + i + '"><span class="bubble">' + LETTERS[i] + "</span>" + body + "</button>";
+    }).join("");
+    app.innerHTML =
+      '<div class="topbar"><span class="count">Question ' + (test.n + 1) + " of " + TOTAL + '</span>' +
+      '<span class="clock" id="clock" role="timer" aria-label="Seconds left"></span>' +
+      '<div class="qtrack" id="qtrack" aria-hidden="true"><i id="qbar"></i></div></div>' +
+      '<section class="sheet">' +
+        '<div class="qhead"><div class="section-label"><span>' + sec.en + '</span><span class="he" lang="he" dir="rtl">' + sec.he + "</span></div>" +
+        '<span class="level">' + bars(c.level) + LEVEL_NAMES[c.level] + "</span></div>" +
+        '<h2 class="q-prompt" id="prompt" tabindex="-1"></h2>' +
+        (q.seq ? '<p class="q-seq"></p>' : "") +
+        (q.figure || "") +
+        '<div class="options' + (q.drawn ? " shapes" : "") + '">' + opts + "</div>" +
+      "</section>";
+    document.getElementById("prompt").textContent = q.prompt;
+    if (q.seq) app.querySelector(".q-seq").textContent = q.seq;
+    app.querySelectorAll(".opt").forEach(function (b) {
+      var i = Number(b.dataset.i);
+      if (!q.drawn) b.querySelector(".opt-text").textContent = q.options[c.order[i]];
+      b.onclick = function () { pick(i, b); };
+    });
+    document.getElementById("prompt").focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+    tickTest();
+    ticker = setInterval(tickTest, 200);
+  }
+  var picking = false;
+  function advance(shownIndex) {
+    answer(test, shownIndex);
+    if (test.n >= TOTAL) return finish();
+    drawQuestion(test);
+    render();
+  }
+  function pick(i, btn) {
+    if (picking || !test || !test.current) return;
+    picking = true;
+    stopTicker();
+    btn.classList.add("picked");
+    setTimeout(function () { picking = false; if (test) advance(i); }, 170);
+  }
+  function tickTest() {
+    if (!test || !test.current) return;
+    var left = (test.current.endAt - Date.now()) / 1000;
+    var clock = document.getElementById("clock"), bar = document.getElementById("qbar"), track = document.getElementById("qtrack");
+    if (clock) { clock.textContent = "0:" + String(Math.max(0, Math.ceil(left))).padStart(2, "0"); clock.classList.toggle("low", left <= 10); }
+    if (bar) bar.style.transform = "scaleX(" + Math.max(0, left / PER_Q) + ")";
+    if (track) track.classList.toggle("low", left <= 10);
+    if (left <= 0 && !picking) { stopTicker(); advance(null); }
+  }
+  function finish() {
+    var s = scoreFor(test.log);
+    result = { log: test.log, points: s.points, score: s.score, correct: test.log.filter(function (e) { return e.right; }).length };
+    test = null;
+    render();
+  }
+
+  /* ---------- Student: result, with the path through the levels ---------- */
+  function pathChart(log) {
+    var W = 340, H = 132, L = 58, R = 12, T = 14, B = 26;
+    var y = { hard: T, medium: T + (H - T - B) / 2, easy: H - B };
+    var step = (W - L - R) / (TOTAL - 1);
+    var grid = LEVELS.map(function (l) {
+      return '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y[l] + '" y2="' + y[l] + '" stroke="#CDB98A" stroke-width="1"/>' +
+        '<text x="' + (L - 8) + '" y="' + (y[l] + 4) + '" text-anchor="end" font-size="11" fill="#1F2A18" font-family="IBM Plex Mono, monospace">' + LEVEL_NAMES[l] + "</text>";
+    }).join("");
+    var pts = log.map(function (e, i) { return [L + i * step, y[e.level]]; });
+    var line = '<polyline points="' + pts.map(function (p) { return p.join(","); }).join(" ") + '" fill="none" stroke="#48562A" stroke-width="2.5" stroke-linejoin="round"/>';
+    var marks = log.map(function (e, i) {
+      var p = pts[i];
+      if (e.right) return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="5.5" fill="#48562A"/>';
+      return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="5.5" fill="#FBF4DF" stroke="#A3211B" stroke-width="2.5"/>';
+    }).join("");
+    var ticks = [1, 5, 10, 15].map(function (n) {
+      return '<text x="' + (L + (n - 1) * step) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="10" fill="#54593F" font-family="IBM Plex Mono, monospace">' + n + "</text>";
+    }).join("");
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Your level on each of the ' + TOTAL + ' questions">' + grid + line + marks + ticks + "</svg>";
+  }
+  function renderResult() {
+    var hardRight = result.log.filter(function (e) { return e.right && e.level === "hard"; }).length;
+    app.innerHTML =
+      '<div class="tab"><span class="he">דפ״ר</span> Your mock score</div>' +
+      '<section class="sheet">' +
+        '<div class="score-wrap"><p class="score" id="score">' + result.score + '</p>' +
+        '<p class="score-label">out of 90</p>' +
+        '<p class="verdict">' + verdictFor(result.score) + "</p>" +
+        '<p>You got <b>' + result.correct + " of " + TOTAL + "</b> right" +
+          (hardRight ? ", including <b>" + hardRight + "</b> hard " + (hardRight === 1 ? "one" : "ones") : "") + ".</p></div>" +
+        '<div class="path"><h3>Your path through the levels</h3><div class="path-box">' + pathChart(result.log) + "</div>" +
+        '<div class="legend"><span><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="#48562A"/></svg>Right</span>' +
+        '<span><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="4.5" fill="#FBF4DF" stroke="#A3211B" stroke-width="2.5"/></svg>Wrong or out of time</span></div></div>' +
+        '<p>Compare your path with the people around you, then look up at the screen.</p>' +
+        '<p class="fineprint small muted">This is a class game with made-up questions. It is not a real Dapar, and it doesn\'t measure how smart you are.</p>' +
+        '<div class="foot"><button class="link" id="again" type="button">Play again</button></div>' +
+      "</section>";
+    document.getElementById("again").onclick = function () { result = null; render(); };
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Leader: code gate, so students don't wander into the answers ---------- */
+  function renderGate() {
+    app.innerHTML =
+      '<div class="tab">Leader screen</div>' +
+      '<section class="sheet">' +
+        "<h2>Leaders only</h2>" +
+        "<p>This screen has the answers. Enter the leader code to open it.</p>" +
+        '<form class="gate" id="gateForm"><div class="field"><label for="code">Leader code</label>' +
+        '<input id="code" inputmode="numeric" autocomplete="off"></div>' +
+        '<button class="btn primary" type="submit">Open</button>' +
+        '<button class="btn" id="gateBack" type="button">Back to the test</button></form>' +
+        (gateError ? '<p class="err">That code isn\'t right. Check it and try again.</p>' : "") +
+      "</section>";
+    document.getElementById("gateForm").onsubmit = function (e) {
+      e.preventDefault();
+      if (document.getElementById("code").value.trim() === LEADER_CODE) {
+        gateError = false;
+        leaderUnlockedThisLoad = true;
+        store("dapar-leader", "yes");
+      } else {
+        gateError = true;
+      }
+      render();
+    };
+    document.getElementById("gateBack").onclick = leaveLeader;
+  }
+  function leaveLeader() {
+    gateError = false;
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { location.hash = ""; }
+    render();
+  }
+
+  /* ---------- Leader ---------- */
+  var STEPS = [["join", "1. Join"], ["timer", "2. Clock"], ["versus", "3. Did you beat us?"], ["answers", "4. Answers"]];
+  function renderLeader() {
+    var tabs = STEPS.map(function (s) {
+      return '<button class="step" type="button" data-step="' + s[0] + '"' + (leader.step === s[0] ? ' aria-current="step"' : "") + ">" + s[1] + "</button>";
+    }).join("");
+    app.innerHTML = '<nav class="steps" aria-label="Leader steps">' + tabs + '</nav><section class="sheet" id="pane"></section>' +
+      '<div class="foot" style="margin-top:10px"><span></span><button class="link" id="toTest" type="button">Back to the student test</button></div>';
+    app.querySelectorAll(".step").forEach(function (b) {
+      b.onclick = function () { leader.step = b.dataset.step; render(); };
+    });
+    document.getElementById("toTest").onclick = leaveLeader;
+    ({ join: paneJoin, timer: paneTimer, versus: paneVersus, answers: paneAnswers })[leader.step](document.getElementById("pane"));
+  }
+
+  function paneJoin(pane) {
+    pane.innerHTML =
+      '<div class="join"><div style="display:grid;gap:18px;min-width:0"><h2>Open this on your phone</h2>' +
+      "<ol><li>Scan the code.</li><li>Wait on the start screen.</li><li>When we say go, tap Start.</li></ol>" +
+      '<div class="field"><label for="shareLink">Paste the game\'s share link to make the code</label>' +
+      '<input id="shareLink" type="url" placeholder="https://claude.ai/..." autocomplete="off"></div>' +
+      '<p class="small muted">No phones or no signal? Open step 4 and run the questions on this screen, with students voting by raising their hands.</p></div>' +
+      '<div class="qr" id="qr">The code appears here once you paste the link.</div></div>';
+    var input = document.getElementById("shareLink");
+    input.value = leader.link;
+    input.oninput = function () { leader.link = input.value.trim(); store("dapar-link", leader.link); drawQr(); };
+    drawQr();
+  }
+  function drawQr() {
+    var box = document.getElementById("qr");
+    if (!box) return;
+    if (!/^https:\/\/\S+$/.test(leader.link)) {
+      box.textContent = leader.link ? "That doesn't look like a full link. It should start with https://" : "The code appears here once you paste the link.";
+      return;
+    }
+    if (!window.QRCode) {
+      box.textContent = "The code couldn't load on this network. Send students the link another way, like the class chat.";
+      return;
+    }
+    box.textContent = "";
+    try {
+      new window.QRCode(box, { text: leader.link, width: 260, height: 260, colorDark: "#000000", colorLight: "#ffffff", correctLevel: window.QRCode.CorrectLevel.M });
+    } catch (e) {
+      box.textContent = "That link is too long for a code. Send students the link another way, like the class chat.";
+    }
+  }
+
+  function leaderLeft() {
+    return leader.endAt ? Math.max(0, (leader.endAt - Date.now()) / 1000) : leader.left;
+  }
+  function paneTimer(pane) {
+    pane.innerHTML =
+      '<h2 style="text-align:center">Everyone should be done by zero</h2>' +
+      '<div class="bigclock" id="bigclock" role="timer"></div>' +
+      '<div class="row"><button class="btn primary" id="tGo" type="button"></button><button class="btn" id="tReset" type="button">Reset to ' + fmt(GUIDE_SECONDS) + "</button></div>" +
+      '<p class="small muted" style="text-align:center">Each phone gives 30 seconds per question, so ' + TOTAL + ' questions take ' + fmt(GUIDE_SECONDS) + ' at most. Start this clock when students tap Start.</p>';
+    var go = document.getElementById("tGo");
+    function paint() {
+      var left = leaderLeft();
+      var clock = document.getElementById("bigclock");
+      if (!clock) return;
+      clock.textContent = fmt(left);
+      clock.classList.toggle("low", left <= 30);
+      if (leader.endAt && left <= 0) { leader.endAt = null; leader.left = 0; }
+      go.textContent = leader.endAt ? "Pause" : left <= 0 ? "Time's up" : left < GUIDE_SECONDS ? "Resume" : "Start " + fmt(GUIDE_SECONDS);
+      go.disabled = !leader.endAt && left <= 0;
+    }
+    go.onclick = function () {
+      if (leader.endAt) { leader.left = leaderLeft(); leader.endAt = null; }
+      else { leader.endAt = Date.now() + leader.left * 1000; }
+      paint();
+    };
+    document.getElementById("tReset").onclick = function () { leader.endAt = null; leader.left = GUIDE_SECONDS; paint(); };
+    paint();
+    ticker = setInterval(paint, 250);
+  }
+
+  function paneVersus(pane) {
+    function col(key) {
+      var scores = ["?", "10", "20", "30", "40", "50", "60", "70", "80", "90"];
+      return '<div><input id="name-' + key + '" aria-label="Name" autocomplete="off">' +
+        '<select id="score-' + key + '" aria-label="Mock score">' + scores.map(function (s) { return "<option>" + s + "</option>"; }).join("") + "</select></div>";
+    }
+    pane.innerHTML = '<h2 style="text-align:center">Did you beat us?</h2><div class="versus">' + col("a") + col("b") + "</div>" +
+      '<p class="small muted" style="text-align:center">Take the test yourselves first, then pick your real mock scores here. Students can compare in private.</p>';
+    ["a", "b"].forEach(function (k) {
+      var n = document.getElementById("name-" + k), s = document.getElementById("score-" + k);
+      n.value = leader[k].name; s.value = leader[k].score;
+      n.oninput = function () { leader[k].name = n.value; };
+      s.onchange = function () { leader[k].score = s.value; };
+    });
+  }
+
+  /* Answers: browse the bank by level. Students saw different questions, so you pick a few to go over. */
+  function levelList(level) {
+    var list = [];
+    for (var i = 0; i < 5; i++) ORDER.forEach(function (s) { list.push({ section: s, q: BANK[s][level][i] }); });
+    return list;
+  }
+  function paneAnswers(pane) {
+    var list = levelList(leader.level), item = list[leader.idx], q = item.q, sec = SECTIONS[item.section];
+    var tabs = LEVELS.map(function (l) {
+      return '<button type="button" data-level="' + l + '" aria-pressed="' + (l === leader.level) + '">' + LEVEL_NAMES[l] + "</button>";
+    }).join("");
+    var opts = q.options.map(function (o, i) {
+      var cls = leader.reveal ? (i === q.answer ? " correct" : " dim") : "";
+      return '<div class="opt' + cls + '"><span class="bubble">' + LETTERS[i] + "</span>" + (q.drawn ? o : '<span class="opt-text" data-i="' + i + '"></span>') + "</div>";
+    }).join("");
+    pane.innerHTML =
+      '<div class="review-head"><div class="lvl-tabs" role="group" aria-label="Level">' + tabs + '</div>' +
+      '<span class="review-num">' + LEVEL_NAMES[leader.level] + " " + (leader.idx + 1) + " of " + list.length + "</span></div>" +
+      '<div class="section-label"><span>' + sec.en + '</span><span class="he" lang="he" dir="rtl">' + sec.he + "</span></div>" +
+      '<h2 class="q-prompt" id="rPrompt" style="font-family:var(--font-body);color:var(--ink);font-weight:600"></h2>' +
+      (q.seq ? '<p class="q-seq" id="rSeq"></p>' : "") + (q.figure || "") +
+      '<div class="review-opts">' + opts + "</div>" +
+      (leader.reveal ? '<p class="why" id="rWhy"></p>' : "") +
+      '<div class="row" style="justify-content:space-between">' +
+        '<button class="btn" id="rPrev" type="button"' + (leader.idx === 0 ? " disabled" : "") + ">Previous</button>" +
+        '<button class="btn primary" id="rShow" type="button">' + (leader.reveal ? "Hide answer" : "Reveal answer") + "</button>" +
+        '<button class="btn" id="rNext" type="button"' + (leader.idx === list.length - 1 ? " disabled" : "") + ">Next</button></div>";
+    document.getElementById("rPrompt").textContent = q.prompt;
+    if (q.seq) document.getElementById("rSeq").textContent = q.seq;
+    if (leader.reveal) document.getElementById("rWhy").textContent = q.why;
+    if (!q.drawn) pane.querySelectorAll(".opt-text").forEach(function (el) { el.textContent = q.options[Number(el.dataset.i)]; });
+    pane.querySelectorAll("[data-level]").forEach(function (b) {
+      b.onclick = function () { leader.level = b.dataset.level; leader.idx = 0; leader.reveal = false; render(); };
+    });
+    document.getElementById("rPrev").onclick = function () { leader.idx -= 1; leader.reveal = false; render(); };
+    document.getElementById("rNext").onclick = function () { leader.idx += 1; leader.reveal = false; render(); };
+    document.getElementById("rShow").onclick = function () { leader.reveal = !leader.reveal; render(); };
+  }
+
+  window.addEventListener("hashchange", render);
+  render();
+})();
+</script>
+
+</body>
+</html>
