@@ -1,6 +1,6 @@
 # IDF Unit Showdown
 
-A projector game for a 45-minute high school Hebrew class. It's built for students who know little about Israel or the IDF. Teams compete on trivia, history, army slang and mystery units, earn power-up cards, and finish with a no-points discussion of current events. Students don't need phones. The teacher runs everything from one laptop.
+A projector game for a 45-minute high school Hebrew class (the full plan is 47 minutes; see the teaching script). It's built for students who know little about Israel or the IDF. Teams compete on trivia, history, army slang and mystery units, earn power-up cards, and finish with a no-points discussion of current events. Students don't need phones. The teacher runs everything from one laptop.
 
 - The whole game is one file, `index.html`. It has no build step and no backend, and it saves nothing between sessions.
 - Live at `https://edenbaredenbar-wq.github.io/idf-showdown/`. You can also double-click `index.html` to open it offline; the stencil fonts load from Google Fonts, and without internet a standard font is used instead.
@@ -22,13 +22,13 @@ A projector game for a 45-minute high school Hebrew class. It's built for studen
 | 2 | **Timeline** | 6 min | Each team gets its own 4 history events (1948 to 2023) with hints. The captain says the order and you tap the cards (or press 1–4), then **Lock in**. | +50 per card in the right place, +100 bonus for all 4 |
 | 3 | **Army Slang** | 8 min | An IDF slang word in Hebrew (jobnik, fashla, hamshush, pazam…). Every team holds up 1–4 fingers on "SHOW!". After the reveal, click the teams that were right, plus any team that uses the word correctly in a sentence. | +100 right, +50 sentence |
 | 4 | **Who Am I?** | 7 min | Turn-based, like Trivia. Each team gets its own mystery: a lineup of 8 "suspects" (units and systems), each with a picture, name and one-line description, plus 4 clues from hard to easy. Students don't need to know any units beforehand; they read the board and use the clues to rule suspects out. After each clue the team on duty either guesses (click the suspect it names, or press 1–8) or asks for the next clue (Space). A wrong guess is crossed off the board, and the next team can steal for half the points. **R** passes to the steal; **W** is a wrong answer that isn't on the board. | 400 / 300 / 200 / 100, steal: half |
-| 5 | **Real or Fake?** | 5 min | A surprising IDF fact. Teams show thumbs up (real) or down (fake). Press **R**, then click the teams that were right. | +100 each |
+| 5 | **Real or Fake?** | 7 min | A surprising IDF fact. Teams show thumbs up (real) or down (fake). Press **R**, then click the teams that were right. | +100 each |
 | | **Think Tank** | 5 min | Four topics: October 7, the Haredi draft, women in combat, being drafted at 18. Each has a short factual background and a discussion question; two show "Some say / Others say". Press **T** for a 90-second team talk. | none |
 | | **Awards** | 2 min | Podium with ranks, confetti and an exit ticket. | |
 
 Every answer is followed by a **Field Note**, a short fact to read aloud. In Army Slang there's also an example sentence.
 
-Each game draws different questions: Trivia uses 2–5 questions per team, depending on the number of teams, out of 20; Army Slang uses 8 of 13 words; Who Am I? gives every team the same number of mysteries (1–3 each, depending on the number of teams) out of 10; Real or Fake? uses 8 of 24 facts; Timeline draws from 16 events.
+Each game draws different questions: Trivia uses 2–5 questions per team, depending on the number of teams, out of 20; Army Slang uses 8 of 13 words; Who Am I? gives every team the same number of mysteries (1–3 each, depending on the number of teams) out of 10; Real or Fake? uses 12 of 24 facts, always 6 real and 6 fake; Timeline draws from 16 events.
 
 ## Ranks
 
@@ -65,7 +65,7 @@ At the end of each scoring round, the team that scored the most points in that r
 
 Hover over a team's score to add or take away 50 points by hand. **Rounds** in the top bar jumps to any round (scores and cards are kept).
 
-## 45-minute teaching script
+## Teaching script (47 minutes)
 
 The clock in the top bar counts the class time and turns red when you're behind schedule for the current round.
 
@@ -76,11 +76,11 @@ The clock in the top bar counts the class time and turns red when you're behind 
 | **12:00–18:00** | Timeline. | Give each team about a minute. After each reveal, ask: "Which of these surprised you?" |
 | **18:00–26:00** | Army Slang. | Have the whole class read each Hebrew word aloud before answering. After the reveal, invite a sentence: "Who can use *fashla* in a sentence?" |
 | **26:00–33:00** | Who Am I? | On the first mystery, read the 8 suspects aloud together. Then build suspense: "It's worth 400 right now… who's brave?" |
-| **33:00–38:00** | Real or Fake? | Before the reveal, let one team explain its vote. |
-| **38:00–43:00** | Think Tank. | Pick 1–2 of the 4 topics (Space skips a topic). Read the background aloud, press **T**, then take 2–3 short answers. Set the tone: "There's no right answer here, and we listen to each other." |
-| **43:00–45:00** | Awards + exit ticket. | Teams with a Raid card get one last chance before you open the awards. Exit ticket: "Teach someone one army slang word tonight." |
+| **33:00–40:00** | Real or Fake? (12 facts) | Before the reveal, let one team explain its vote. |
+| **40:00–45:00** | Think Tank. | Pick 1–2 of the 4 topics (Space skips a topic). Read the background aloud, press **T**, then take 2–3 short answers. Set the tone: "There's no right answer here, and we listen to each other." |
+| **45:00–47:00** | Awards + exit ticket. | Teams with a Raid card get one last chance before you open the awards. Exit ticket: "Teach someone one army slang word tonight." |
 
-**Running late?** Open **Rounds** and jump ahead, or untick a round on the setup screen next time. Real or Fake? and Think Tank are the easiest to shorten.
+**Running late?** Open **Rounds** and jump ahead, or untick a round on the setup screen next time. To fit exactly 45 minutes, discuss only one Think Tank topic. Real or Fake? is also easy to shorten: set `REALFAKE_PER_GAME` lower.
 
 ## A note on the Think Tank
 

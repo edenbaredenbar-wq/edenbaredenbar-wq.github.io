@@ -743,7 +743,7 @@ const ROUNDS = [
   { id: "timeline",  name: "Timeline",           mins: 6, scoring: true },
   { id: "slang",     name: "Army Slang",         mins: 8, scoring: true },
   { id: "whoami",    name: "Who Am I?",          mins: 7, scoring: true },
-  { id: "realfake",  name: "Real or Fake?",      mins: 5, scoring: true },
+  { id: "realfake",  name: "Real or Fake?",      mins: 7, scoring: true },
   { id: "thinktank", name: "Think Tank",         mins: 5, scoring: false },
   { id: "awards",    name: "Awards",             mins: 2, scoring: false }
 ];
@@ -783,7 +783,7 @@ const INTRO = {
 const TEAM_COLORS = ["#ff8a3d", "#3fc5f0", "#f25c9a", "#9be15d", "#b18cff", "#2fe0c0"];
 const DEFAULT_NAMES = ["Team Falafel", "Team Bamba", "Team Shakshuka", "Team Krembo", "Team Sabich", "Team Hummus"];
 const TRIVIA_SECONDS = 30, STEAL_SECONDS = 15, SHOW_SECONDS = 20, TIMELINE_SECONDS = 60, TALK_SECONDS = 90;
-const SLANG_PER_GAME = 8, REALFAKE_PER_GAME = 8;
+const SLANG_PER_GAME = 8, REALFAKE_PER_GAME = 12;
 
 /* ===================================================================== */
 
@@ -925,7 +925,11 @@ function goRound(k) {
   if (id === "timeline") { S.deck = S.teams.map(() => timelineSet()); S.turn = 0; }
   if (id === "slang") S.deck = pickFrom(CONTENT.slang, SLANG_PER_GAME).map(mcq);
   if (id === "whoami") { const per = n <= 2 ? 3 : n === 3 ? 2 : 1; S.deck = pickFrom(CONTENT.whoami, Math.min(CONTENT.whoami.length, per * n)); }
-  if (id === "realfake") S.deck = pickFrom(CONTENT.realfake, REALFAKE_PER_GAME);
+  if (id === "realfake") {
+    /* Half real, half fake, in random order, so teams can't count on a pattern. */
+    const half = Math.floor(REALFAKE_PER_GAME / 2);
+    S.deck = shuffle([...pickFrom(CONTENT.realfake.filter((x) => x.real), REALFAKE_PER_GAME - half), ...pickFrom(CONTENT.realfake.filter((x) => !x.real), half)]);
+  }
   if (id === "thinktank") S.deck = CONTENT.thinktank.slice();
 }
 function mcq(item) {
