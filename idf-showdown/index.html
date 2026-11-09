@@ -638,7 +638,25 @@ const CONTENT = {
       note: "Its alerts give people from about 15 seconds to a few minutes to reach a safe room, depending on where they live." },
     { answer: "The Paratroopers Brigade", name: "Paratroopers", tag: "They jump from airplanes", icon: "🪂",
       clues: ["A famous 1967 photo shows three of my soldiers at the Western Wall.", "My beret is red.", "My symbol has wings, but I'm not the Air Force.", "In Hebrew I'm the Tzanchanim."],
-      note: "Paratroopers earn their wings after jump school." }
+      note: "Paratroopers earn their wings after jump school." },
+    { answer: "The Golani Brigade", name: "Golani", tag: "Infantry · brown beret", icon: "🫒",
+      clues: ["I'm one of Israel's oldest brigades, from 1948.", "My symbol is a green olive tree.", "In the Yom Kippur War, my soldiers recaptured Mount Hermon.", "My beret is brown."],
+      note: "Golani fans sing “Golani Sheli” (“My Golani”). Its soldiers are famous for their team spirit." },
+    { answer: "The Givati Brigade", name: "Givati", tag: "Infantry · purple beret", icon: "🦊",
+      clues: ["My nickname comes from a story about Samson in the Bible.", "I was first formed in 1948 and formed again in 1983.", "My symbol is a fox.", "My beret is purple."],
+      note: "Givati's fighters are called “Samson's Foxes.” In the Bible, Samson sent foxes into the Philistines' fields." },
+    { answer: "The Armored Corps", name: "Armored Corps", tag: "Tanks · black beret", icon: "🛞",
+      clues: ["My soldiers work in crews of four.", "My favorite ride weighs more than 60 tons.", "My ride is called the Merkava, “chariot.”", "My beret is black."],
+      note: "The Merkava was designed in Israel. It has a back door, so it can carry soldiers or a stretcher inside." },
+    { answer: "The Combat Engineering Corps", name: "Combat Engineers", tag: "Builders & breakers · gray beret", icon: "🚜",
+      clues: ["Some of my soldiers are trained to find tunnels.", "My soldiers clear mines and blow up obstacles.", "I drive the D9 bulldozer, nicknamed “Doobi” (teddy bear).", "My beret is gray."],
+      note: "Combat engineers go first: they open the way for everyone else." },
+    { answer: "The Air Force Flight Academy", name: "Flight Academy", tag: "Pilot school", icon: "✈️",
+      clues: ["Only a small share of my cadets make it to graduation.", "My course takes about three years.", "My graduates get their wings in a ceremony at Hatzerim base.", "My graduates fly fighter jets and helicopters."],
+      note: "Cadets start at 18 and also earn a college degree during the course." },
+    { answer: "The Military Rabbinate", name: "Military Rabbinate", tag: "Religious life in the army", icon: "📜",
+      clues: ["My chief has the rank of Tat Aluf (brigadier general).", "I help soldiers keep Shabbat on base.", "I check that every army kitchen is kosher.", "My officers are rabbis."],
+      note: "The Rabbinate also runs holiday events on bases, like Passover seders for soldiers who can't go home." }
   ],
 
   realfake: [
@@ -742,7 +760,7 @@ const ROUNDS = [
   { id: "trivia",    name: "Boot Camp Trivia",   mins: 9, scoring: true },
   { id: "timeline",  name: "Timeline",           mins: 6, scoring: true },
   { id: "slang",     name: "Army Slang",         mins: 8, scoring: true },
-  { id: "whoami",    name: "Who Am I?",          mins: 7, scoring: true },
+  { id: "whoami",    name: "Who Am I?",          mins: 9, scoring: true },
   { id: "realfake",  name: "Real or Fake?",      mins: 7, scoring: true },
   { id: "thinktank", name: "Think Tank",         mins: 5, scoring: false },
   { id: "awards",    name: "Awards",             mins: 2, scoring: false }
@@ -784,6 +802,8 @@ const TEAM_COLORS = ["#ff8a3d", "#3fc5f0", "#f25c9a", "#9be15d", "#b18cff", "#2f
 const DEFAULT_NAMES = ["Team Falafel", "Team Bamba", "Team Shakshuka", "Team Krembo", "Team Sabich", "Team Hummus"];
 const TRIVIA_SECONDS = 30, STEAL_SECONDS = 15, SHOW_SECONDS = 20, TIMELINE_SECONDS = 60, TALK_SECONDS = 90;
 const SLANG_PER_GAME = 8, REALFAKE_PER_GAME = 12;
+/* Who Am I? plays about this many mysteries, rounded up so every team gets the same number of turns. */
+const WHOAMI_TARGET = 8;
 
 /* ===================================================================== */
 
@@ -924,7 +944,7 @@ function goRound(k) {
   }
   if (id === "timeline") { S.deck = S.teams.map(() => timelineSet()); S.turn = 0; }
   if (id === "slang") S.deck = pickFrom(CONTENT.slang, SLANG_PER_GAME).map(mcq);
-  if (id === "whoami") { const per = n <= 2 ? 3 : n === 3 ? 2 : 1; S.deck = pickFrom(CONTENT.whoami, Math.min(CONTENT.whoami.length, per * n)); }
+  if (id === "whoami") { const per = Math.ceil(WHOAMI_TARGET / n); S.deck = pickFrom(CONTENT.whoami, Math.min(CONTENT.whoami.length, per * n)); }
   if (id === "realfake") {
     /* Half real, half fake, in random order, so teams can't count on a pattern. */
     const half = Math.floor(REALFAKE_PER_GAME / 2);
