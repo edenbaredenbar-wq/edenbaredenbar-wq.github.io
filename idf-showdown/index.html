@@ -669,7 +669,27 @@ const CONTENT = {
     { s: "Iron Dome was invented in the United States and sold to Israel.", real: false,
       note: "Fake! The Israeli company Rafael developed it. The United States helped pay for it." },
     { s: "Israel has the largest army in the Middle East.", real: false,
-      note: "Fake! Egypt and Iran have far more soldiers. Israel relies on its reservists and its technology." }
+      note: "Fake! Egypt and Iran have far more soldiers. Israel relies on its reservists and its technology." },
+    { s: "The IDF has soldiers whose job is reading footprints and tracks in the sand.", real: true,
+      note: "Real! They're called trackers (gashashim). Many are Bedouin, and they can tell from tracks how many people passed and when." },
+    { s: "Every kitchen in the IDF is kosher.", real: true,
+      note: "Real! The Military Rabbinate supervises army kitchens so that every soldier can eat in them." },
+    { s: "Many Israeli soldiers take their rifles with them on the bus when they go home for the weekend.", real: true,
+      note: "Real! Combat soldiers usually keep their rifle with them at all times, even on leave. It's a normal sight in Israel." },
+    { s: "Drafted IDF soldiers get a monthly salary.", real: true,
+      note: "Real! It's small, and combat soldiers get more than others." },
+    { s: "Some Israeli teens volunteer in hospitals or schools for a year or two instead of joining the army.", real: true,
+      note: "Real! It's called Sherut Leumi (national service). Many religious young women choose it." },
+    { s: "The President of Israel is the commander of the IDF.", real: false,
+      note: "Fake! Unlike in the US, Israel's president is mostly ceremonial. The IDF answers to the government and the Defense Minister." },
+    { s: "IDF soldiers are not allowed to have smartphones during their service.", real: false,
+      note: "Fake! Most soldiers keep their phones, though secret units and some bases restrict them." },
+    { s: "Every IDF soldier goes through the same six-month basic training.", real: false,
+      note: "Fake! It depends on the job: a few weeks for some roles, about four months or more for combat soldiers." },
+    { s: "Reservists can only be called up until age 25.", real: false,
+      note: "Fake! Most reservists can be called up until about age 40, and officers even later." },
+    { s: "The IDF was founded before Israel declared independence.", real: false,
+      note: "Fake! Israel declared independence on May 14, 1948, and the IDF was founded on May 26. Before that, groups like the Haganah defended Jewish communities." }
   ],
 
   thinktank: [
@@ -744,10 +764,10 @@ const INTRO = {
             "Bonus: use the word correctly in a sentence for extra points."],
     score: "Right: +100 · Good sentence: +50" },
   whoami: { he: "מי אני?", sub: "Mi ani? · who am I?",
-    rules: ["Each mystery has a lineup of 8 suspects: IDF units and systems. Read the board!",
-            "Clues appear one at a time, from hard to easy. Use them to rule suspects out.",
-            "Think you know? Raise your hands and name a suspect. Wrong? It's crossed off, and your team sits out this mystery."],
-    score: "Clue 1: 400 · Clue 2: 300 · Clue 3: 200 · Clue 4: 100" },
+    rules: ["Teams take turns. Each mystery has a lineup of 8 suspects: IDF units and systems. Read the board!",
+            "Clues appear one at a time, from hard to easy. After each clue, your team guesses or asks for the next clue.",
+            "A wrong guess is crossed off the board, and the NEXT team can steal for half the points."],
+    score: "Clue 1: 400 · Clue 2: 300 · Clue 3: 200 · Clue 4: 100 · Steal: half" },
   realfake: { he: "אמת או בדיה?", sub: "Emet o bdaya? · real or fake?",
     rules: ["A surprising fact about the IDF appears. Real or fake?",
             "Every team decides quietly.",
@@ -763,7 +783,7 @@ const INTRO = {
 const TEAM_COLORS = ["#ff8a3d", "#3fc5f0", "#f25c9a", "#9be15d", "#b18cff", "#2fe0c0"];
 const DEFAULT_NAMES = ["Team Falafel", "Team Bamba", "Team Shakshuka", "Team Krembo", "Team Sabich", "Team Hummus"];
 const TRIVIA_SECONDS = 30, STEAL_SECONDS = 15, SHOW_SECONDS = 20, TIMELINE_SECONDS = 60, TALK_SECONDS = 90;
-const SLANG_PER_GAME = 8, REALFAKE_PER_GAME = 8, WHOAMI_PER_GAME = 6;
+const SLANG_PER_GAME = 8, REALFAKE_PER_GAME = 8;
 
 /* ===================================================================== */
 
@@ -904,7 +924,7 @@ function goRound(k) {
   }
   if (id === "timeline") { S.deck = S.teams.map(() => timelineSet()); S.turn = 0; }
   if (id === "slang") S.deck = pickFrom(CONTENT.slang, SLANG_PER_GAME).map(mcq);
-  if (id === "whoami") S.deck = pickFrom(CONTENT.whoami, WHOAMI_PER_GAME);
+  if (id === "whoami") { const per = n <= 2 ? 3 : n === 3 ? 2 : 1; S.deck = pickFrom(CONTENT.whoami, Math.min(CONTENT.whoami.length, per * n)); }
   if (id === "realfake") S.deck = pickFrom(CONTENT.realfake, REALFAKE_PER_GAME);
   if (id === "thinktank") S.deck = CONTENT.thinktank.slice();
 }
@@ -935,7 +955,7 @@ function setupQuestion() {
   if (id === "trivia") { S.phase = "ask"; startTimer(TRIVIA_SECONDS); }
   if (id === "timeline") { S.turn = S.i; S.phase = "order"; startTimer(TIMELINE_SECONDS); }
   if (id === "slang" || id === "realfake") { S.phase = "ask"; startTimer(SHOW_SECONDS); }
-  if (id === "whoami") { S.phase = "clue"; S.board = lineup(S.deck[S.i]); stopTimer(); }
+  if (id === "whoami") { S.turn = S.i % S.teams.length; S.phase = "clue"; S.board = lineup(S.deck[S.i]); startTimer(TRIVIA_SECONDS); }
   if (id === "thinktank") { S.phase = "read"; stopTimer(); }
 }
 function nextQuestion() {
@@ -980,7 +1000,7 @@ function canUse(t, card) {
     if (!play) return "Use it during a question.";
     if (id === "trivia") return (S.phase === "ask" && S.turn === t) || (S.phase === "steal" && stealer() === t) ? (S.removed.length ? "Intel was already used on this question." : "") : "Use it on your own trivia turn, before answering.";
     if (id === "timeline") return S.phase === "order" && S.turn === t && !S.lockFirst && !S.order.length ? "" : "Use it on your own timeline turn, before tapping any card.";
-    if (id === "whoami") return S.phase !== "clue" ? "Use it while nobody is answering." : intelTargets().length ? "" : "There are no wrong suspects left to cross out.";
+    if (id === "whoami") return !((S.phase === "clue" && S.turn === t) || (S.phase === "steal" && stealer() === t)) ? "Use it on your own Who Am I turn, or when you're stealing." : intelTargets().length ? "" : "There are no wrong suspects left to cross out.";
     if (id === "slang" || id === "realfake") return S.phase === "ask" ? (S.intelTeams.includes(t) ? "Already used on this question." : "") : "Use it before the answer is revealed.";
     return "Intel doesn't work in this round.";
   }
@@ -989,7 +1009,7 @@ function canUse(t, card) {
     if (!hasSpare()) return "There are no spare questions left in this round.";
     if (id === "trivia") return S.phase === "ask" && S.turn === t && !S.picks.length ? "" : "Use it on your own trivia turn, before answering.";
     if (id === "timeline") return S.phase === "order" && S.turn === t ? "" : "Use it on your own timeline turn.";
-    if (id === "whoami") return S.phase === "clue" && !S.locked.length ? "" : "Use it before any team has answered this card.";
+    if (id === "whoami") return S.phase === "clue" && S.turn === t ? "" : "Use it on your own Who Am I turn, before guessing.";
     if (id === "slang" || id === "realfake") return S.phase === "ask" ? "" : "Use it before the answer is revealed.";
     return "Hamshush doesn't work in this round.";
   }
@@ -1036,11 +1056,13 @@ function doRaid(from, idx, to, intercepted) {
   });
 }
 
-/* Who Am I: a wrong guess locks the team out of this mystery and shows the next clue. */
-function judgeWrong() {
-  S.locked.push(S.actor); S.actor = -1; SFX.no();
-  if (S.locked.length >= S.teams.length) { S.phase = "done"; S.flash = "Nobody got it this time."; }
-  else { S.phase = "clue"; if (S.shown < 4) S.shown++; }
+/* Who Am I points: 400 on clue 1 down to 100 on clue 4. A steal is worth half. */
+function waiValue() { const v = Math.max(100, 500 - 100 * S.shown); return S.phase === "steal" ? Math.max(50, Math.round(v / 100) * 50) : v; }
+/* A wrong guess: on the team's own turn the next team may steal; a wrong steal ends the mystery. */
+function waiWrong() {
+  SFX.no();
+  if (S.phase === "clue" && S.teams.length > 1) { S.phase = "steal"; startTimer(STEAL_SECONDS); }
+  else { S.phase = "done"; S.flash = "Nobody got it this time."; stopTimer(); }
 }
 
 /* ---------- Timer ---------- */
@@ -1094,7 +1116,7 @@ function activeTeam() {
   const id = round().id;
   if (id === "trivia") return S.phase === "steal" ? stealer() : S.turn;
   if (id === "timeline") return S.turn;
-  if (id === "whoami") return S.actor;
+  if (id === "whoami") return S.phase === "steal" ? stealer() : S.turn;
   return -1;
 }
 function renderBoard() {
@@ -1315,8 +1337,8 @@ function renderRealFake() {
 }
 
 function renderWhoAmI() {
-  const it = S.deck[S.i], done = S.phase === "done", judging = S.phase === "judge";
-  const value = Math.max(100, 500 - 100 * S.shown);
+  const it = S.deck[S.i], done = S.phase === "done", picking = S.phase === "clue" || S.phase === "steal";
+  const value = waiValue();
   const clues = it.clues.map((c, k) => {
     const vis = k < S.shown || done;
     return `<li class="clue ${vis ? "" : "hidden"} ${k === S.shown - 1 && !done ? "new" : ""}"><span class="pts">${400 - 100 * k}</span><p>${vis ? esc(c) : "CLASSIFIED"}</p></li>`;
@@ -1324,28 +1346,29 @@ function renderWhoAmI() {
   const board = S.board.map((b, k) => {
     const x = S.crossed.includes(k), win = done && b.answer === it.answer;
     const cls = win ? "win" : x ? "x" : done ? "dim" : "";
-    return `<button class="sus ${cls}" data-a="suspect" data-k="${k}" ${judging && !x ? "" : "disabled"}><span class="sk">${k + 1}</span><span class="si">${b.icon}</span><span class="sn">${esc(b.name)}</span><span class="st">${esc(b.tag)}</span></button>`;
+    return `<button class="sus ${cls}" data-a="suspect" data-k="${k}" ${picking && !x ? "" : "disabled"}><span class="sk">${k + 1}</span><span class="si">${b.icon}</span><span class="sn">${esc(b.name)}</span><span class="st">${esc(b.tag)}</span></button>`;
   }).join("");
-  const teamBtns = S.teams.map((t, i) => {
-    const lockd = S.locked.includes(i);
-    return `<button class="teamBtn small ${lockd ? "out" : ""}" style="--tc:${t.color}" data-a="buzz" data-t="${i}" ${lockd ? "disabled" : ""}><span class="n">${i + 1}</span>${esc(t.name)}</button>`;
-  }).join("");
-  let bottom;
+  let head, bottom;
   if (done) {
-    bottom = `${noteBox(it.note)}<div class="judgeBar"><span class="tag" style="--tc:var(--good)">${it.icon} ${esc(it.answer)}</span><span class="eyebrow">${esc(S.flash)}</span>${primary("Next mystery", "next")}</div>`;
-  } else if (judging) {
-    bottom = `<div class="judgeBar">${teamTag(S.actor)}<span class="lead">Which suspect? Click the one they name (or press 1–8).</span>
-      <button class="btn no" data-a="wrong">Not on the board / wrong <kbd>W</kbd></button></div>`;
+    head = `<span class="eyebrow">${esc(S.flash)}</span>`;
+    bottom = `${noteBox(it.note)}<div class="judgeBar"><span class="tag" style="--tc:var(--good)">${it.icon} ${esc(it.answer)}</span>${primary(S.i + 1 >= S.deck.length ? "Finish round" : "Next team", "next")}</div>`;
+  } else if (S.phase === "steal") {
+    head = `<span class="eyebrow" style="color:var(--bad)">Wrong!</span>${teamTag(stealer(), "steal")}<span class="eyebrow">can steal</span>`;
+    bottom = `${timerHtml()}<div class="judgeBar"><span class="lead">Click the suspect they name (or press 1–8).</span>
+      <button class="btn small" data-a="wrong">Not on the board <kbd>W</kbd></button>
+      <button class="btn" data-a="nosteal">No steal · show answer <kbd>R</kbd></button></div>`;
   } else {
-    bottom = `<div class="judgeBar"><span class="eyebrow">Hands up! Who was first? <span class="muted">(1–${S.teams.length})</span></span>${teamBtns}</div>
-      <div class="judgeBar"><button class="btn go" data-a="clue" data-primary ${S.shown >= 4 ? "disabled" : ""}>Next clue <kbd>Space</kbd></button>
-      <button class="btn small" data-a="giveup">Nobody knows · reveal <kbd>R</kbd></button></div>`;
+    head = `${teamTag(S.turn)}<span class="eyebrow">your mystery</span>`;
+    bottom = `${timerHtml()}<div class="judgeBar"><span class="lead">Guessing? Click the suspect they name (or press 1–8).</span>
+      <button class="btn go" data-a="clue" data-primary ${S.shown >= 4 ? "disabled" : ""}>Next clue <kbd>Space</kbd></button>
+      <button class="btn small" data-a="wrong">Not on the board <kbd>W</kbd></button>
+      <button class="btn small" data-a="pass">Pass <kbd>R</kbd></button></div>`;
   }
   return `<div class="wai2">
-    <div class="waiTop"><h2 class="display h-l">Who am I?</h2><span class="eyebrow">Mystery ${S.i + 1} of ${S.deck.length}</span><span class="grow"></span>
-      ${done ? "" : `<span class="worthPill">Worth <b>${value}</b></span>`}</div>
+    <div class="waiTop"><h2 class="display h-l">Who am I?</h2><span class="eyebrow">Mystery ${S.i + 1} of ${S.deck.length}</span>${head}<span class="grow"></span>
+      ${done ? "" : `<span class="worthPill">${S.phase === "steal" ? "Steal for" : "Worth"} <b>${value}</b></span>`}</div>
     <ul class="clues2">${clues}</ul>
-    <div class="board ${judging ? "pick" : ""}">${board}</div>
+    <div class="board ${picking ? "pick" : ""}">${board}</div>
     ${bottom}
   </div>`;
 }
@@ -1491,18 +1514,22 @@ const ACTIONS = {
     if (any) SFX.ok();
     nextQuestion();
   }),
-  clue: () => { if (S.phase === "clue" && S.shown < 4) act(() => { S.shown++; SFX.tick(); }); },
-  buzz: (d) => { const t = +d.t; if (S.phase === "done" || S.locked.includes(t)) return; act(() => { S.actor = t; S.phase = "judge"; SFX.tick(); }); },
+  clue: () => { if (S.phase === "clue" && S.shown < 4) act(() => { S.shown++; startTimer(TRIVIA_SECONDS); SFX.tick(); }); },
   suspect: (d) => {
-    if (S.phase !== "judge") return;
+    if (S.phase !== "clue" && S.phase !== "steal") return;
     const k = +d.k;
     if (S.crossed.includes(k)) return;
-    if (S.board[k].answer === S.deck[S.i].answer) return ACTIONS.correct();
-    act(() => { S.crossed.push(k); judgeWrong(); });
+    act(() => {
+      if (S.board[k].answer === S.deck[S.i].answer) {
+        const steal = S.phase === "steal", who = steal ? stealer() : S.turn;
+        const got = addPoints(who, waiValue());
+        S.flash = `${S.teams[who].name} +${got}${steal ? " (steal!)" : ""}`;
+        S.phase = "done"; stopTimer(); SFX.ok();
+      } else { S.crossed.push(k); waiWrong(); }
+    });
   },
-  correct: () => { if (S.phase !== "judge") return; act(() => { const v = Math.max(100, 500 - 100 * S.shown); const got = addPoints(S.actor, v); S.flash = `${S.teams[S.actor].name} +${got}`; S.phase = "done"; SFX.ok(); }); },
-  wrong: () => { if (S.phase === "judge") act(judgeWrong); },
-  giveup: () => act(() => { S.phase = "done"; S.actor = -1; S.flash = "Nobody got it this time."; }),
+  wrong: () => { if (S.phase === "clue" || S.phase === "steal") act(waiWrong); },
+  pass: () => { if (S.phase === "clue") act(() => { if (S.teams.length > 1) { S.phase = "steal"; startTimer(STEAL_SECONDS); } else { S.phase = "done"; S.flash = "Passed."; stopTimer(); } }); },
   card: (d) => showCard(+d.t, +d.i),
   useCard: (d) => useCard(+d.t, +d.i),
   raidTarget: (d) => {
@@ -1557,15 +1584,15 @@ document.addEventListener("keydown", (e) => {
   const id = round().id;
   if (id === "trivia" && "abcd".includes(k) && k.length === 1) return press(`[data-a='pick'][data-k='${"abcd".indexOf(k)}']`);
   if (k === "t") return press("[data-a='talk']") || press("[data-a='timer']");
-  if (k === "r") return press("[data-a='reveal']") || press("[data-a='nosteal']") || press("[data-a='giveup']");
+  if (k === "r") return press("[data-a='reveal']") || press("[data-a='nosteal']") || press("[data-a='pass']");
   if (k === "c") return press("[data-a='correct']");
   if (k === "w") return press("[data-a='wrong']");
-  if (id === "whoami" && S.phase === "judge" && /^[1-8]$/.test(k)) return press(`[data-a='suspect'][data-k='${+k - 1}']`);
+  if (id === "whoami" && /^[1-8]$/.test(k)) return press(`[data-a='suspect'][data-k='${+k - 1}']`);
   if (/^[1-6]$/.test(k)) {
     const t = +k - 1;
     if (id === "timeline") return press(`[data-a='tap'][data-k='${t}']`);
     if (t >= S.teams.length) return;
-    press(`[data-a='toggleTeam'][data-kind='right'][data-t='${t}']`) || press(`[data-a='buzz'][data-t='${t}']`);
+    press(`[data-a='toggleTeam'][data-kind='right'][data-t='${t}']`);
   }
   if (k === "arrowleft" && id === "briefing") ACTIONS.slidePrev();
 });
@@ -1606,10 +1633,10 @@ function showHelp() {
       <kbd>Space</kbd><span>The big yellow button: next slide, question, clue or round</span>
       <kbd>A–D</kbd><span>Trivia: the answer the team chose</span>
       <kbd>1–4</kbd><span>Timeline: tap the event cards in the team's order</span>
-      <kbd>1–6</kbd><span>Pick a team: who was right, who raised hands first</span>
-      <kbd>R</kbd><span>Reveal the answer · no steal · nobody knows</span>
-      <kbd>1–8</kbd><span>Who Am I: after a team raises hands, the suspect they name</span>
-      <kbd>W</kbd> <span>Who Am I: wrong answer that isn't on the board</span>
+      <kbd>1–6</kbd><span>Slang / Real or Fake: mark the teams that were right</span>
+      <kbd>R</kbd><span>Reveal the answer · no steal · pass</span>
+      <kbd>1–8</kbd><span>Who Am I: the suspect the team names</span>
+      <kbd>W</kbd> <span>Who Am I: a wrong answer that isn't on the board</span>
       <kbd>T</kbd><span>Restart the countdown · Think Tank: start the team talk</span>
       <kbd>U</kbd><span>Undo the last action (press again to keep undoing)</span>
       <kbd>F</kbd><span>Full screen</span>

@@ -21,14 +21,14 @@ A projector game for a 45-minute high school Hebrew class. It's built for studen
 | 1 | **Boot Camp Trivia** | 9 min | Teams take turns on multiple-choice questions. Click the answer the team's captain says, or press A–D. If they're wrong, the next team can steal. | +100, steal +50 |
 | 2 | **Timeline** | 6 min | Each team gets its own 4 history events (1948 to 2023) with hints. The captain says the order and you tap the cards (or press 1–4), then **Lock in**. | +50 per card in the right place, +100 bonus for all 4 |
 | 3 | **Army Slang** | 8 min | An IDF slang word in Hebrew (jobnik, fashla, hamshush, pazam…). Every team holds up 1–4 fingers on "SHOW!". After the reveal, click the teams that were right, plus any team that uses the word correctly in a sentence. | +100 right, +50 sentence |
-| 4 | **Who Am I?** | 7 min | A lineup like the board game Guess Who: 8 "suspects" (units and systems), each with a picture, name and one-line description, plus 4 clues from hard to easy. Students don't need to know any units beforehand; they read the board and use the clues to rule suspects out. A team raises hands; click the team, then click the suspect it names (or press 1–8). Right: points. Wrong: that suspect is crossed off, the team sits out this mystery, and the next clue appears. Use **W** for an answer that isn't on the board. | 400 / 300 / 200 / 100 |
+| 4 | **Who Am I?** | 7 min | Turn-based, like Trivia. Each team gets its own mystery: a lineup of 8 "suspects" (units and systems), each with a picture, name and one-line description, plus 4 clues from hard to easy. Students don't need to know any units beforehand; they read the board and use the clues to rule suspects out. After each clue the team on duty either guesses (click the suspect it names, or press 1–8) or asks for the next clue (Space). A wrong guess is crossed off the board, and the next team can steal for half the points. **R** passes to the steal; **W** is a wrong answer that isn't on the board. | 400 / 300 / 200 / 100, steal: half |
 | 5 | **Real or Fake?** | 5 min | A surprising IDF fact. Teams show thumbs up (real) or down (fake). Press **R**, then click the teams that were right. | +100 each |
 | | **Think Tank** | 5 min | Four topics: October 7, the Haredi draft, women in combat, being drafted at 18. Each has a short factual background and a discussion question; two show "Some say / Others say". Press **T** for a 90-second team talk. | none |
 | | **Awards** | 2 min | Podium with ranks, confetti and an exit ticket. | |
 
 Every answer is followed by a **Field Note**, a short fact to read aloud. In Army Slang there's also an example sentence.
 
-Each game draws different questions: Trivia uses 2–5 questions per team, depending on the number of teams, out of 20; Army Slang uses 8 of 13 words; Who Am I? uses 6 of 10 mystery cards; Real or Fake? uses 8 of 14 facts; Timeline draws from 16 events.
+Each game draws different questions: Trivia uses 2–5 questions per team, depending on the number of teams, out of 20; Army Slang uses 8 of 13 words; Who Am I? gives every team the same number of mysteries (1–3 each, depending on the number of teams) out of 10; Real or Fake? uses 8 of 24 facts; Timeline draws from 16 events.
 
 ## Ranks
 
@@ -41,10 +41,10 @@ At the end of each scoring round, the team that scored the most points in that r
 | Card | What it does | When |
 |---|---|---|
 | 🪖 **Miluim** (מילואים) | The team's next points are doubled. | Any time |
-| 📡 **8200 Intel** (מודיעין) | Trivia: removes 2 wrong answers. Timeline: places the earliest event. Slang / Real or Fake: the team counts as right. Who Am I: crosses out 3 wrong suspects. | Trivia and Timeline: on your own turn. Others: before the reveal. |
+| 📡 **8200 Intel** (מודיעין) | Trivia: removes 2 wrong answers. Timeline: places the earliest event. Slang / Real or Fake: the team counts as right. Who Am I: crosses out 3 wrong suspects. | Trivia, Timeline and Who Am I: on your own turn (or when stealing). Others: before the reveal. |
 | ⚡ **Raid** (פשיטה) | Steal up to 100 points from any team. | Any time, including right before the awards |
 | 🛡️ **Iron Dome** (כיפת ברזל) | When another team raids you, the game asks whether you want to intercept. Intercepting cancels the raid and uses up both cards. | Automatic |
-| 🏖️ **Hamshush** (חמשוש) | Skip the current question and get a new one. | Trivia and Timeline: on your own turn. Others: before anyone answers. |
+| 🏖️ **Hamshush** (חמשוש) | Skip the current question and get a new one. | Trivia, Timeline and Who Am I: on your own turn. Others: before the reveal. |
 
 ## Host keys
 
@@ -53,9 +53,9 @@ At the end of each scoring round, the team that scored the most points in that r
 | **Space** / Enter | The big yellow button: next slide, question, clue, card or round |
 | **A–D** | Trivia: the answer the team chose |
 | **1–4** | Timeline: tap the event cards in the team's order |
-| **1–6** | Pick a team: who was right, who raised hands first |
-| **R** | Reveal the answer · no steal · nobody knows |
-| **1–8** | Who Am I: after a team raises hands, the suspect it names |
+| **1–6** | Slang / Real or Fake: mark the teams that were right |
+| **R** | Reveal the answer · no steal · Who Am I: pass |
+| **1–8** | Who Am I: the suspect the team names |
 | **W** | Who Am I: a wrong answer that isn't on the board |
 | **T** | Restart the countdown · Think Tank: start the 90-second team talk |
 | **U** | Undo the last action (press again to keep undoing). Card plays can be undone too. |
@@ -97,6 +97,6 @@ Open `index.html` in a text editor. The `CONTENT` object near the top of the scr
 - `realfake`: `s` (the statement), `real` (`true` or `false`) and `note`.
 - `thinktank`: `title`, `primer` (the background), `prompt` and optional `sides` (two short opposing views).
 
-Below the content you can change the cards (`CARDS`), the rank thresholds (`RANKS`), the round times (`ROUNDS`), the countdowns (`TRIVIA_SECONDS`, `TIMELINE_SECONDS`, `TALK_SECONDS`…) and how many questions each round uses (`SLANG_PER_GAME`, `REALFAKE_PER_GAME`, `WHOAMI_PER_GAME`).
+Below the content you can change the cards (`CARDS`), the rank thresholds (`RANKS`), the round times (`ROUNDS`), the countdowns (`TRIVIA_SECONDS`, `TIMELINE_SECONDS`, `TALK_SECONDS`…) and how many questions each round uses (`SLANG_PER_GAME`, `REALFAKE_PER_GAME`).
 
 Use curly quotes (“ ” ‘ ’) inside text. A plain `"` inside a string breaks the file. If the page goes blank after an edit, undo your last change.
