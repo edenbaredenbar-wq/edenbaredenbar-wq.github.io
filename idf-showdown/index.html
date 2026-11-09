@@ -227,11 +227,6 @@ button.opt:hover:not(:disabled) { border-color: var(--flag); transform: translat
 .rules li::before { content: "▸"; color: var(--flag); font-family: var(--font-display); text-align: right; }
 .score-line { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; color: var(--flag); letter-spacing: 0.04em; }
 
-/* ---------- Beret ---------- */
-.beretStage { display: grid; place-items: center; padding: 0.4rem 3rem; border-radius: 50%; background: radial-gradient(closest-side, rgba(236, 227, 200, 0.34), rgba(236, 227, 200, 0.08) 70%, transparent); max-width: 100%; }
-.beret { height: min(28vh, 17rem); width: auto; max-width: 100%; filter: drop-shadow(0 0.6rem 0.4rem rgba(0,0,0,0.5)); animation: plop 0.5s cubic-bezier(.3,1.6,.5,1); }
-@keyframes plop { from { transform: translateY(-30px) scale(0.85); opacity: 0; } to { transform: none; opacity: 1; } }
-
 /* ---------- Real / Fake ---------- */
 .rf { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: min(100%, 60rem); }
 .rf div { border-radius: 0.8rem; padding: 0.9rem; border: 3px solid var(--line); background: var(--panel); display: flex; flex-direction: column; align-items: center; gap: 0.2rem; transition: all 0.25s; }
@@ -260,16 +255,6 @@ button.opt:hover:not(:disabled) { border-color: var(--flag); transform: translat
 .answerBox { background: var(--good); color: var(--good-ink); border-radius: 0.8rem; padding: 0.9rem 1.1rem; animation: plop 0.45s cubic-bezier(.3,1.6,.5,1); }
 .answerBox .ico { font-family: var(--emoji); font-size: 3rem; line-height: 1; }
 .answerBox h3 { margin: 0.2rem 0 0; font-family: var(--font-display); font-weight: 400; font-size: 2rem; line-height: 1.05; }
-
-/* ---------- Commander says ---------- */
-.cmd { width: min(100%, 70rem); background: var(--panel); border: 3px solid var(--line); border-radius: 1rem; padding: 1.4rem 1.6rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
-.cmd.says { border-color: var(--flag); }
-.cmd .prefix { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.6rem, 4.5vh, 3rem); color: var(--flag); letter-spacing: 0.04em; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-.cmd .prefix.nope { color: var(--line); text-decoration: line-through; font-size: 1.4rem; }
-.cmd .heb { font-family: var(--font-he); font-weight: 800; font-size: clamp(2.6rem, 9vh, 6.5rem); line-height: 1.05; direction: rtl; }
-.cmd .tr { font-family: var(--font-display); font-size: clamp(2rem, 6vh, 4.4rem); line-height: 1.05; }
-.cmd .en { font-size: 1.6rem; color: var(--khaki); }
-.cmd.pop { animation: plop 0.35s cubic-bezier(.3,1.6,.5,1); }
 
 /* ---------- End ---------- */
 .podium { display: flex; align-items: flex-end; justify-content: center; gap: 1rem; width: min(100%, 70rem); }
@@ -336,6 +321,98 @@ button.opt:hover:not(:disabled) { border-color: var(--flag); transform: translat
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Power-up cards ---------- */
+.team { grid-template-rows: auto auto auto; }
+.team .ts { grid-row: 1 / 4; }
+.chips { grid-column: 1; display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem; min-height: 1.7rem; }
+.chip {
+  display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--font-head); font-weight: 800; font-size: 0.85rem;
+  padding: 0.12rem 0.4rem; border-radius: 0.3rem; background: var(--sand); color: #1d2214; box-shadow: 0 2px 0 var(--shadow);
+}
+.chip i { font-style: normal; font-family: var(--emoji); font-size: 1rem; line-height: 1; }
+.chip:hover { background: var(--flag); }
+.chip.x2 { background: var(--good); color: var(--good-ink); cursor: default; animation: pulse 0.9s ease-in-out infinite alternate; }
+
+.pcard {
+  width: min(16rem, 70vw); aspect-ratio: 5 / 7; max-width: 100%; border-radius: 0.9rem; padding: 0.9rem; position: relative;
+  background: linear-gradient(160deg, #f4ecd3, #d9cca5); color: #1d2214; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  box-shadow: 0 0.6rem 0 var(--shadow), inset 0 0 0 0.35rem #1d2214, inset 0 0 0 0.5rem #f4ecd3, inset 0 0 0 0.6rem var(--flag);
+  text-align: center;
+}
+.pcard .ptype { font-family: var(--font-head); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 0.5rem; }
+.pcard .pico { font-family: var(--emoji); font-size: 4.2rem; line-height: 1; }
+.pcard .pname { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; }
+.pcard .phe { font-family: var(--font-he); font-weight: 800; font-size: 1.3rem; direction: rtl; color: #6a5a2a; }
+.pcard .ptext { font-size: 1rem; font-weight: 600; line-height: 1.25; margin-bottom: 0.5rem; }
+.pcard.back { background: repeating-linear-gradient(45deg, #3a4527 0 0.8rem, #2e3822 0.8rem 1.6rem); color: var(--flag); justify-content: center; gap: 0.5rem; }
+.pcard.back .pname { font-size: 2.2rem; }
+.drop .pcard:not(.mini) { width: min(14rem, 60vw); }
+.drop { display: flex; flex-wrap: wrap; gap: 1.6rem; justify-content: center; align-items: flex-start; }
+.dropItem { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+.flip { animation: flipIn 0.7s cubic-bezier(.3,1.4,.5,1); }
+@keyframes flipIn { 0% { transform: perspective(60rem) rotateY(90deg) scale(0.8); } 100% { transform: perspective(60rem) rotateY(0) scale(1); } }
+.useRow { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.sheet .pcard { margin: 0 auto; }
+
+/* ---------- Timeline ---------- */
+.tl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem; width: min(100%, 86rem); }
+.ev {
+  position: relative; display: flex; flex-direction: column; gap: 0.45rem; text-align: left; min-width: 0;
+  background: var(--panel); border: 3px solid var(--line); border-radius: 0.8rem; padding: 0.9rem 1rem 1rem;
+  transition: transform 0.1s, border-color 0.2s, background 0.2s;
+}
+button.ev:hover:not(:disabled) { border-color: var(--flag); transform: translateY(-2px); }
+.ev h4 { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: clamp(1.25rem, 2.9vh, 2rem); line-height: 1.1; overflow-wrap: anywhere; }
+.ev .hint { font-size: 1.05rem; color: var(--khaki); }
+.ev .slot {
+  position: absolute; top: -0.9rem; right: -0.6rem; width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 1.5rem; background: var(--flag); color: var(--flag-ink); box-shadow: 0 0.2rem 0 var(--shadow);
+}
+.ev.set { border-color: var(--flag); }
+.ev .yr { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; color: var(--flag); }
+.ev.ok { border-color: var(--good); }
+.ev.ok .slot { background: var(--good); color: var(--good-ink); }
+.ev.bad { border-color: var(--bad); }
+.ev.bad .slot { background: var(--bad); color: var(--bad-ink); }
+.ev .evnote { font-size: 1.05rem; line-height: 1.25; }
+.ev.locked { border-style: dashed; border-color: var(--good); }
+.arrowline { display: flex; align-items: center; gap: 0.6rem; width: min(100%, 86rem); font-family: var(--font-head); font-weight: 700; color: var(--khaki); letter-spacing: 0.12em; text-transform: uppercase; }
+.arrowline::after { content: ""; flex: 1; height: 3px; background: linear-gradient(90deg, var(--line), var(--flag)); }
+
+/* ---------- Slang ---------- */
+.slangWord { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+.slangWord .heb { font-family: var(--font-he); font-weight: 800; font-size: clamp(3rem, 12vh, 8rem); line-height: 1; color: var(--flag); direction: rtl; }
+.slangWord .tr { font-family: var(--font-display); font-size: clamp(1.8rem, 5vh, 3.4rem); line-height: 1; }
+.example { width: min(100%, 72rem); border-left: 0.4rem solid var(--flag); padding: 0.4rem 0.9rem; text-align: left; font-size: 1.4rem; background: rgba(0,0,0,0.25); border-radius: 0 0.4rem 0.4rem 0; }
+.example b { font-family: var(--font-head); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.85em; color: var(--khaki); margin-right: 0.5rem; }
+.awardRows { display: flex; flex-direction: column; gap: 0.6rem; align-items: center; }
+.awardRow { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; justify-content: center; }
+.awardRow > span { font-family: var(--font-head); font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--khaki); min-width: 11rem; text-align: right; }
+.teamBtn.small { font-size: 1.2rem; padding: 0.3rem 0.7rem; }
+.intelTag { font-family: var(--font-head); font-weight: 800; font-size: 1.2rem; color: var(--good); }
+
+/* ---------- Think tank ---------- */
+.tank { width: min(100%, 76rem); display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+.primer { background: var(--panel); border: 2px solid var(--line); border-radius: 0.8rem; padding: 1rem 1.3rem; font-size: 1.5rem; line-height: 1.4; }
+.primer b.k { display: block; font-family: var(--font-head); font-size: 1rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--khaki); margin-bottom: 0.3rem; }
+.prompt { font-family: var(--font-head); font-weight: 700; font-size: clamp(1.8rem, 4.8vh, 3.4rem); line-height: 1.12; margin: 0; text-wrap: balance; color: var(--sand); }
+.prompt::before { content: "Discuss: "; color: var(--flag); }
+.sides { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.sides div { background: rgba(0,0,0,0.25); border-radius: 0.6rem; padding: 0.7rem 1rem; font-size: 1.3rem; }
+.sides b { display: block; font-family: var(--font-head); letter-spacing: 0.1em; text-transform: uppercase; color: var(--flag); font-size: 1rem; }
+
+@media (max-width: 760px) {
+  .tl, .sides { grid-template-columns: minmax(0, 1fr); }
+  .awardRow > span { min-width: 0; text-align: center; width: 100%; }
+}
+.pcard.mini { width: min(11.5rem, 42vw); padding: 0.7rem; }
+.pcard.mini .pico { font-size: 2.6rem; }
+.pcard.mini .pname { font-size: 1.25rem; }
+.pcard.mini .phe { font-size: 1rem; }
+.pcard.mini .ptype { font-size: 0.75rem; }
+.pcard.mini .ptext { font-size: 0.78rem; }
+
 </style>
 </head>
 <body>
@@ -357,194 +434,300 @@ button.opt:hover:not(:disabled) { border-color: var(--flag); transform: translat
 const CONTENT = {
   trivia: [
     { q: "What does “Tzahal” (צה״ל) stand for?",
-      opts: ["Israel Defense Forces", "Israeli Desert Fighters", "Israel's Daring Falcons", "Team Hummus Army League"],
-      note: "Tzahal is short for Tzva HaHagana LeYisrael: the army that protects Israel. It was founded in 1948, the same year Israel became a country." },
-    { q: "At what age do most Israelis start their army service?",
-      opts: ["18", "14", "25", "40"],
-      note: "Right after high school! Service is required by law for most Israelis, girls and boys. It lasts about 2–3 years." },
-    { q: "What is the name of Israel's famous tank?",
-      opts: ["Merkava", "Falafel 3000", "Shalom Tank", "The Iron Turtle"],
-      note: "Merkava means “chariot.” It was designed and built in Israel, and it weighs more than 60 tons." },
-    { q: "Iron Dome is famous for…",
-      opts: ["Shooting down incoming rockets in midair", "Being Israel's biggest soccer stadium", "Keeping soldiers dry in the rain", "A secret underground base"],
-      note: "Iron Dome (Kipat Barzel) first went into action in 2011. It protects Israeli towns from rockets." },
-    { q: "Which IDF unit works with specially trained dogs?",
-      opts: ["Oketz", "Golani", "Shayetet 13", "Unit 8200"],
-      note: "Oketz means “sting.” Its dogs sniff out danger and help find people. Good dog!" },
-    { q: "The Givati Brigade's symbol is which animal?",
-      opts: ["A fox", "A lion", "An eagle", "A camel"],
-      note: "Givati's fighters are nicknamed “Samson's Foxes,” after a story in the Bible. They wear a purple beret." },
-    { q: "Unit 8200 is best known for…",
-      opts: ["Intelligence, codes and cyber", "Cooking for the whole army", "Driving tanks", "Parachuting"],
-      note: "Many 8200 veterans later started Israeli tech companies. That's one reason Israel is called the “Start-Up Nation.”" },
-    { q: "Shayetet 13 is the elite commando unit of…",
-      opts: ["The Navy", "The Air Force", "The army band", "The dog unit"],
-      note: "Its fighters train in the sea, under the sea, and on land. Funny thing: 13 is an unlucky number in America!" },
-    { q: "Adults who keep serving a few days or weeks each year are doing “miluim.” What is that in English?",
-      opts: ["Reserve duty", "Summer camp", "Shabbat dinner", "Beach volleyball"],
-      note: "Many Israeli adults serve in the reserves for years after their regular service. Your teacher, doctor or dentist could be a reservist!" },
-    { q: "Krav Maga, the self-defense taught in the IDF, means…",
-      opts: ["Contact combat", "Fast feet", "Angry pancake", "Strong army"],
-      note: "It was developed by Imi Lichtenfeld. Today people learn Krav Maga at gyms all over the United States." },
-    { q: "In the IDF, a “lone soldier” is…",
-      opts: ["A soldier whose family doesn't live in Israel", "A soldier who eats lunch alone", "The driver of a one-person tank", "A soldier on vacation"],
-      note: "Thousands of lone soldiers serve in the IDF. Many of them are volunteers from the United States." },
-    { q: "Israel's F-35 fighter jet is nicknamed “Adir.” What does that mean?",
-      opts: ["Mighty", "Sleepy", "Pizza", "Tiny"],
-      note: "The Israeli Air Force gives its jets Hebrew nicknames. The F-16I is called “Sufa,” which means storm." },
-    { q: "The Combat Engineers' giant armored D9 bulldozer has a cute nickname, “Doobi.” It means…",
-      opts: ["Teddy bear", "Monster", "Banana", "Rock"],
-      note: "Combat Engineers clear roads, build bridges and wear a gray beret." },
-    { q: "Only one person at a time holds the IDF's highest rank, “Rav Aluf.” Who?",
-      opts: ["The Chief of Staff", "The best pilot", "The oldest soldier", "The head chef"],
-      note: "The Chief of Staff (the RAMATKAL) leads the entire IDF." },
-    { q: "Which part of the IDF helps rescue people after earthquakes, even in other countries?",
-      opts: ["Home Front Command", "The Armored Corps", "Unit 8200", "The submarines"],
-      note: "IDF rescue teams and field hospitals have helped after disasters in Haiti (2010), Mexico (2017) and Turkey (2023)." },
-    { q: "Many famous Israeli singers got their start in…",
-      opts: ["Army music troupes", "The tank driving school", "The dog unit", "Pilot school"],
-      note: "The army troupes, called “lehakot tzvaiot,” performed for soldiers and launched many Israeli stars." }
+      opts: ["Israel Defense Forces", "Israeli National Guard", "Israel's Desert Army", "Hebrew Army League"],
+      note: "Tzahal is short for Tzva HaHagana LeYisrael. It was founded on May 26, 1948, two weeks after Israel declared independence." },
+    { q: "Most Arab citizens of Israel are not drafted. Which community's men HAVE been drafted since 1956?",
+      opts: ["The Druze", "The Armenians", "The Samaritans", "The Circassians of Cyprus"],
+      note: "Druze men are drafted like Jewish Israelis, and many reach senior ranks. Other Arab citizens, such as Bedouin, can volunteer." },
+    { q: "Israel's tank is called the Merkava. What does Merkava mean?",
+      opts: ["Chariot", "Shield", "Lion", "Thunder"],
+      note: "The Merkava was designed in Israel and weighs more than 60 tons. It even has a back door so it can carry soldiers or a stretcher inside." },
+    { q: "Iron Dome does NOT shoot at every rocket. When does it fire?",
+      opts: ["When the rocket is heading for a town or important site", "Only at rockets bigger than a car", "Only at night", "Only when a soldier presses a red button for each one"],
+      note: "Its radar works out where a rocket will land in seconds. Rockets headed for open fields are left alone, which saves expensive interceptors." },
+    { q: "In 1948, an American West Point graduate became the IDF's first general. Who was he?",
+      opts: ["David “Mickey” Marcus", "Yitzhak Rabin", "Moshe Dayan", "Ariel Sharon"],
+      note: "Mickey Marcus volunteered from New York. He was killed weeks later and is buried at West Point. The movie “Cast a Giant Shadow” tells his story." },
+    { q: "Which future prime minister was the IDF Chief of Staff during the Six-Day War in 1967?",
+      opts: ["Yitzhak Rabin", "Golda Meir", "Benjamin Netanyahu", "David Ben-Gurion"],
+      note: "Rabin later became prime minister and signed peace with Jordan in 1994. He was assassinated in 1995." },
+    { q: "Krav Maga, the self-defense system taught in the IDF, means…",
+      opts: ["Contact combat", "Fast hands", "Street fighting", "Army strength"],
+      note: "It was developed by Imi Lichtenfeld, who trained IDF soldiers. Today people learn it at gyms across the United States." },
+    { q: "In the IDF, a “lone soldier” (chayal boded) is…",
+      opts: ["A soldier whose family doesn't live in Israel", "A soldier on a one-person mission", "A soldier without a unit yet", "A soldier who volunteers for night guard"],
+      note: "Thousands of lone soldiers serve, many of them Americans who chose to move to Israel and enlist." },
+    { q: "Before the draft, Israeli teens take the “Dapar.” What is it?",
+      opts: ["An aptitude test that helps decide your army job", "A fitness test with push-ups", "A Hebrew spelling test", "A medical check-up"],
+      note: "Dapar scores go from 10 to 90. A high score opens doors to jobs like intelligence, tech and officer training." },
+    { q: "At the end of the “masa kumta,” a long march at the end of training, soldiers receive…",
+      opts: ["Their unit's beret", "A medal", "A week of vacation", "Their rifle"],
+      note: "Each unit has its own beret color: Golani brown, Givati purple, Paratroopers red, Armored black. Soldiers earn it with that march." },
+    { q: "The Caracal Battalion, a combat unit where men and women serve together, is named after…",
+      opts: ["A desert wild cat", "A famous general", "A type of rifle", "A city in the Negev"],
+      note: "Caracal was founded in 2004 and guards Israel's borders with Egypt and Jordan." },
+    { q: "In what year did Israel's first female fighter pilot graduate from flight school?",
+      opts: ["2001", "1948", "1973", "2020"],
+      note: "Roni Zuckerman graduated in 2001. Pilot school opened to women after Alice Miller, an immigrant from South Africa, won a Supreme Court case in 1995." },
+    { q: "Which branch of the IDF operates Iron Dome?",
+      opts: ["The Air Force", "The Navy", "The Ground Forces", "Military Intelligence"],
+      note: "Iron Dome belongs to the Air Force's Air Defense Array, together with David's Sling and the Arrow system." },
+    { q: "On Yom HaZikaron, Israel's Memorial Day, what does the whole country do when the siren sounds?",
+      opts: ["Stops and stands in silence", "Sings Hatikva together", "Turns off all the lights", "Rings the bells of every school"],
+      note: "Drivers stop and get out of their cars, even on highways. Yom HaZikaron comes the day before Independence Day: sadness, then celebration." },
+    { q: "Israel's F-35 fighter jet is nicknamed “Adir.” What does it mean?",
+      opts: ["Mighty", "Eagle", "Silent", "Lightning"],
+      note: "The Air Force gives its jets Hebrew nicknames. The F-16I is “Sufa” (storm) and the F-15I is “Ra'am” (thunder)." },
+    { q: "The IDF's highest rank, Rav Aluf, is held by only one person. Who?",
+      opts: ["The Chief of Staff (RAMATKAL)", "The Minister of Defense", "The Prime Minister", "The commander of the Air Force"],
+      note: "The Chief of Staff is a soldier, not a politician, and answers to the government. The Minister of Defense is a civilian." },
+    { q: "The founders of Wiz, which Google agreed to buy for $32 billion in 2025, met while serving in…",
+      opts: ["Unit 8200", "The Navy", "The Paratroopers", "The army band"],
+      note: "8200 is Military Intelligence's signals and cyber unit. Its veterans have founded hundreds of tech companies." },
+    { q: "Which part of the IDF sends rescue teams to earthquakes in other countries?",
+      opts: ["Home Front Command", "The Armored Corps", "Unit 8200", "The Navy commandos"],
+      note: "IDF rescue teams and field hospitals have helped in Haiti (2010), Mexico (2017) and Turkey (2023)." },
+    { q: "Shayetet 13, one of Israel's most secret commando units, belongs to…",
+      opts: ["The Navy", "The Air Force", "Military Intelligence", "Home Front Command"],
+      note: "Shayetet means flotilla. Its fighters train at sea, under the sea and on land." },
+    { q: "Givati soldiers wear a purple beret. Their nickname is “Samson's…”",
+      opts: ["Foxes", "Lions", "Hammers", "Brothers"],
+      note: "In the Bible, Samson sent foxes into the Philistines' fields. Givati's symbol is a fox." }
   ],
 
-  berets: [
-    { unit: "Golani Brigade", color: "#6b4a2b", note: "Golani wears brown. Its symbol is a green olive tree, and it was founded in 1948, one of the IDF's oldest brigades." },
-    { unit: "Givati Brigade", color: "#6a2c91", note: "Givati wears purple. Its symbol is a fox: its soldiers are “Samson's Foxes.”" },
-    { unit: "Paratroopers Brigade", color: "#8f1d2c", note: "Paratroopers (Tzanchanim) wear a red beret. In 1967 a famous photo showed three paratroopers at the Western Wall." },
-    { unit: "Nahal Brigade", color: "#8fc04a", note: "Nahal wears light green. Its soldiers once mixed army service with building new farming communities." },
-    { unit: "Armored Corps", color: "#121212", note: "Tank crews wear black. They drive the Merkava, Israel's homemade tank." },
-    { unit: "Artillery Corps", color: "#19b5b0", note: "Artillery wears turquoise. They fire big guns from far away." },
-    { unit: "Combat Engineering", color: "#9aa0a6", note: "Combat Engineers wear gray. They clear paths, build bridges and drive the D9 “Doobi” bulldozer." },
-    { unit: "Home Front Command", color: "#f08a24", note: "Home Front Command wears orange. It protects people at home and runs search-and-rescue missions around the world." },
-    { unit: "Kfir Brigade", color: "camo", note: "Kfir wears camouflage! It's the IDF's newest infantry brigade (2005). Kfir means “lion cub.”" }
+  timeline: [
+    { y: 1948, t: "The IDF is founded", hint: "Two weeks after Israel declares independence",
+      note: "Underground groups like the Haganah and Palmach became one army." },
+    { y: 1956, t: "The Sinai Campaign", hint: "Israel, Britain and France vs. Egypt, over the Suez Canal",
+      note: "The IDF crossed the Sinai desert in about 100 hours." },
+    { y: 1967, t: "The Six-Day War", hint: "A short war; Jerusalem is reunited",
+      note: "Paratroopers reached the Western Wall. Yitzhak Rabin was Chief of Staff." },
+    { y: 1973, t: "The Yom Kippur War", hint: "A surprise attack on the holiest day of the year",
+      note: "Egypt and Syria attacked on Yom Kippur. It changed how the IDF gathers intelligence." },
+    { y: 1976, t: "Operation Entebbe", hint: "A rescue of hijacked hostages in Uganda",
+      note: "Commandos flew about 4,000 km and rescued 102 hostages. Their commander, Yoni Netanyahu, was killed." },
+    { y: 1979, t: "Peace treaty with Egypt", hint: "Signed at the White House, six years after a war",
+      note: "Israel returned the Sinai. The peace has held ever since." },
+    { y: 1981, t: "Operation Opera", hint: "Air Force jets fly all the way to Iraq",
+      note: "Eight F-16s destroyed Iraq's nuclear reactor near Baghdad." },
+    { y: 1982, t: "The First Lebanon War", hint: "The IDF enters Lebanon to stop PLO attacks",
+      note: "It turned into an 18-year presence in southern Lebanon." },
+    { y: 1991, t: "Operation Solomon", hint: "A giant airlift from Africa",
+      note: "In about 36 hours, more than 14,000 Ethiopian Jews flew to Israel. One plane carried a world-record 1,088 people." },
+    { y: 1994, t: "Peace treaty with Jordan", hint: "Israel's second peace treaty with an Arab neighbor",
+      note: "Signed by Prime Minister Yitzhak Rabin and King Hussein." },
+    { y: 2000, t: "The IDF leaves southern Lebanon", hint: "The first year of a new millennium",
+      note: "After 18 years, the IDF pulled out of its security zone." },
+    { y: 2001, t: "Israel's first female fighter pilot", hint: "A few years after a famous court case",
+      note: "Roni Zuckerman graduated from flight school." },
+    { y: 2004, t: "The Caracal Battalion is founded", hint: "A new combat unit for men and women together",
+      note: "It guards Israel's borders with Egypt and Jordan." },
+    { y: 2005, t: "Israel leaves Gaza (the Disengagement)", hint: "Soldiers remove Israeli communities",
+      note: "About 8,000 Israelis left 21 communities in Gaza." },
+    { y: 2011, t: "Iron Dome's first interception", hint: "A brand-new system stops a rocket",
+      note: "Since then it has intercepted thousands of rockets." },
+    { y: 2023, t: "The October 7 attack", hint: "The deadliest day for Jews since the Holocaust",
+      note: "Hamas attacked southern Israel; the “Swords of Iron” war followed." }
+  ],
+
+  slang: [
+    { heb: "ג׳ובניק", tr: "Jobnik", opts: ["A soldier with a non-combat job", "A soldier looking for a job after the army", "The army's head chef", "A soldier who is always on their phone"],
+      note: "From the English word “job.” Combat soldiers tease jobniks, but most of the army is jobniks: intelligence, tech, teachers, logistics.",
+      ex: "She's a jobnik in Tel Aviv, so she sleeps at home most nights." },
+    { heb: "פאשלה", tr: "Fashla", opts: ["A big mistake or screw-up", "A surprise inspection", "A tasty army snack", "A dance after basic training"],
+      note: "Israelis use it everywhere now, not only in the army.",
+      ex: "I left my beret at home on the day of the ceremony. Total fashla!" },
+    { heb: "ראש גדול", tr: "Rosh gadol", opts: ["Someone who takes initiative and does extra", "Someone who brags all the time", "The commander of a whole base", "A soldier with a big helmet"],
+      note: "Literally “big head.” The opposite is rosh katan (“small head”): someone who does only the bare minimum.",
+      ex: "He fixed the problem before anyone asked. What a rosh gadol." },
+    { heb: "חמשוש", tr: "Hamshush", opts: ["A long weekend at home, Thursday to Sunday", "A five-minute break", "A soldier in their fifth year", "Hummus with five toppings"],
+      note: "It starts on chamishi, Thursday. Every soldier's dream.",
+      ex: "I got a hamshush, so I'm going to the beach on Thursday." },
+    { heb: "פז״ם", tr: "Pazam", opts: ["How long you've served (seniority)", "A grumpy officer", "A type of field ration", "Push-ups as punishment"],
+      note: "Soldiers with more pazam get small perks, and new recruits are expected to respect it.",
+      ex: "He's got more pazam than me, so he picks his bed first." },
+    { heb: "גיבוש", tr: "Gibbush", opts: ["Tryouts for elite units", "A team party", "Cleaning the barracks", "The graduation ceremony"],
+      note: "A gibbush can last days: running, carrying sandbags and teamwork tests while officers watch and take notes.",
+      ex: "She trained all summer for the Air Force gibbush." },
+    { heb: "בקו״ם", tr: "Bakum", opts: ["The base where new recruits are drafted", "A loud army alarm", "The army's bakery", "The army dentist"],
+      note: "At the Bakum, recruits get uniforms, shots and an army ID, and say goodbye to their parents. There are usually tears.",
+      ex: "My parents drove me to the Bakum on my first day." },
+    { heb: "פרופיל 97", tr: "Profil 97", opts: ["The highest medical fitness score", "The age limit for reserve duty", "A perfect Dapar score", "97% on the shooting range"],
+      note: "Every recruit gets a medical “profile.” Nobody gets 100: 97 is the top, and it means you're fit for any combat unit.",
+      ex: "He has a profil 97, so he can try out for any unit." },
+    { heb: "תורנות", tr: "Toranut", opts: ["Chores, like kitchen or cleaning duty", "Torah study on base", "Target practice", "A night patrol"],
+      note: "From “tor,” a turn: everyone takes a turn. Kitchen duty is toranut mitbach.",
+      ex: "I can't come to the phone, I have toranut in the kitchen." },
+    { heb: "ש״ג", tr: "Shin-Gimel", opts: ["The guard post at the base gate", "A secret code word", "The second sergeant", "A shower break"],
+      note: "Pronounced after its two Hebrew letters. Standing guard at the shin-gimel is a rite of passage.",
+      ex: "I'm on shin-gimel from 2 to 6 in the morning." },
+    { heb: "חפ״ש", tr: "Hapash", opts: ["A regular soldier with no special role", "A soldier who loves nature", "The army's fastest runner", "A fresh pita"],
+      note: "Short for chayal pashut, “a simple soldier.”",
+      ex: "I'm just a hapash, I don't make the rules." },
+    { heb: "צ׳ופר", tr: "Chupar", opts: ["A treat or a perk", "A helicopter", "A haircut", "A punishment"],
+      note: "Like chocolate after a hard week. It sounds like “chopper,” but it has nothing to do with helicopters.",
+      ex: "The commander brought pizza as a chupar after the march." },
+    { heb: "סוגרים שבת", tr: "Sogrim Shabbat", opts: ["Staying on base over the weekend", "Locking the base gate on Friday", "Lighting Shabbat candles", "Sleeping the whole weekend"],
+      note: "Literally “closing Shabbat.” Soldiers take turns staying so the base is never empty.",
+      ex: "I can't come to the party, we're sogrim Shabbat." }
   ],
 
   whoami: [
     { answer: "Oketz, the dog unit", icon: "🐕",
-      clues: ["My name means “sting” in Hebrew.", "My best members have amazing noses.", "They love treats and belly rubs.", "Woof! Woof!"],
-      note: "Oketz dogs and their handlers train together for months. They become partners." },
-    { answer: "Iron Dome", icon: "🛡️",
-      clues: ["I'm not a person. I'm a system.", "I first went into action in 2011.", "In Hebrew I'm called “Kipat Barzel.”", "I shoot rockets out of the sky."],
-      note: "Iron Dome's radar works out where a rocket will land, and fires an interceptor only when the rocket is headed for a populated area." },
-    { answer: "The Merkava tank", icon: "🛞",
-      clues: ["I weigh more than 60 tons.", "I was designed and built in Israel.", "My name means “chariot.”", "The Armored Corps rides inside me."],
-      note: "The Merkava has a back door, so it can carry extra people or a stretcher inside." },
+      clues: ["My name means “sting” in Hebrew.", "My best members train for months with one partner.", "They work for treats and praise.", "Woof!"],
+      note: "Oketz dogs search for explosives and missing people. Each dog works with one handler." },
+    { answer: "Iron Dome (Kipat Barzel)", icon: "🛡️",
+      clues: ["I first went into action in 2011.", "I belong to the Air Force's Air Defense Array.", "I only fire at threats headed for populated areas.", "I shoot rockets out of the sky."],
+      note: "Each Iron Dome battery has a radar, a control center and launchers." },
+    { answer: "Iron Beam (Magen Or)", icon: "🔦",
+      clues: ["My Hebrew name means “Light Shield.”", "I'm one of the newest air-defense systems in the world.", "Each of my shots costs just a few dollars.", "I use a laser instead of a missile."],
+      note: "Iron Dome interceptors cost tens of thousands of dollars each. A laser shot costs almost nothing." },
+    { answer: "Talpiot", icon: "🧪",
+      clues: ["My name comes from the Song of Songs.", "I'm a program, not a combat unit.", "My cadets study physics and math at Hebrew University in uniform.", "I take only a few dozen top students a year to invent military technology."],
+      note: "Talpiot graduates have founded companies and led major defense projects." },
+    { answer: "Unit 669", icon: "🚁",
+      clues: ["I belong to the Air Force.", "My training takes about a year and a half.", "I rescue people, including hurt or lost hikers.", "My name is a number: six, six…"],
+      note: "669 is the Air Force's search-and-rescue unit. Its medics are lowered from hovering helicopters." },
+    { answer: "Shayetet 13", icon: "🌊",
+      clues: ["I'm one of the most secret units in the IDF.", "My symbol is a bat with wings.", "My number is unlucky in America.", "I'm the Navy's commando unit."],
+      note: "Shayetet means flotilla. Its selection is one of the hardest in the IDF." },
+    { answer: "Unit 8200", icon: "💻",
+      clues: ["My name is a four-digit number.", "I'm part of Military Intelligence.", "I work with signals, codes and cyber.", "My veterans founded Wiz, Check Point and many other tech companies."],
+      note: "8200 is one reason Israel is called the “Start-Up Nation.”" },
+    { answer: "The Caracal Battalion", icon: "🐈",
+      clues: ["I was founded in 2004.", "I guard the borders with Egypt and Jordan.", "Men and women serve side by side in my combat companies.", "I'm named after a desert wild cat with tufted ears."],
+      note: "The caracal is a real cat that lives in the Negev and the Arava." },
+    { answer: "Home Front Command (Pikud HaOref)", icon: "🚨",
+      clues: ["I was created after the 1991 Gulf War.", "I wear an orange beret.", "I run search-and-rescue teams at home and abroad.", "My app tells Israelis when to run to a shelter."],
+      note: "Its alerts give people from about 15 seconds to a few minutes to reach a safe room, depending on where they live." },
     { answer: "The Paratroopers Brigade", icon: "🪂",
       clues: ["A famous 1967 photo shows three of my soldiers at the Western Wall.", "My symbol has wings, but I'm not the Air Force.", "My beret is red.", "I jump out of airplanes!"],
-      note: "In Hebrew they're the Tzanchanim. Paratroopers earn their wings after jump training." },
-    { answer: "Unit 669", icon: "🚁",
-      clues: ["I belong to the Air Force.", "I rescue people, including lost or hurt hikers.", "I fly helicopters to the rescue.", "My name is a number: six, six, …"],
-      note: "Unit 669 is the Air Force's search-and-rescue unit. Its medics can be lowered from a hovering helicopter." },
-    { answer: "Golani Brigade", icon: "🫒",
-      clues: ["I was founded in 1948.", "I'm an infantry brigade, and I'm famous for team spirit.", "My symbol is a green olive tree and my beret is brown.", "My name starts with G, and I'm NOT Givati."],
-      note: "Golani fans sing “Golani Sheli” (“My Golani”). Its soldiers are known for their brown beret." },
-    { answer: "Shayetet 13", icon: "🌊",
-      clues: ["I'm one of Israel's most secret commando units.", "My number is considered unlucky in America.", "I'm part of the Navy.", "I train in the sea… a LOT."],
-      note: "Shayetet means “flotilla.” Its training is one of the hardest in the IDF." },
-    { answer: "Unit 8200", icon: "💻",
-      clues: ["My name is a four-digit number.", "I'm part of Military Intelligence.", "I work with codes, computers and cyber.", "Lots of my veterans start tech companies."],
-      note: "8200 is one reason Israel has so many tech start-ups." },
-    { answer: "The Caracal Battalion", icon: "🐈",
-      clues: ["I was founded in 2004.", "I guard Israel's borders in the south.", "Men and women serve side by side in my combat companies.", "I'm named after a desert wild cat with tufted ears."],
-      note: "The caracal is a real desert cat that lives in Israel's Negev and Arava." }
-  ],
-
-  commands: [
-    { heb: "דום!", tr: "Dom!", en: "Attention! Stand straight and still." },
-    { heb: "נוח!", tr: "Noach!", en: "At ease! Feet apart, hands behind your back." },
-    { heb: "ימינה פנה!", tr: "Yamina pne!", en: "Right face! Turn to your right." },
-    { heb: "שמאלה פנה!", tr: "Smola pne!", en: "Left face! Turn to your left." },
-    { heb: "לאחור פנה!", tr: "Le'achor pne!", en: "About face! Turn all the way around." },
-    { tr: "Tank noise!", en: "Make your loudest Merkava tank sound." },
-    { tr: "Sniff like Oketz!", en: "Sniff the air like a dog from the Oketz unit." },
-    { tr: "F-35 takeoff!", en: "Arms out wide, fly like a fighter jet." },
-    { tr: "Commando swim!", en: "Swim in place like Shayetet 13." },
-    { tr: "Parachute jump!", en: "Jump like a paratrooper leaving the plane." },
-    { tr: "Doobi bulldozer!", en: "Scoop and push like a D9 bulldozer." },
-    { tr: "3 jumping jacks!", en: "Basic training warm-up: three jumping jacks." },
-    { tr: "Hop on one foot!", en: "Balance on one foot and hop." },
-    { tr: "Touch your toes!", en: "Bend down and touch your toes." }
+      note: "In Hebrew they're the Tzanchanim. Paratroopers earn their wings after jump school." }
   ],
 
   realfake: [
-    { s: "Some IDF soldiers get boots made without leather and berets made without wool, because they're vegan.", real: true,
-      note: "Real! Since 2015, vegan soldiers can ask for leather-free boots and wool-free berets." },
-    { s: "The Israeli Navy has a team of dolphins that deliver mail to ships.", real: false,
-      note: "Fake! No dolphin mail carriers. But Israel's submarines really are called Dolphin-class subs." },
-    { s: "Every IDF soldier has to learn how to jump out of an airplane.", real: false,
-      note: "Fake! Only some units, like the Paratroopers, earn their jump wings." },
-    { s: "Many IDF soldiers go home on weekends to be with their families for Shabbat.", real: true,
-      note: "Real! On Thursdays and Fridays you'll see soldiers in uniform on buses and trains all over Israel." },
-    { s: "IDF tanks have a built-in falafel oven.", real: false,
-      note: "Fake! No falafel. But the Merkava tank does have a back door, so it can carry extra people inside." },
-    { s: "Women in the IDF can be fighter pilots.", real: true,
-      note: "Real! Israel's first female fighter pilot graduated from flight school in 2001." },
-    { s: "Some IDF soldiers' job is to be teachers.", real: true,
-      note: "Real! Teacher-soldiers teach Hebrew to new immigrants and help kids in schools around Israel." },
-    { s: "Soldiers in basic training each get their own camel.", real: false,
-      note: "Fake! Basic training (tironut) is marching, learning and LOTS of push-ups. No camels." },
-    { s: "The IDF has a unit that rescues hikers who get lost or hurt.", real: true,
-      note: "Real! Unit 669 flies helicopters to rescue people, including hikers in Israel's deserts and mountains." },
-    { s: "To become an IDF pilot, you must be at least 30 years old.", real: false,
-      note: "Fake! Most pilot cadets start flight school at around 18." },
-    { s: "Many famous Israeli singers started out in army music troupes.", real: true,
-      note: "Real! The army troupes (lehakot tzvaiot) launched lots of Israeli stars." },
+    { s: "Vegan IDF soldiers can get boots made without leather and berets made without wool.", real: true,
+      note: "Real! Since 2015 the IDF has offered vegan meals and leather-free, wool-free gear." },
+    { s: "The IDF has a unit where soldiers on the autism spectrum analyze satellite and aerial images.", real: true,
+      note: "Real! The program is called Roim Rachok (“Seeing Far”). Its soldiers are known for spotting tiny details." },
+    { s: "IDF soldiers ride buses and trains for free.", real: true,
+      note: "Real! That's why on Sunday mornings Israel's trains are full of soldiers heading back to base." },
+    { s: "Israeli soldiers can vote in national elections from polling stations on their bases.", real: true,
+      note: "Real! Soldiers vote on base a few days before election day, and their ballots are counted with everyone else's." },
+    { s: "Top athletes can get “outstanding athlete” status so they can keep training during their service.", real: true,
+      note: "Real! Many of Israel's Olympians served this way." },
+    { s: "Some IDF soldiers' job is to teach Hebrew to new immigrants.", real: true,
+      note: "Real! Teacher-soldiers (morot chayalot) teach Hebrew and help kids in schools across Israel." },
+    { s: "Women can serve as IDF fighter pilots.", real: true,
+      note: "Real! Israel's first female fighter pilot graduated in 2001." },
+    { s: "The Israeli Navy trains dolphins to deliver mail to ships.", real: false,
+      note: "Fake! But Israel's submarines really are called Dolphin-class subs." },
+    { s: "Every IDF soldier has to learn to jump out of an airplane.", real: false,
+      note: "Fake! Only some units, like the Paratroopers, go to jump school." },
     { s: "Soldiers can pick any beret color they like.", real: false,
-      note: "Fake! Each unit has its own color, and soldiers earn it, often at the end of a long hike called the beret march (masa kumta)." }
+      note: "Fake! Each unit has its own color, and soldiers earn it after the beret march (masa kumta)." },
+    { s: "You must be at least 30 years old to start IDF flight school.", real: false,
+      note: "Fake! Pilot cadets usually start at 18, right after high school." },
+    { s: "Every Israeli soldier must serve in a combat unit for at least one year.", real: false,
+      note: "Fake! Most soldiers serve in non-combat roles: intelligence, tech, logistics, teaching and more." },
+    { s: "The IDF has an official mascot: a camel named Tzahi.", real: false,
+      note: "Fake! There's no mascot. Though some southern units do patrol in camel country." },
+    { s: "Merkava tanks have a built-in falafel oven.", real: false,
+      note: "Fake! But the Merkava does have a back door, so it can carry soldiers or a stretcher inside." }
+  ],
+
+  thinktank: [
+    { title: "October 7, 2023",
+      primer: "On October 7, 2023, the holiday of Simchat Torah, Hamas terrorists from Gaza attacked southern Israel. About 1,200 people were killed and 251 were taken hostage into Gaza: the deadliest day for Jews since the Holocaust. Within days, about 360,000 reservists reported for duty, some flying home from the United States. The war in Gaza that followed caused enormous loss of life and destruction there, and it is debated around the world. A ceasefire began in October 2025, and the living hostages came home.",
+      prompt: "Thousands of reservists showed up before they were even called. What makes people volunteer like that? Would you?" },
+    { title: "Should everyone serve?",
+      primer: "For decades, ultra-Orthodox (Haredi) men who study Torah full-time were exempt from the draft. In June 2024, Israel's Supreme Court ruled that the government must draft them like everyone else. It's one of the biggest debates in Israel today.",
+      prompt: "Should full-time religious students be drafted?",
+      sides: ["Everyone should share the burden equally, especially in wartime.", "Torah study protects the Jewish people too, and army life clashes with a strictly religious life."] },
+    { title: "Women in combat",
+      primer: "Since a law passed in 2000, women can serve in many combat jobs: as pilots, in mixed battalions like Caracal, and in border-defense tank crews, which fought on October 7. Many infantry brigades are still for men only.",
+      prompt: "Should every unit be open to anyone who passes the tests?",
+      sides: ["Equal tests, equal chances: the best person should get the job.", "Physical demands and each unit's needs should decide, not fairness alone."] },
+    { title: "Drafted at 18",
+      primer: "The United States ended its draft in 1973 and has an all-volunteer military. Israel still drafts most 18-year-olds, and many adults keep serving in the reserves for years.",
+      prompt: "If you lived in Israel, how would you feel about being drafted at 18? What would you gain, and what would you give up?" }
   ]
 };
 
-/* Ranks — teams get promoted as they score. */
+/* Power-up cards. Teams earn one by scoring the most points in a round. */
+const CARDS = {
+  miluim:   { name: "Miluim",     he: "מילואים",   icon: "🪖", type: "Double points",
+              text: "Reinforcements! Your team's next points are doubled." },
+  intel:    { name: "8200 Intel", he: "מודיעין",   icon: "📡", type: "Inside info",
+              text: "Trivia: remove 2 wrong answers. Timeline: the earliest event is placed for you. Slang / Real or Fake: your team counts as right. Who Am I: a free clue." },
+  raid:     { name: "Raid",       he: "פשיטה",     icon: "⚡", type: "Steal 100",
+              text: "Take 100 points from any team. Watch out for Iron Dome!" },
+  dome:     { name: "Iron Dome",  he: "כיפת ברזל", icon: "🛡️", type: "Block a raid",
+              text: "When another team raids you, intercept the raid and keep your points." },
+  hamshush: { name: "Hamshush",   he: "חמשוש",     icon: "🏖️", type: "Skip",
+              text: "Long weekend! Skip the current question and get a new one. In Trivia and Timeline, only on your own turn." }
+};
+const CARD_IDS = Object.keys(CARDS);
+
+/* Ranks: teams get promoted as they score. */
 const RANKS = [
   { min: 0,    tr: "Tiron",     en: "Recruit",    chev: "" },
-  { min: 200,  tr: "Turai",     en: "Private",    chev: "›" },
-  { min: 500,  tr: "Rav-Turai", en: "Corporal",   chev: "››" },
-  { min: 900,  tr: "Samal",     en: "Sergeant",   chev: "›››" },
-  { min: 1300, tr: "Segen",     en: "Lieutenant", chev: "★" },
-  { min: 1800, tr: "Seren",     en: "Captain",    chev: "★★" },
-  { min: 2300, tr: "Rav-Seren", en: "Major",      chev: "✦" },
-  { min: 2800, tr: "Aluf",      en: "General",    chev: "✦✦" }
+  { min: 250,  tr: "Turai",     en: "Private",    chev: "›" },
+  { min: 600,  tr: "Rav-Turai", en: "Corporal",   chev: "››" },
+  { min: 1000, tr: "Samal",     en: "Sergeant",   chev: "›››" },
+  { min: 1500, tr: "Segen",     en: "Lieutenant", chev: "★" },
+  { min: 2000, tr: "Seren",     en: "Captain",    chev: "★★" },
+  { min: 2600, tr: "Rav-Seren", en: "Major",      chev: "✦" },
+  { min: 3200, tr: "Aluf",      en: "General",    chev: "✦✦" }
 ];
 
 const ROUNDS = [
-  { id: "briefing",  name: "Briefing",        mins: 2 },
-  { id: "trivia",    name: "Boot Camp Trivia", mins: 8 },
-  { id: "berets",    name: "Beret Lineup",    mins: 4 },
-  { id: "whoami",    name: "Who Am I?",       mins: 6 },
-  { id: "commander", name: "Commander Says",  mins: 3 },
-  { id: "realfake",  name: "Real or Fake?",   mins: 4 },
-  { id: "awards",    name: "Awards",          mins: 2 }
+  { id: "briefing",  name: "Briefing",           mins: 3, scoring: false },
+  { id: "trivia",    name: "Boot Camp Trivia",   mins: 9, scoring: true },
+  { id: "timeline",  name: "Timeline",           mins: 6, scoring: true },
+  { id: "slang",     name: "Army Slang",         mins: 8, scoring: true },
+  { id: "whoami",    name: "Who Am I?",          mins: 7, scoring: true },
+  { id: "realfake",  name: "Real or Fake?",      mins: 5, scoring: true },
+  { id: "thinktank", name: "Think Tank",         mins: 5, scoring: false },
+  { id: "awards",    name: "Awards",             mins: 2, scoring: false }
 ];
 const INTRO = {
   trivia: { he: "טירונות", sub: "Tironut · basic training",
-    rules: ["Teams take turns answering. The team on duty discusses, then its captain says A, B, C or D.",
-            "Wrong answer? The NEXT team can steal.",
-            "Keep the volume down while the other team thinks, or no steal for you!"],
+    rules: ["Teams take turns. The team on duty talks it over, then its captain answers A, B, C or D.",
+            "A wrong answer lets the NEXT team steal.",
+            "Quiet while another team thinks, or you lose your steal."],
     score: "Correct: +100 · Steal: +50" },
-  berets: { he: "כומתות", sub: "Kumtot · berets",
-    rules: ["Every IDF unit has its own beret color.",
-            "A beret appears with 4 units. Every team decides together, quietly.",
-            "When I say “SHOW!”, every team holds up 1, 2, 3 or 4 fingers. No changing!"],
-    score: "Every team that's right: +100" },
+  timeline: { he: "ציר הזמן", sub: "Tsir hazman · the timeline",
+    rules: ["Your team gets 4 moments in IDF and Israeli history.",
+            "Put them in order, from earliest to latest. The hints help.",
+            "Your captain says the order and I tap the cards. No changing after “lock in”!"],
+    score: "+50 for each card in the right place · +100 bonus for all 4" },
+  slang: { he: "סלנג צבאי", sub: "Slang tzva'i · army slang",
+    rules: ["An Israeli army slang word appears in Hebrew. Read it out loud together!",
+            "Every team decides quietly. On “SHOW!”, hold up 1, 2, 3 or 4 fingers.",
+            "Bonus: use the word correctly in a sentence for extra points."],
+    score: "Right: +100 · Good sentence: +50" },
   whoami: { he: "מי אני?", sub: "Mi ani? · who am I?",
     rules: ["Clues appear one at a time, from hard to easy.",
-            "Know it? The whole team raises hands. The first team I call answers.",
-            "Wrong answer? Your team is out for this card. Guess early for more points!"],
+            "Know it? Your whole team raises hands. The first team I call answers.",
+            "Wrong? Your team is out for this card. Guess early for more points!"],
     score: "Clue 1: 400 · Clue 2: 300 · Clue 3: 200 · Clue 4: 100" },
-  commander: { he: "המפקד אומר", sub: "HaMefaked omer · the commander says",
-    rules: ["This is how Israeli kids play Simon Says! One player from each team comes to the front.",
-            "If the command starts with “HaMefaked omer” (the commander says), DO IT.",
-            "No “HaMefaked omer”? DON'T MOVE. Move by mistake and you're out."],
-    score: "Last soldier standing: +300" },
   realfake: { he: "אמת או בדיה?", sub: "Emet o bdaya? · real or fake?",
-    rules: ["A strange fact about the IDF appears. Is it real or fake?",
-            "Every team decides together, quietly.",
+    rules: ["A surprising fact about the IDF appears. Real or fake?",
+            "Every team decides quietly.",
             "On “SHOW!”: thumbs up for REAL, thumbs down for FAKE."],
-    score: "Every team that's right: +100" }
+    score: "Every team that's right: +100" },
+  thinktank: { he: "חשיבה", sub: "Chashiva · thinking",
+    rules: ["No points this round. Just real talk.",
+            "Read the background together, then talk it over in your team for 90 seconds.",
+            "A few teams share. There's no right answer. Listen to each other with respect."],
+    score: "Last chance to use your Raid cards before the awards!" }
 };
 
 const TEAM_COLORS = ["#ff8a3d", "#3fc5f0", "#f25c9a", "#9be15d", "#b18cff", "#2fe0c0"];
 const DEFAULT_NAMES = ["Team Falafel", "Team Bamba", "Team Shakshuka", "Team Krembo", "Team Sabich", "Team Hummus"];
-const TRIVIA_SECONDS = 30, SHOW_SECONDS = 15, BERETS_PER_GAME = 6, REALFAKE_PER_GAME = 8, WHOAMI_PER_GAME = 5;
+const TRIVIA_SECONDS = 30, STEAL_SECONDS = 15, SHOW_SECONDS = 20, TIMELINE_SECONDS = 60, TALK_SECONDS = 90;
+const SLANG_PER_GAME = 8, REALFAKE_PER_GAME = 8, WHOAMI_PER_GAME = 6;
 
 /* ===================================================================== */
 
@@ -553,18 +736,21 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&
 const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const rankOf = (score) => { let r = 0; RANKS.forEach((k, i) => { if (score >= k.min) r = i; }); return r; };
 const fmt = (ms) => { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
+const keyOf = (x) => x.q || x.s || x.heb || x.answer || x.t || x.title;
 
 function freshState() {
   return {
-    screen: "setup",           // setup | intro | play | end
+    screen: "setup",           // setup | intro | play | drop | end
     teamCount: 4,
     names: DEFAULT_NAMES.slice(),
     enabled: ROUNDS.map(() => true),
     teams: [],
-    roundIdx: 0,
-    deck: [], i: 0,
-    turn: 0, phase: "", picks: [], actor: -1, chosen: [], locked: [], shown: 1,
-    out: [], cmd: null, cmdN: 0, lastCmd: -1,
+    roundIdx: 0, roundStart: [],
+    deck: [], used: [], i: 0,
+    turn: 0, phase: "", picks: [], removed: [], actor: -1,
+    chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, free: 0,
+    order: [], lockFirst: false,
+    drops: [], dropRevealed: false,
     slide: 0, startedAt: null, flash: ""
   };
 }
@@ -592,7 +778,9 @@ const SFX = {
   show: () => { tone(523, 0.12, "triangle"); tone(784, 0.25, "triangle", 0.2, 0.1); },
   bugle: () => { [392, 523, 659, 784, 659, 784].forEach((f, i) => tone(f, i === 5 ? 0.45 : 0.16, "triangle", 0.16, i * 0.15)); },
   fanfare: () => { [523, 523, 523, 659, 784, 659, 784, 1047].forEach((f, i) => tone(f, i === 7 ? 0.8 : 0.18, "sawtooth", 0.06, i * 0.17)); },
-  out: () => tone(220, 0.3, "sawtooth", 0.07)
+  card: () => { [440, 554, 659, 880].forEach((f, i) => tone(f, 0.18, "triangle", 0.14, i * 0.08)); },
+  raid: () => { tone(880, 0.12, "sawtooth", 0.08); tone(440, 0.4, "sawtooth", 0.08, 0.1); },
+  dome: () => { tone(300, 0.1, "square", 0.06); tone(1400, 0.35, "sine", 0.15, 0.08); }
 };
 
 /* ---------- State changes (all undoable) ---------- */
@@ -607,6 +795,7 @@ function act(fn) {
 function undo() {
   if (!undoStack.length) return toast("Nothing to undo");
   S = JSON.parse(undoStack.pop());
+  closeOverlay();
   toast("Undone");
   render();
 }
@@ -621,13 +810,20 @@ function afterScore(before) {
     }
   });
 }
-function addPoints(team, pts) { if (team >= 0 && S.teams[team]) S.teams[team].score += pts; }
+/* Points from answering. A team with Miluim active gets double. Returns the points given. */
+function addPoints(team, pts) {
+  const t = S.teams[team];
+  if (!t || !pts) return 0;
+  if (pts > 0 && t.double) { pts *= 2; t.double = false; setTimeout(() => toast(`Miluim! ${t.name} scores double`, `+${pts}`), 150); }
+  t.score = Math.max(0, t.score + pts);
+  return pts;
+}
 
 /* ---------- Flow ---------- */
 const round = () => ROUNDS[S.roundIdx];
 function startGame() {
   readSetupInputs();
-  S.teams = S.names.slice(0, S.teamCount).map((n, i) => ({ name: (n || "").trim() || DEFAULT_NAMES[i], color: TEAM_COLORS[i], score: 0 }));
+  S.teams = S.names.slice(0, S.teamCount).map((n, i) => ({ name: (n || "").trim() || DEFAULT_NAMES[i], color: TEAM_COLORS[i], score: 0, cards: [], double: false }));
   S.startedAt = Date.now();
   S.roundIdx = -1;
   nextRound();
@@ -638,32 +834,55 @@ function nextRound() {
   if (k >= ROUNDS.length) k = ROUNDS.length - 1;
   goRound(k);
 }
+/* After a scoring round: the team(s) that scored most this round earn a power-up card. */
+function finishRound() {
+  stopTimer();
+  if (!round().scoring) return nextRound();
+  const deltas = S.teams.map((t, i) => t.score - (S.roundStart[i] || 0));
+  const best = Math.max(...deltas);
+  if (best <= 0) return nextRound();
+  S.drops = deltas.map((d, i) => (d === best ? i : -1)).filter((i) => i >= 0).map((t) => ({ t, card: CARD_IDS[Math.floor(Math.random() * CARD_IDS.length)], pts: best }));
+  S.drops.forEach((d) => S.teams[d.t].cards.push(d.card));
+  S.dropRevealed = false;
+  S.screen = "drop";
+  SFX.fanfare();
+}
+function pickFrom(pool, n) {
+  const fresh = shuffle(pool.filter((x) => !S.used.includes(keyOf(x))));
+  const out = fresh.slice(0, n);
+  out.forEach((x) => S.used.push(keyOf(x)));
+  return out;
+}
 function goRound(k) {
   S.roundIdx = k;
-  S.i = 0; S.phase = ""; S.picks = []; S.actor = -1; S.chosen = []; S.locked = []; S.shown = 1; S.out = []; S.cmd = null; S.cmdN = 0; S.slide = 0;
-  const id = round().id;
-  const n = S.teams.length;
-  if (id === "briefing") { S.screen = "play"; }
-  else if (id === "awards") { S.screen = "end"; SFX.fanfare(); confetti(); }
-  else {
-    S.screen = "intro";
-    if (id === "trivia") {
-      const per = n <= 2 ? 4 : n <= 4 ? 3 : 2;
-      S.deck = shuffle(CONTENT.trivia).slice(0, Math.min(CONTENT.trivia.length, per * n)).map(mcq);
-      S.turn = 0;
-    }
-    if (id === "berets") S.deck = shuffle(CONTENT.berets).slice(0, BERETS_PER_GAME).map((b) => {
-      const others = shuffle(CONTENT.berets.filter((x) => x.unit !== b.unit)).slice(0, 3).map((x) => x.unit);
-      const opts = shuffle([b.unit, ...others]);
-      return { ...b, opts, answer: opts.indexOf(b.unit) };
-    });
-    if (id === "whoami") S.deck = shuffle(CONTENT.whoami).slice(0, WHOAMI_PER_GAME);
-    if (id === "realfake") S.deck = shuffle(CONTENT.realfake).slice(0, REALFAKE_PER_GAME);
+  Object.assign(S, { i: 0, phase: "", picks: [], removed: [], actor: -1, chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, free: 0, order: [], lockFirst: false, slide: 0, used: [] });
+  S.roundStart = S.teams.map((t) => t.score);
+  const id = round().id, n = S.teams.length;
+  if (id === "briefing") { S.screen = "play"; return; }
+  if (id === "awards") { S.screen = "end"; SFX.fanfare(); confetti(); return; }
+  S.screen = "intro";
+  if (id === "trivia") {
+    const per = n <= 2 ? 5 : n <= 4 ? 3 : 2;
+    S.deck = pickFrom(CONTENT.trivia, per * n).map(mcq);
+    S.turn = 0;
   }
+  if (id === "timeline") { S.deck = S.teams.map(() => timelineSet()); S.turn = 0; }
+  if (id === "slang") S.deck = pickFrom(CONTENT.slang, SLANG_PER_GAME).map(mcq);
+  if (id === "whoami") S.deck = pickFrom(CONTENT.whoami, WHOAMI_PER_GAME);
+  if (id === "realfake") S.deck = pickFrom(CONTENT.realfake, REALFAKE_PER_GAME);
+  if (id === "thinktank") S.deck = CONTENT.thinktank.slice();
 }
 function mcq(item) {
   const opts = shuffle(item.opts);
-  return { q: item.q, note: item.note, opts, answer: opts.indexOf(item.opts[0]) };
+  return { ...item, opts, answer: opts.indexOf(item.opts[0]) };
+}
+/* 4 different events for one timeline turn, shown in random order. Events repeat only once all have been used. */
+function timelineSet() {
+  let pool = CONTENT.timeline.filter((e) => !S.used.includes(keyOf(e)));
+  if (pool.length < 4) { S.used = S.used.filter((k) => !CONTENT.timeline.some((e) => keyOf(e) === k)); pool = CONTENT.timeline.slice(); }
+  const set = shuffle(pool).slice(0, 4);
+  set.forEach((e) => S.used.push(keyOf(e)));
+  return set;
 }
 function beginRound() {
   S.screen = "play";
@@ -671,17 +890,108 @@ function beginRound() {
 }
 function setupQuestion() {
   const id = round().id;
-  S.picks = []; S.chosen = []; S.locked = []; S.shown = 1; S.actor = -1;
+  Object.assign(S, { picks: [], removed: [], chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, free: 0, actor: -1, order: [], lockFirst: false });
   if (id === "trivia") { S.phase = "ask"; startTimer(TRIVIA_SECONDS); }
-  if (id === "berets" || id === "realfake") { S.phase = "ask"; startTimer(SHOW_SECONDS); }
+  if (id === "timeline") { S.turn = S.i; S.phase = "order"; startTimer(TIMELINE_SECONDS); }
+  if (id === "slang" || id === "realfake") { S.phase = "ask"; startTimer(SHOW_SECONDS); }
   if (id === "whoami") { S.phase = "clue"; stopTimer(); }
-  if (id === "commander") { S.phase = "ready"; S.out = []; S.cmd = null; S.cmdN = 0; stopTimer(); }
+  if (id === "thinktank") { S.phase = "read"; stopTimer(); }
 }
 function nextQuestion() {
   S.i++;
   if (round().id === "trivia") S.turn = (S.turn + 1) % S.teams.length;
-  if (S.i >= S.deck.length) { stopTimer(); nextRound(); return; }
+  if (S.i >= S.deck.length) { finishRound(); return; }
   setupQuestion();
+}
+/* Hamshush: swap the current question for a fresh one. */
+function replaceCurrent() {
+  const id = round().id;
+  const pools = { trivia: CONTENT.trivia, slang: CONTENT.slang, whoami: CONTENT.whoami, realfake: CONTENT.realfake };
+  if (id === "timeline") { S.deck[S.i] = timelineSet(); }
+  else {
+    const [item] = pickFrom(pools[id], 1);
+    if (!item) return false;
+    S.deck[S.i] = id === "trivia" || id === "slang" ? mcq(item) : item;
+  }
+  const keepTurn = S.turn;
+  setupQuestion();
+  S.turn = keepTurn;
+  return true;
+}
+function hasSpare() {
+  const id = round().id;
+  const pools = { trivia: CONTENT.trivia, slang: CONTENT.slang, whoami: CONTENT.whoami, realfake: CONTENT.realfake };
+  if (id === "timeline") return true;
+  return !!pools[id] && pools[id].some((x) => !S.used.includes(keyOf(x)));
+}
+
+/* ---------- Power-up cards: when each can be used ---------- */
+function stealer() { return (S.turn + 1) % S.teams.length; }
+function canUse(t, card) {
+  const team = S.teams[t];
+  if (S.screen === "end" || S.screen === "setup") return "The game is over.";
+  const id = round().id, play = S.screen === "play";
+  if (card === "dome") return "Iron Dome works by itself: when another team raids you, you'll be asked if you want to intercept.";
+  if (card === "raid") return S.teams.length > 1 ? "" : "There's nobody to raid.";
+  if (card === "miluim") return team.double ? "Miluim is already active for this team." : "";
+  if (card === "intel") {
+    if (!play) return "Use it during a question.";
+    if (id === "trivia") return (S.phase === "ask" && S.turn === t) || (S.phase === "steal" && stealer() === t) ? (S.removed.length ? "Intel was already used on this question." : "") : "Use it on your own trivia turn, before answering.";
+    if (id === "timeline") return S.phase === "order" && S.turn === t && !S.lockFirst && !S.order.length ? "" : "Use it on your own timeline turn, before tapping any card.";
+    if (id === "whoami") return S.phase === "clue" && S.shown < 4 ? "" : "Use it while clues are still hidden and nobody is answering.";
+    if (id === "slang" || id === "realfake") return S.phase === "ask" ? (S.intelTeams.includes(t) ? "Already used on this question." : "") : "Use it before the answer is revealed.";
+    return "Intel doesn't work in this round.";
+  }
+  if (card === "hamshush") {
+    if (!play) return "Use it during a question.";
+    if (!hasSpare()) return "There are no spare questions left in this round.";
+    if (id === "trivia") return S.phase === "ask" && S.turn === t && !S.picks.length ? "" : "Use it on your own trivia turn, before answering.";
+    if (id === "timeline") return S.phase === "order" && S.turn === t ? "" : "Use it on your own timeline turn.";
+    if (id === "whoami") return S.phase === "clue" && !S.locked.length ? "" : "Use it before any team has answered this card.";
+    if (id === "slang" || id === "realfake") return S.phase === "ask" ? "" : "Use it before the answer is revealed.";
+    return "Hamshush doesn't work in this round.";
+  }
+  return "";
+}
+function useCard(t, idx) {
+  const team = S.teams[t], card = team.cards[idx];
+  const why = canUse(t, card);
+  if (why) return toast(why);
+  if (card === "raid") return showRaidTargets(t, idx);
+  closeOverlay();
+  act(() => {
+    team.cards.splice(idx, 1);
+    const id = round().id;
+    if (card === "miluim") { team.double = true; toast(`${team.name} called up the Miluim!`, "Next points are doubled"); }
+    if (card === "hamshush") { replaceCurrent(); toast(`${team.name} took a Hamshush`, "New question!"); }
+    if (card === "intel") {
+      if (id === "trivia") {
+        const it = S.deck[S.i];
+        const wrong = shuffle(it.opts.map((o, k) => k).filter((k) => k !== it.answer && !S.picks.includes(k)));
+        S.removed = wrong.slice(0, 2);
+      }
+      if (id === "timeline") { const set = S.deck[S.i]; let e = 0; set.forEach((x, k) => { if (x.y < set[e].y) e = k; }); S.order = [e]; S.lockFirst = true; }
+      if (id === "whoami") { S.shown++; S.free++; }
+      if (id === "slang" || id === "realfake") S.intelTeams.push(t);
+      toast(`8200 Intel for ${team.name}`, "Inside information!");
+    }
+    SFX.card();
+  });
+}
+function doRaid(from, idx, to, intercepted) {
+  closeOverlay();
+  act(() => {
+    const A = S.teams[from], B = S.teams[to];
+    A.cards.splice(idx, 1);
+    if (intercepted) {
+      B.cards.splice(B.cards.indexOf("dome"), 1);
+      toast(`Iron Dome! ${B.name} intercepted the raid`, `${A.name}'s raid failed`); SFX.dome();
+    } else {
+      const take = Math.min(100, B.score);
+      B.score -= take; A.score += take;
+      toast(`${A.name} raided ${B.name}!`, `${take} points stolen`); SFX.raid();
+    }
+  });
 }
 
 /* ---------- Timer ---------- */
@@ -730,19 +1040,28 @@ function renderTop() {
       <button class="tool" data-a="help" title="Keys (H)">?</button>
     </div>`;
 }
+function activeTeam() {
+  if (S.screen !== "play") return -1;
+  const id = round().id;
+  if (id === "trivia") return S.phase === "steal" ? stealer() : S.turn;
+  if (id === "timeline") return S.turn;
+  if (id === "whoami") return S.actor;
+  return -1;
+}
 function renderBoard() {
   const b = $("#board");
   if (S.screen === "setup" || !S.teams.length) { b.hidden = true; return; }
   b.hidden = false;
   b.style.setProperty("--n", S.teams.length);
-  const id = round().id;
-  const active = S.screen === "play" && id === "trivia" ? (S.phase === "steal" ? (S.turn + 1) % S.teams.length : S.turn) : (id === "whoami" ? S.actor : -1);
+  const active = activeTeam();
   b.innerHTML = S.teams.map((t, i) => {
     const r = RANKS[rankOf(t.score)];
     const bump = t.bump && Date.now() - t.bump < 900 ? "bump" : "";
+    const chips = t.cards.map((c, k) => `<button class="chip" data-a="card" data-t="${i}" data-i="${k}" title="${esc(CARDS[c].name)}: ${esc(CARDS[c].type)}"><i>${CARDS[c].icon}</i>${esc(CARDS[c].name)}</button>`).join("");
     return `<div class="team ${i === active ? "active" : ""}" style="--tc:${t.color}">
       <div class="tn"><span class="num">${i + 1}</span>${esc(t.name)}</div>
       <div class="tr"><span class="chev">${r.chev}</span> ${r.tr} · ${r.en}</div>
+      <div class="chips">${t.double ? `<span class="chip x2"><i>🪖</i>×2 ready</span>` : ""}${chips}</div>
       <div class="ts ${bump}">${t.score}</div>
       <div class="adj"><button data-a="adj" data-t="${i}" data-v="50" aria-label="Add 50 to ${esc(t.name)}">+50</button><button data-a="adj" data-t="${i}" data-v="-50" aria-label="Take 50 from ${esc(t.name)}">−50</button></div>
     </div>`;
@@ -753,6 +1072,11 @@ function renderBoard() {
 function teamTag(i, extra = "") { const t = S.teams[i]; return `<span class="tag ${extra}" style="--tc:${t.color}">${esc(t.name)}</span>`; }
 function noteBox(text) { return `<div class="note"><b class="lbl">FIELD NOTE</b><p>${esc(text)}</p></div>`; }
 function timerHtml(doneText) { return `<div class="row" style="width:min(100%,72rem);flex-wrap:nowrap"><div class="timer" id="tbar"><i></i></div><span class="timerNum" id="tnum" ${doneText ? `data-done="${esc(doneText)}"` : ""}></span></div>`; }
+function cardArt(id, extra = "") {
+  const c = CARDS[id];
+  return `<div class="pcard ${extra}"><div class="ptype">${esc(c.type)}</div><div class="pico">${c.icon}</div><div><div class="pname">${esc(c.name)}</div><div class="phe">${c.he}</div></div><div class="ptext">${esc(c.text)}</div></div>`;
+}
+function primary(label, action, key = "Space", cls = "go big") { return `<button class="btn ${cls}" data-a="${action}" data-primary>${label} <kbd>${key}</kbd></button>`; }
 
 function renderSetup() {
   const names = S.names.slice(0, S.teamCount).map((n, i) => `
@@ -764,9 +1088,9 @@ function renderSetup() {
     <div class="center" style="align-items:flex-start;text-align:left;gap:1rem">
       <div class="eyebrow">A team game about the Israel Defense Forces</div>
       <h1 class="display h-xxl">IDF Unit<br>Showdown</h1>
-      <p class="lead" style="text-wrap:pretty">Learn the units, berets and ranks of <span class="he">צה״ל</span> by beating your classmates at trivia, beret matching, mystery units and the commander says. Every team starts as a recruit. Score points to get promoted!</p>
-      <div class="row" style="justify-content:flex-start"><button class="btn go big" data-a="start">Start the game <kbd>Enter</kbd></button></div>
-      <p class="hint">Tip: press F for full screen before the class arrives. Hover over a team's score during the game to fix points by hand.</p>
+      <p class="lead" style="text-wrap:pretty">Learn how <span class="he">צה״ל</span> works: its units, its history, its slang and its debates. Win rounds to earn power-up cards, raid other teams, and climb from recruit to general.</p>
+      <div class="row" style="justify-content:flex-start"><button class="btn go big" data-a="start" data-primary>Start the game <kbd>Enter</kbd></button></div>
+      <p class="hint">Press F for full screen before class. Hover over a team's score during the game to fix points by hand.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:1rem;min-width:0">
       <div class="panel">
@@ -787,28 +1111,32 @@ const SLIDES = [
   () => `<div class="eyebrow">Briefing · What is the IDF?</div>
     <div class="bigHe">צה״ל</div>
     <h2 class="display h-xl">Tzahal</h2>
-    <p class="lead">The <b>Israel Defense Forces</b>. Founded in <b>1948</b>, right after Israel became a country. Its job: to protect the people of Israel.</p>`,
+    <p class="lead">The <b>Israel Defense Forces</b>, founded on <b>May 26, 1948</b>, two weeks after Israel declared independence. Underground groups like the Haganah and Palmach became one army.</p>`,
   () => `<div class="eyebrow">Briefing · Who serves?</div>
     <div class="bigNum">18</div>
-    <p class="lead">At 18, most Israelis, <b>girls and boys</b>, are drafted. Instead of heading to college, they put on a uniform for about <b>2–3 years</b>. Imagine going from graduation straight to the army!</p>`,
+    <p class="lead">At 18, most Jewish and Druze Israelis, <b>women and men</b>, are drafted: about <b>2 years</b> for women and <b>2½–3</b> for men. Many adults keep serving in the reserves (<i>miluim</i>) for years. The US hasn't drafted anyone since <b>1973</b>.</p>`,
   () => `<div class="eyebrow">Briefing · Three main branches</div>
     <div class="branches">
-      <div class="branch"><div class="ico">🪖</div><h4>Ground Forces</h4><p>Infantry brigades like Golani and Givati, tanks, artillery and engineers.</p></div>
-      <div class="branch"><div class="ico">✈️</div><h4>Air Force</h4><p>Fighter jets, helicopters, rescue teams and the Iron Dome system.</p></div>
-      <div class="branch"><div class="ico">⚓</div><h4>Navy</h4><p>Ships, submarines and the Shayetet 13 commandos.</p></div>
+      <div class="branch"><div class="ico">🪖</div><h4>Ground Forces</h4><p>Infantry brigades like Golani and Givati, tanks, artillery and combat engineers.</p></div>
+      <div class="branch"><div class="ico">✈️</div><h4>Air Force</h4><p>Fighter jets, helicopters, rescue Unit 669, and air defense like Iron Dome.</p></div>
+      <div class="branch"><div class="ico">⚓</div><h4>Navy</h4><p>Missile boats, submarines and the Shayetet 13 commandos.</p></div>
     </div>
-    <p class="lead">There's also intelligence, cyber, search-and-rescue, teachers… and even a dog unit.</p>`,
+    <p class="lead">Plus Military Intelligence (Unit 8200), Home Front Command, teachers, and even a dog unit.</p>`,
   () => `<div class="eyebrow">Briefing · Earn your rank</div>
     <h2 class="display h-l">Every team starts as a <span style="color:var(--flag)">Tiron</span> (recruit)</h2>
     <div class="ladder">${RANKS.map((r) => `<div class="rung"><span class="chev">${r.chev || "·"}</span><b>${r.tr}</b><span>${r.en}</span><em>${r.min}</em></div>`).join("")}</div>
-    <p class="lead">Score points to get promoted. The real IDF has even more ranks; the very top one, <b>Rav Aluf</b>, belongs to just one person.</p>`
+    <p class="lead">Score points to get promoted. The real top rank, <b>Rav Aluf</b>, belongs to just one person: the Chief of Staff.</p>`,
+  () => `<div class="eyebrow">Briefing · Power-up cards</div>
+    <h2 class="display h-l">Win a round, earn a card</h2>
+    <div class="drop">${CARD_IDS.map((c) => cardArt(c, "mini")).join("")}</div>
+    <p class="lead">The team that scores the most in a round draws a card. Click a card on the scoreboard to play it.</p>`
 ];
 function renderBriefing() {
   const last = S.slide >= SLIDES.length - 1;
   return `<div class="center">${SLIDES[S.slide]()}
     <div class="row">
       ${S.slide > 0 ? `<button class="btn small" data-a="slidePrev">← Back</button>` : ""}
-      <button class="btn go big" data-a="next">${last ? "To round 1" : "Next"} <kbd>Space</kbd></button>
+      ${primary(last ? "To round 1" : "Next", "next")}
     </div>
     <div class="slideNum">${S.slide + 1} / ${SLIDES.length}</div></div>`;
 }
@@ -823,27 +1151,38 @@ function renderIntro() {
     <div><span class="he" style="font-size:2.4rem;font-weight:800;color:var(--flag)">${info.he}</span> <span class="muted" style="font-size:1.3rem">&nbsp;${esc(info.sub)}</span></div>
     <ul class="rules">${info.rules.map((x) => `<li><span>${esc(x)}</span></li>`).join("")}</ul>
     <div class="score-line">${esc(info.score)}</div>
-    <button class="btn go big" data-a="begin">Let's go <kbd>Space</kbd></button>
+    ${primary("Let's go", "begin")}
   </div></div>`;
 }
 
+function renderDrop() {
+  const items = S.drops.map((d) => `<div class="dropItem">${teamTag(d.t)}${S.dropRevealed ? cardArt(d.card, "flip") : `<div class="pcard back"><div class="pico">🎖️</div><div class="pname">TOP SECRET</div></div>`}</div>`).join("");
+  const names = S.drops.map((d) => S.teams[d.t].name).join(" & ");
+  return `<div class="center">
+    <div class="eyebrow">${esc(round().name)} · round winner${S.drops.length > 1 ? "s" : ""}</div>
+    <h1 class="display h-l">${esc(names)} scored the most: +${S.drops[0].pts}</h1>
+    <div class="drop">${items}</div>
+    ${S.dropRevealed ? `<p class="hint" style="font-size:1.2rem">Saved on the scoreboard. Click it there whenever you want to play it.</p>${primary("Next round", "nextRound")}` : primary("Reveal the card", "revealDrop")}
+  </div>`;
+}
+
 function renderTrivia() {
-  const it = S.deck[S.i], n = S.teams.length;
-  const stealer = (S.turn + 1) % n;
+  const it = S.deck[S.i];
   const done = S.phase === "done";
   let head;
   if (S.phase === "ask") head = `<div class="row">${teamTag(S.turn)}<span class="eyebrow">your question</span></div>`;
-  else if (S.phase === "steal") head = `<div class="row"><span class="eyebrow" style="color:var(--bad)">Wrong!</span>${teamTag(stealer, "steal")}<span class="eyebrow">can steal for 50</span></div>`;
+  else if (S.phase === "steal") head = `<div class="row"><span class="eyebrow" style="color:var(--bad)">Wrong!</span>${teamTag(stealer(), "steal")}<span class="eyebrow">can steal for 50</span></div>`;
   else head = `<div class="row"><span class="eyebrow">${esc(S.flash)}</span></div>`;
   const opts = it.opts.map((o, k) => {
     let cls = "";
     if (done && k === it.answer) cls = "right";
-    else if (S.picks.includes(k)) cls = "wrong";
+    else if (S.picks.includes(k) || S.removed.includes(k)) cls = "wrong";
     else if (done) cls = "dim";
-    return `<button class="opt ${cls}" data-a="pick" data-k="${k}" ${done || S.picks.includes(k) ? "disabled" : ""}><span class="key">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`;
+    const off = done || S.picks.includes(k) || S.removed.includes(k);
+    return `<button class="opt ${cls}" data-a="pick" data-k="${k}" ${off ? "disabled" : ""}><span class="key">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`;
   }).join("");
   return `<div class="center">
-    <div class="eyebrow">Question ${S.i + 1} of ${S.deck.length}</div>
+    <div class="eyebrow">Question ${S.i + 1} of ${S.deck.length}${S.removed.length ? ` · <span class="intelTag">8200 Intel removed 2 answers</span>` : ""}</div>
     ${head}
     <h2 class="q">${esc(it.q)}</h2>
     <div class="opts">${opts}</div>
@@ -851,66 +1190,84 @@ function renderTrivia() {
     <div class="row">
       ${S.phase === "steal" ? `<button class="btn" data-a="nosteal">No steal · show answer <kbd>R</kbd></button>` : ""}
       ${S.phase === "ask" ? `<button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button>` : ""}
-      ${done ? `<button class="btn go big" data-a="next">Next question <kbd>Space</kbd></button>` : ""}
+      ${done ? primary("Next question", "next") : ""}
     </div>
   </div>`;
 }
 
-function beretSvg(color, small) {
-  const camo = color === "camo";
-  const fill = camo ? "url(#camo)" : color;
-  const edge = color === "#121212" ? "#8a8a8a" : "rgba(0,0,0,0.35)";
-  return `<svg class="beret" ${small ? `style="height:min(15vh,9rem)"` : ""} viewBox="0 0 260 170" role="img" aria-label="A beret">
-    <defs>
-      <pattern id="camo" width="70" height="60" patternUnits="userSpaceOnUse">
-        <rect width="70" height="60" fill="#7c8a4e"/>
-        <ellipse cx="14" cy="14" rx="16" ry="9" fill="#4d5a2c"/><ellipse cx="50" cy="38" rx="18" ry="10" fill="#8e7a4a"/>
-        <ellipse cx="18" cy="46" rx="11" ry="7" fill="#3a4322"/><ellipse cx="58" cy="10" rx="10" ry="6" fill="#a69a6a"/>
-      </pattern>
-      <radialGradient id="sheen" cx="0.38" cy="0.3" r="0.7"><stop offset="0" stop-color="#fff" stop-opacity="0.28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-    </defs>
-    <path d="M28 112 C 8 70, 70 22, 158 26 C 236 30, 258 82, 222 104 C 180 128, 72 134, 28 112 Z" fill="${fill}" stroke="${edge}" stroke-width="3"/>
-    <path d="M28 112 C 8 70, 70 22, 158 26 C 236 30, 258 82, 222 104 C 180 128, 72 134, 28 112 Z" fill="url(#sheen)"/>
-    <path d="M34 108 C 80 128, 180 124, 222 102 L 226 120 C 182 142, 80 146, 32 126 Z" fill="#2b2418" stroke="#120f09" stroke-width="2"/>
-    <circle cx="150" cy="27" r="6" fill="${fill}" stroke="${edge}" stroke-width="2"/>
-    <circle cx="70" cy="92" r="17" fill="#d6b45a" stroke="#8a6c22" stroke-width="3"/>
-    <path d="M70 80 L74 89 L84 89 L76 95 L79 104 L70 98 L61 104 L64 95 L56 89 L66 89 Z" fill="#8a6c22"/>
-  </svg>`;
+function renderTimeline() {
+  const set = S.deck[S.i], done = S.phase === "done";
+  const sorted = set.slice().sort((a, b) => a.y - b.y);
+  let cards;
+  if (!done) {
+    cards = set.map((e, k) => {
+      const pos = S.order.indexOf(k);
+      const locked = S.lockFirst && pos === 0;
+      return `<button class="ev ${pos >= 0 ? "set" : ""} ${locked ? "locked" : ""}" data-a="tap" data-k="${k}" ${locked ? "disabled" : ""}>
+        ${pos >= 0 ? `<span class="slot">${pos + 1}</span>` : ""}
+        <h4>${esc(e.t)}</h4><span class="hint">Hint: ${esc(e.hint)}</span>${locked ? `<span class="intelTag">Placed by 8200 Intel</span>` : ""}</button>`;
+    }).join("");
+  } else {
+    cards = sorted.map((e, p) => {
+      const ok = set[S.order[p]] === e || (S.order[p] !== undefined && set[S.order[p]].y === e.y);
+      return `<div class="ev ${ok ? "ok" : "bad"}"><span class="slot">${ok ? "✓" : "✗"}</span><span class="yr">${e.y}</span><h4>${esc(e.t)}</h4><span class="evnote">${esc(e.note)}</span></div>`;
+    }).join("");
+  }
+  return `<div class="center">
+    <div class="eyebrow">Timeline ${S.i + 1} of ${S.deck.length}</div>
+    <div class="row">${teamTag(S.turn)}<span class="eyebrow">${done ? esc(S.flash) : "put these in order, earliest first"}</span></div>
+    <div class="arrowline">${done ? "The real order" : "Earliest"}</div>
+    <div class="tl">${cards}</div>
+    ${done ? "" : timerHtml()}
+    <div class="row">
+      ${done ? primary("Next team", "next")
+        : `<button class="btn small" data-a="clearOrder" ${S.order.length > (S.lockFirst ? 1 : 0) ? "" : "disabled"}>Clear</button>
+           <button class="btn go big" data-a="lockIn" data-primary ${S.order.length === 4 ? "" : "disabled"}>Lock in <kbd>Space</kbd></button>`}
+    </div>
+    ${done ? "" : `<p class="hint">Tap the cards in the order the team says (or press 1–4). Tap a numbered card again to remove it.</p>`}
+  </div>`;
 }
 
-function renderEveryone() {
-  const id = round().id, it = S.deck[S.i];
-  const revealed = S.phase === "reveal";
-  let body;
-  if (id === "berets") {
-    const opts = it.opts.map((o, k) => {
-      const cls = revealed ? (k === it.answer ? "right" : "dim") : "";
-      return `<div class="opt ${cls}"><span class="key">${k + 1}</span><span>${esc(o)}</span></div>`;
-    }).join("");
-    body = `<h2 class="q" style="font-size:clamp(1.6rem,4.4vh,3.2rem)">Which unit wears this beret?</h2>
-      <div class="beretStage">${beretSvg(it.color, revealed)}</div>
-      <div class="opts">${opts}</div>`;
-  } else {
-    const cls = (isReal) => revealed ? (it.real === isReal ? "right" : "wrong") : "";
-    body = `<h2 class="statement">“${esc(it.s)}”</h2>
-      <div class="rf"><div class="${cls(true)}"><span class="thumb">👍</span><b>REAL</b></div><div class="${cls(false)}"><span class="thumb">👎</span><b>FAKE</b></div></div>`;
-  }
-  const picks = S.teams.map((t, i) => `<button class="teamBtn ${S.chosen.includes(i) ? "on" : ""}" style="--tc:${t.color}" data-a="toggleTeam" data-t="${i}"><span class="n">${i + 1}</span>${esc(t.name)}${S.chosen.includes(i) ? " ✓" : ""}</button>`).join("");
-  const showWord = id === "berets" ? "SHOW your fingers!" : "SHOW your thumbs!";
+function awardRows(withBonus) {
+  const btn = (kind, t, on, locked) => `<button class="teamBtn small ${on ? "on" : ""}" style="--tc:${S.teams[t].color}" data-a="toggleTeam" data-kind="${kind}" data-t="${t}" ${locked ? "disabled" : ""}><span class="n">${t + 1}</span><span>${esc(S.teams[t].name)}${on ? " ✓" : ""}</span></button>`;
+  const right = S.teams.map((x, t) => btn("right", t, S.chosen.includes(t) || S.intelTeams.includes(t), S.intelTeams.includes(t))).join("");
+  const bonus = S.teams.map((x, t) => btn("bonus", t, S.bonus.includes(t), false)).join("");
+  return `<div class="awardRows">
+    <div class="awardRow"><span>Got it right +100</span>${right}</div>
+    ${withBonus ? `<div class="awardRow"><span>Good sentence +50</span>${bonus}</div>` : ""}
+  </div>`;
+}
+function renderSlang() {
+  const it = S.deck[S.i], revealed = S.phase === "reveal";
+  const opts = revealed
+    ? `<div class="opt right" style="width:min(100%,72rem)"><span class="key">${it.answer + 1}</span><span>${esc(it.opts[it.answer])}</span></div>`
+    : `<div class="opts">${it.opts.map((o, k) => `<div class="opt"><span class="key">${k + 1}</span><span>${esc(o)}</span></div>`).join("")}</div>`;
+  return `<div class="center" style="gap:0.9rem">
+    <div class="eyebrow">Word ${S.i + 1} of ${S.deck.length} · every team answers${S.intelTeams.length ? ` · <span class="intelTag">Intel: ${S.intelTeams.map((t) => esc(S.teams[t].name)).join(", ")}</span>` : ""}</div>
+    <div class="slangWord"><div class="heb" ${revealed ? `style="font-size:clamp(2.4rem,8vh,5rem)"` : ""}>${esc(it.heb)}</div><div class="tr">${esc(it.tr)}</div></div>
+    ${opts}
+    ${revealed ? `${noteBox(it.note)}<div class="example"><b>Use it</b>${esc(it.ex)}</div>
+      <div class="row">${awardRows(true)}${primary("Award &amp; next", "award", "Space", "go")}</div>`
+    : `${timerHtml("SHOW your fingers!")}
+      <div class="row"><button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button>${primary("Reveal", "reveal", "R")}</div>`}
+  </div>`;
+}
+function renderRealFake() {
+  const it = S.deck[S.i], revealed = S.phase === "reveal";
+  const cls = (isReal) => revealed ? (it.real === isReal ? "right" : "wrong") : "";
   return `<div class="center">
-    <div class="eyebrow">${id === "berets" ? "Beret" : "Fact"} ${S.i + 1} of ${S.deck.length} · every team answers</div>
-    ${body}
-    ${revealed ? `${noteBox(it.note)}
-      <div class="eyebrow">Click every team that got it right (or press their number)</div>
-      <div class="row"><div class="teamBtns">${picks}</div><button class="btn go" data-a="award">+100 &amp; next <kbd>Space</kbd></button></div>`
-    : `${timerHtml(showWord)}
-      <div class="row"><button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button><button class="btn go big" data-a="reveal">Reveal answer <kbd>R</kbd></button></div>`}
+    <div class="eyebrow">Fact ${S.i + 1} of ${S.deck.length} · every team answers${S.intelTeams.length ? ` · <span class="intelTag">Intel: ${S.intelTeams.map((t) => esc(S.teams[t].name)).join(", ")}</span>` : ""}</div>
+    <h2 class="statement">“${esc(it.s)}”</h2>
+    <div class="rf"><div class="${cls(true)}"><span class="thumb">👍</span><b>REAL</b></div><div class="${cls(false)}"><span class="thumb">👎</span><b>FAKE</b></div></div>
+    ${revealed ? `${noteBox(it.note)}<div class="row">${awardRows(false)}${primary("Award &amp; next", "award", "Space", "go")}</div>`
+    : `${timerHtml("SHOW your thumbs!")}
+      <div class="row"><button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button>${primary("Reveal", "reveal", "R")}</div>`}
   </div>`;
 }
 
 function renderWhoAmI() {
   const it = S.deck[S.i], done = S.phase === "done";
-  const value = 500 - 100 * S.shown;
+  const value = Math.max(100, 500 - 100 * (S.shown - S.free));
   const clues = it.clues.map((c, k) => {
     const vis = k < S.shown || done;
     return `<li class="clue ${vis ? "" : "hidden"} ${k === S.shown - 1 && !done ? "new" : ""}"><span class="pts">${400 - 100 * k}</span><p>${vis ? esc(c) : "CLASSIFIED"}</p></li>`;
@@ -922,57 +1279,43 @@ function renderWhoAmI() {
   let side;
   if (done) {
     side = `<div class="answerBox"><div class="ico">${it.icon}</div><h3>${esc(it.answer)}</h3><p style="margin:0.3rem 0 0;font-weight:700">${esc(S.flash)}</p></div>
-      <button class="btn go big" data-a="next">Next card <kbd>Space</kbd></button>`;
+      ${primary("Next card", "next")}`;
   } else if (S.phase === "judge") {
     side = `<div class="worth"><span class="eyebrow">${esc(S.teams[S.actor].name)} answers for</span><b>${value}</b></div>
       <button class="btn ok big" data-a="correct">Correct <kbd>C</kbd></button>
       <button class="btn no big" data-a="wrong">Wrong <kbd>W</kbd></button>`;
   } else {
-    side = `<div class="worth"><span class="eyebrow">Worth right now</span><b>${value}</b></div>
-      <button class="btn go" data-a="clue" ${S.shown >= 4 ? "disabled" : ""}>Next clue <kbd>Space</kbd></button>
+    side = `<div class="worth"><span class="eyebrow">Worth right now</span><b>${value}</b>${S.free ? `<span class="intelTag">Free clue from 8200 Intel</span>` : ""}</div>
+      <button class="btn go" data-a="clue" data-primary ${S.shown >= 4 ? "disabled" : ""}>Next clue <kbd>Space</kbd></button>
       <button class="btn small" data-a="giveup">Nobody knows · reveal <kbd>R</kbd></button>`;
   }
   return `<div class="wai">
     <div style="display:flex;flex-direction:column;gap:0.9rem;min-width:0">
       <div class="row" style="justify-content:space-between"><span class="eyebrow">Mystery ${S.i + 1} of ${S.deck.length}</span><h2 class="display h-l" style="margin:0">Who am I?</h2></div>
       <ul class="clues">${clues}</ul>
-      ${done ? noteBox(it.note) : `<div class="eyebrow" style="text-align:center">Hands up! Who buzzed first? <span class="muted">(press 1–${S.teams.length})</span></div><div class="teamBtns">${teamBtns}</div>`}
+      ${done ? noteBox(it.note) : `<div class="eyebrow" style="text-align:center">Hands up! Who was first? <span class="muted">(press 1–${S.teams.length})</span></div><div class="teamBtns">${teamBtns}</div>`}
     </div>
     <div class="side">${side}</div>
   </div>`;
 }
 
-let lastPop = -1;
-function renderCommander() {
-  const alive = S.teams.map((t, i) => i).filter((i) => !S.out.includes(i));
-  const chips = S.teams.map((t, i) => `<button class="teamBtn ${S.out.includes(i) ? "out" : "on"}" style="--tc:${t.color}" data-a="outTeam" data-t="${i}" ${S.phase === "done" ? "disabled" : ""}><span class="n">${i + 1}</span>${esc(t.name)}</button>`).join("");
-  let card;
-  if (S.phase === "done") {
-    card = `<div class="cmd says"><div class="prefix">${esc(S.flash)}</div><div class="tr">Well done, soldiers!</div></div>`;
-  } else if (!S.cmd) {
-    card = `<div class="cmd"><div class="prefix">One player from each team: come to the front!</div>
-      <div class="tr">Ready?</div><div class="en">Commands come in Hebrew <i>and</i> English. Listen for “HaMefaked omer”!</div></div>`;
-  } else {
-    const c = S.cmd;
-    const pop = S.cmdN !== lastPop; lastPop = S.cmdN;
-    card = `<div class="cmd ${pop ? "pop" : ""} ${c.says ? "says" : ""}">
-      <div class="prefix ${c.says ? "" : "nope"}">${c.says ? `<span class="he">המפקד אומר</span><span>HaMefaked omer:</span>` : `(no “HaMefaked omer”)`}</div>
-      ${c.heb ? `<div class="heb">${esc(c.heb)}</div>` : ""}
-      <div class="tr">${esc(c.tr)}</div>
-      <div class="en">${esc(c.en)}</div></div>`;
-  }
-  const lastOne = alive.length === 1 && S.phase !== "done";
-  return `<div class="center">
-    <div class="eyebrow">Commander says · command ${S.cmdN}</div>
-    ${card}
-    <div class="eyebrow">Moved by mistake? Click their team to put them out (or press 1–${S.teams.length})</div>
-    <div class="teamBtns">${chips}</div>
-    <div class="row">
-      ${S.phase === "done" ? `<button class="btn go big" data-a="next">Next round <kbd>Space</kbd></button>`
-      : lastOne ? `<button class="btn ok big" data-a="cmdWin">${esc(S.teams[alive[0]].name)} wins +300 <kbd>Space</kbd></button>`
-      : `<button class="btn go big" data-a="cmd">${S.cmd ? "Next command" : "First command"} <kbd>Space</kbd></button>
-         ${S.cmd && alive.length !== 1 ? `<button class="btn small" data-a="cmdWin">Time's up · +300 to everyone still standing</button>` : ""}`}
+function renderThinkTank() {
+  const it = S.deck[S.i], last = S.i >= S.deck.length - 1;
+  const talking = S.phase === "talk";
+  return `<div class="center" style="gap:1rem">
+    <div class="eyebrow">Think Tank ${S.i + 1} of ${S.deck.length} · no points, just real talk</div>
+    <h1 class="display h-l">${esc(it.title)}</h1>
+    <div class="tank">
+      <div class="primer"><b class="k">Background</b>${esc(it.primer)}</div>
+      <p class="prompt">${esc(it.prompt)}</p>
+      ${it.sides ? `<div class="sides"><div><b>Some say</b>${esc(it.sides[0])}</div><div><b>Others say</b>${esc(it.sides[1])}</div></div>` : ""}
     </div>
+    ${talking ? timerHtml("Time to share!") : ""}
+    <div class="row">
+      ${talking ? "" : `<button class="btn" data-a="talk">Start 90-second team talk <kbd>T</kbd></button>`}
+      ${primary(last ? "To the awards" : "Next topic", "next")}
+    </div>
+    ${last ? `<p class="hint">Last chance: teams with a Raid card can play it now, before the awards!</p>` : ""}
   </div>`;
 }
 
@@ -995,11 +1338,12 @@ function renderEnd() {
     <h1 class="display h-xl">${tie ? "It's a tie at the top!" : `${esc(winner.name)} wins!`}</h1>
     <div class="podium">${pod}</div>
     ${rest ? `<div class="rest">${rest}</div>` : ""}
-    <div class="debrief"><div class="eyebrow">Debrief · exit question</div><p>Which IDF unit would you want to visit for a day, and why? Name one thing you learned today.</p></div>
+    <div class="debrief"><div class="eyebrow">Debrief · exit ticket</div><p>Teach someone one Hebrew army slang word tonight. And: which unit would you want to visit for a day, and why?</p></div>
     <div class="row"><button class="btn" data-a="again">Play again, same teams</button><button class="btn small" data-a="reset">New game</button></div>
   </div>`;
 }
 
+const PLAY = { briefing: renderBriefing, trivia: renderTrivia, timeline: renderTimeline, slang: renderSlang, whoami: renderWhoAmI, realfake: renderRealFake, thinktank: renderThinkTank };
 function render() {
   renderTop();
   renderBoard();
@@ -1007,11 +1351,9 @@ function render() {
   let html = "";
   if (S.screen === "setup") html = renderSetup();
   else if (S.screen === "intro") html = renderIntro();
+  else if (S.screen === "drop") html = renderDrop();
   else if (S.screen === "end") html = renderEnd();
-  else {
-    const id = round().id;
-    html = id === "briefing" ? renderBriefing() : id === "trivia" ? renderTrivia() : id === "whoami" ? renderWhoAmI() : id === "commander" ? renderCommander() : renderEveryone();
-  }
+  else html = PLAY[round().id]();
   st.innerHTML = html;
   st.scrollTop = 0;
   drawTimer();
@@ -1030,41 +1372,77 @@ const ACTIONS = {
   slidePrev: () => { S.slide = Math.max(0, S.slide - 1); render(); },
   next: () => {
     const id = round().id;
-    if (S.screen === "intro") return act(beginRound);
     if (id === "briefing") { if (S.slide < SLIDES.length - 1) { S.slide++; render(); } else act(nextRound); return; }
-    if (id === "commander") return act(nextRound);
     act(nextQuestion);
   },
+  nextRound: () => act(nextRound),
+  revealDrop: () => { S.dropRevealed = true; SFX.card(); render(); },
   pick: (d) => {
     const k = +d.k, it = S.deck[S.i];
-    if (S.phase === "done" || S.picks.includes(k)) return;
+    if (S.phase === "done" || S.picks.includes(k) || S.removed.includes(k)) return;
     act(() => {
-      const stealer = (S.turn + 1) % S.teams.length;
       if (k === it.answer) {
-        const who = S.phase === "steal" ? stealer : S.turn, pts = S.phase === "steal" ? 50 : 100;
-        addPoints(who, pts); S.flash = `${S.teams[who].name} +${pts}${S.phase === "steal" ? " (steal!)" : ""}`;
+        const steal = S.phase === "steal", who = steal ? stealer() : S.turn;
+        const got = addPoints(who, steal ? 50 : 100);
+        S.flash = `${S.teams[who].name} +${got}${steal ? " (steal!)" : ""}`;
         S.phase = "done"; SFX.ok(); stopTimer();
       } else {
         S.picks.push(k); SFX.no();
-        if (S.phase === "ask" && S.teams.length > 1) { S.phase = "steal"; startTimer(15); }
+        if (S.phase === "ask" && S.teams.length > 1) { S.phase = "steal"; startTimer(STEAL_SECONDS); }
         else { S.phase = "done"; S.flash = "Nobody got it. Here's the answer:"; stopTimer(); }
       }
     });
   },
   nosteal: () => act(() => { S.phase = "done"; S.flash = "No steal. Here's the answer:"; stopTimer(); }),
-  timer: () => { startTimer(round().id === "trivia" ? (S.phase === "steal" ? 15 : TRIVIA_SECONDS) : SHOW_SECONDS); drawTimer(); },
+  timer: () => {
+    const id = round().id;
+    const sec = id === "trivia" ? (S.phase === "steal" ? STEAL_SECONDS : TRIVIA_SECONDS) : id === "timeline" ? TIMELINE_SECONDS : id === "thinktank" ? TALK_SECONDS : SHOW_SECONDS;
+    if (id === "thinktank" && S.phase !== "talk") return ACTIONS.talk();
+    startTimer(sec); drawTimer();
+  },
+  talk: () => { S.phase = "talk"; startTimer(TALK_SECONDS); render(); },
+  tap: (d) => {
+    const k = +d.k;
+    if (S.phase !== "order") return;
+    if (S.order.includes(k)) { if (S.lockFirst && S.order[0] === k) return; S.order = S.order.filter((x) => x !== k); }
+    else if (S.order.length < 4) S.order.push(k);
+    SFX.tick(); render();
+  },
+  clearOrder: () => { S.order = S.lockFirst ? S.order.slice(0, 1) : []; render(); },
+  lockIn: () => {
+    if (S.phase !== "order" || S.order.length !== 4) return;
+    act(() => {
+      const set = S.deck[S.i], sorted = set.slice().sort((a, b) => a.y - b.y);
+      const right = S.order.filter((k, p) => set[k].y === sorted[p].y).length;
+      const pts = right * 50 + (right === 4 ? 100 : 0);
+      const got = addPoints(S.turn, pts);
+      S.flash = right === 4 ? `Perfect timeline! +${got}` : `${right} of 4 in the right place: +${got}`;
+      S.phase = "done"; stopTimer();
+      if (right === 4) SFX.ok(); else if (right === 0) SFX.no(); else SFX.show();
+    });
+  },
   reveal: () => act(() => { S.phase = "reveal"; stopTimer(); SFX.show(); }),
   toggleTeam: (d, el) => {
-    const t = +d.t, on = !S.chosen.includes(t);
-    S.chosen = on ? [...S.chosen, t] : S.chosen.filter((x) => x !== t);
+    const t = +d.t, list = d.kind === "bonus" ? "bonus" : "chosen";
+    const on = !S[list].includes(t);
+    S[list] = on ? [...S[list], t] : S[list].filter((x) => x !== t);
     el.classList.toggle("on", on);
     el.lastChild.textContent = S.teams[t].name + (on ? " ✓" : "");
     if (on) SFX.tick();
   },
-  award: () => act(() => { S.chosen.forEach((t) => addPoints(t, 100)); if (S.chosen.length) SFX.ok(); nextQuestion(); }),
+  award: () => act(() => {
+    const right = new Set([...S.chosen, ...S.intelTeams]);
+    let any = false;
+    S.teams.forEach((t, i) => {
+      const pts = (right.has(i) ? 100 : 0) + (S.bonus.includes(i) ? 50 : 0);
+      if (pts) { addPoints(i, pts); any = true; }
+    });
+    if (any) SFX.ok();
+    nextQuestion();
+  }),
   clue: () => { if (S.phase === "clue" && S.shown < 4) act(() => { S.shown++; SFX.tick(); }); },
   buzz: (d) => { const t = +d.t; if (S.phase === "done" || S.locked.includes(t)) return; act(() => { S.actor = t; S.phase = "judge"; SFX.tick(); }); },
-  correct: () => { if (S.phase !== "judge") return; act(() => { const v = 500 - 100 * S.shown; addPoints(S.actor, v); S.flash = `${S.teams[S.actor].name} +${v}`; S.phase = "done"; SFX.ok(); }); },
+  correct: () => { if (S.phase !== "judge") return; act(() => { const v = Math.max(100, 500 - 100 * (S.shown - S.free)); const got = addPoints(S.actor, v); S.flash = `${S.teams[S.actor].name} +${got}`; S.phase = "done"; SFX.ok(); }); },
   wrong: () => {
     if (S.phase !== "judge") return;
     act(() => {
@@ -1074,29 +1452,23 @@ const ACTIONS = {
     });
   },
   giveup: () => act(() => { S.phase = "done"; S.actor = -1; S.flash = "Nobody got it this time."; }),
-  cmd: () => act(() => {
-    if (!S.cmd) S.phase = "live";
-    let k; do { k = Math.floor(Math.random() * CONTENT.commands.length); } while (k === S.lastCmd && CONTENT.commands.length > 1);
-    S.lastCmd = k; S.cmdN++;
-    S.cmd = { ...CONTENT.commands[k], says: S.cmdN <= 2 ? true : Math.random() < 0.62 };
-    SFX.tick();
-  }),
-  outTeam: (d) => { if (S.phase === "done") return; const t = +d.t; act(() => { if (S.out.includes(t)) S.out = S.out.filter((x) => x !== t); else { S.out.push(t); SFX.out(); } }); },
-  cmdWin: () => act(() => {
-    const alive = S.teams.map((t, i) => i).filter((i) => !S.out.includes(i));
-    alive.forEach((i) => addPoints(i, 300));
-    S.flash = alive.length === 1 ? `${S.teams[alive[0]].name} +300` : alive.length ? `${alive.length} teams still standing: +300 each` : "Nobody left standing!";
-    S.phase = "done"; SFX.ok();
-  }),
-  adj: (d) => act(() => addPoints(+d.t, +d.v)),
+  card: (d) => showCard(+d.t, +d.i),
+  useCard: (d) => useCard(+d.t, +d.i),
+  raidTarget: (d) => {
+    const from = +d.t, idx = +d.i, to = +d.to;
+    if (S.teams[to].cards.includes("dome")) showDome(from, idx, to); else doRaid(from, idx, to, false);
+  },
+  intercept: (d) => doRaid(+d.t, +d.i, +d.to, true),
+  letThrough: (d) => doRaid(+d.t, +d.i, +d.to, false),
+  adj: (d) => act(() => { const t = S.teams[+d.t]; t.score = Math.max(0, t.score + +d.v); }),
   undo: () => undo(),
   rounds: () => showRounds(),
-  jump: (d) => { closeOverlay(); act(() => goRound(+d.k)); },
+  jump: (d) => { closeOverlay(); act(() => { stopTimer(); goRound(+d.k); }); },
   mute: () => { muted = !muted; renderTop(); },
   full: () => toggleFull(),
   help: () => showHelp(),
   close: () => closeOverlay(),
-  again: () => { const keep = S.teams.map((t) => ({ ...t, score: 0 })); undoStack = []; S.teams = keep; S.startedAt = Date.now(); S.roundIdx = -1; act(nextRound); },
+  again: () => { undoStack = []; S.teams = S.teams.map((t) => ({ ...t, score: 0, cards: [], double: false })); S.startedAt = Date.now(); S.roundIdx = -1; act(nextRound); },
   reset: () => { const names = S.teams.map((t) => t.name), n = S.teams.length, en = S.enabled; S = freshState(); S.teamCount = n; names.forEach((x, i) => (S.names[i] = x)); S.enabled = en; undoStack = []; render(); }
 };
 
@@ -1113,11 +1485,11 @@ document.addEventListener("change", (e) => {
 });
 
 /* ---------- Keyboard ---------- */
-function press(selector) { const b = $(selector); if (b && !b.disabled) { b.click(); return true; } return false; }
+function press(selector, root = document) { const b = $(selector, root); if (b && !b.disabled) { b.click(); return true; } return false; }
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && S.screen !== "setup") { e.preventDefault(); undo(); } return; }
   const typing = e.target.tagName === "INPUT" && e.target.type !== "checkbox";
-  if (!$("#overlay").hidden) { if (e.key === "Escape" || e.key.toLowerCase() === "h") closeOverlay(); return; }
+  if (!$("#overlay").hidden) { if (e.key === "Escape") closeOverlay(); return; }
   if (S.screen === "setup") {
     if (e.key === "Enter") { e.preventDefault(); ACTIONS.start(); }
     if (!typing && e.key.toLowerCase() === "f") toggleFull();
@@ -1125,26 +1497,23 @@ document.addEventListener("keydown", (e) => {
   }
   if (typing) return;
   const k = e.key.toLowerCase();
-  const id = round().id;
-  if (k === " " || k === "enter") {
-    e.preventDefault();
-    press("[data-a='next']") || press("[data-a='begin']") || press("[data-a='award']") || press("[data-a='clue']") || press("[data-a='cmdWin'].ok") || press("[data-a='cmd']") || press("[data-a='reveal']");
-    return;
-  }
+  if (k === " " || k === "enter") { e.preventDefault(); press("[data-primary]", $("#stage")); return; }
   if (k === "u") return undo();
   if (k === "f") return toggleFull();
   if (k === "m") return ACTIONS.mute();
   if (k === "h" || k === "?") return showHelp();
   if (S.screen !== "play") return;
-  if (k === "t") return press("[data-a='timer']");
+  const id = round().id;
+  if (id === "trivia" && "abcd".includes(k) && k.length === 1) return press(`[data-a='pick'][data-k='${"abcd".indexOf(k)}']`);
+  if (k === "t") return press("[data-a='talk']") || press("[data-a='timer']");
   if (k === "r") return press("[data-a='reveal']") || press("[data-a='nosteal']") || press("[data-a='giveup']");
   if (k === "c") return press("[data-a='correct']");
   if (k === "w") return press("[data-a='wrong']");
-  if (id === "trivia" && "abcd".includes(k) && k.length === 1) return press(`[data-a='pick'][data-k='${"abcd".indexOf(k)}']`);
   if (/^[1-6]$/.test(k)) {
     const t = +k - 1;
+    if (id === "timeline") return press(`[data-a='tap'][data-k='${t}']`);
     if (t >= S.teams.length) return;
-    press(`[data-a='toggleTeam'][data-t='${t}']`) || press(`[data-a='buzz'][data-t='${t}']`) || press(`[data-a='outTeam'][data-t='${t}']`);
+    press(`[data-a='toggleTeam'][data-kind='right'][data-t='${t}']`) || press(`[data-a='buzz'][data-t='${t}']`);
   }
   if (k === "arrowleft" && id === "briefing") ACTIONS.slidePrev();
 });
@@ -1153,27 +1522,54 @@ document.addEventListener("keydown", (e) => {
 function openOverlay(html) { const o = $("#overlay"); o.innerHTML = `<div class="sheet">${html}</div>`; o.hidden = false; }
 function closeOverlay() { $("#overlay").hidden = true; }
 $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") closeOverlay(); });
+function showCard(t, idx) {
+  const team = S.teams[t], card = team.cards[idx];
+  if (!card) return;
+  const why = canUse(t, card);
+  openOverlay(`<h2>${esc(team.name)}'s card</h2>
+    <div class="useRow">${cardArt(card)}
+      ${why ? `<p class="lead" style="text-align:center">${esc(why)}</p>` : `<button class="btn go big" data-a="useCard" data-t="${t}" data-i="${idx}">Play ${esc(CARDS[card].name)}</button>`}
+    </div>
+    <div class="row" style="justify-content:flex-end"><button class="btn small" data-a="close">Close</button></div>`);
+}
+function showRaidTargets(t, idx) {
+  const others = S.teams.map((x, i) => i).filter((i) => i !== t);
+  openOverlay(`<h2>⚡ Raid: who's the target?</h2>
+    <p class="lead">${esc(S.teams[t].name)} steals up to 100 points.</p>
+    <div class="teamBtns">${others.map((i) => `<button class="teamBtn" style="--tc:${S.teams[i].color}" data-a="raidTarget" data-t="${t}" data-i="${idx}" data-to="${i}"><span class="n">${i + 1}</span>${esc(S.teams[i].name)} · ${S.teams[i].score}</button>`).join("")}</div>
+    <div class="row" style="justify-content:flex-end"><button class="btn small" data-a="close">Cancel</button></div>`);
+}
+function showDome(from, idx, to) {
+  SFX.raid();
+  openOverlay(`<h2>🚨 Incoming raid!</h2>
+    <p class="lead">${esc(S.teams[from].name)} is raiding ${esc(S.teams[to].name)}. ${esc(S.teams[to].name)} has an Iron Dome card. Intercept?</p>
+    <div class="row">
+      <button class="btn ok big" data-a="intercept" data-t="${from}" data-i="${idx}" data-to="${to}">🛡️ Intercept</button>
+      <button class="btn" data-a="letThrough" data-t="${from}" data-i="${idx}" data-to="${to}">Save it, let the raid through</button>
+    </div>`);
+}
 function showHelp() {
   openOverlay(`<h2>Host keys</h2>
     <div class="keys">
-      <kbd>Space</kbd><span>Next step (next slide, next question, next clue, next command)</span>
+      <kbd>Space</kbd><span>The big yellow button: next slide, question, clue or round</span>
       <kbd>A–D</kbd><span>Trivia: the answer the team chose</span>
+      <kbd>1–4</kbd><span>Timeline: tap the event cards in the team's order</span>
+      <kbd>1–6</kbd><span>Pick a team: who was right, who raised hands first</span>
       <kbd>R</kbd><span>Reveal the answer · no steal · nobody knows</span>
-      <kbd>1–6</kbd><span>Pick a team: who's right, who buzzed first, who's out</span>
       <kbd>C</kbd> <span>Who Am I: correct</span>
-      <kbd>W</kbd> <span>Who Am I: wrong (team is locked out for that card)</span>
-      <kbd>T</kbd><span>Restart the countdown</span>
+      <kbd>W</kbd> <span>Who Am I: wrong (that team is out for the card)</span>
+      <kbd>T</kbd><span>Restart the countdown · Think Tank: start the team talk</span>
       <kbd>U</kbd><span>Undo the last action (press again to keep undoing)</span>
       <kbd>F</kbd><span>Full screen</span>
       <kbd>M</kbd><span>Sound on / off</span>
     </div>
-    <p class="hint">Hover over a team's score to add or take away 50 points by hand. The class clock turns red when you're behind schedule.</p>
+    <p class="hint">Power-up cards: click a card on the scoreboard to play it. Hover over a score to add or take away 50 points by hand.</p>
     <div class="row" style="justify-content:flex-end"><button class="btn small" data-a="close">Close</button></div>`);
 }
 function showRounds() {
   openOverlay(`<h2>Jump to a round</h2>
     <div class="jump">${ROUNDS.map((r, k) => `<button data-a="jump" data-k="${k}">${k === S.roundIdx ? "▸ " : ""}${esc(r.name)} <span class="muted">· ${r.mins} min${S.enabled[k] ? "" : " · skipped"}</span></button>`).join("")}</div>
-    <p class="hint">Scores stay. Short on time? Jump straight to Real or Fake, then Awards.</p>
+    <p class="hint">Scores and cards stay. Jumping skips the card drop for the round you leave.</p>
     <div class="row" style="justify-content:flex-end"><button class="btn small" data-a="close">Close</button></div>`);
 }
 function toast(msg, sub = "") {
@@ -1181,7 +1577,7 @@ function toast(msg, sub = "") {
   t.className = "toast"; t.innerHTML = `${esc(msg)}${sub ? `<small>${esc(sub)}</small>` : ""}`;
   const box = $("#toasts"); box.appendChild(t);
   while (box.children.length > 3) box.firstChild.remove();
-  setTimeout(() => t.remove(), 2600);
+  setTimeout(() => t.remove(), 2800);
 }
 function toggleFull() {
   try {
@@ -1219,10 +1615,10 @@ setInterval(() => {
 
 /* ---------- Boot (keeps the game going if the page is updated mid-class) ---------- */
 function start(data) {
-  try { if (data && data.S) { S = data.S; undoStack = data.undo || []; } } catch (e) {}
+  try { if (data && data.S && data.v === 2) { S = data.S; undoStack = data.undo || []; } } catch (e) {}
   render();
 }
-try { window.claude?.hot?.snapshot?.(() => ({ S, undo: undoStack.slice(-20) })); } catch (e) {}
+try { window.claude?.hot?.snapshot?.(() => ({ v: 2, S, undo: undoStack.slice(-20) })); } catch (e) {}
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 </script>
 </body>
