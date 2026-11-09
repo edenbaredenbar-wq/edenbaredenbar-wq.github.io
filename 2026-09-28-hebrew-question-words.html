@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hebrew Question Words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@500;700;800&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f5fa; --card:#ffffff; --ink:#18203a; --muted:#5d6785; --line:#dde2ef;
+  --c1:#3b6fe0; --c2:#7c4ddb; --c3:#1f9d6b; --c4:#d98a07; --c5:#d6435f; --c6:#0e93a8;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10152a; --card:#1a2140; --ink:#f2f4fb; --muted:#a7b0cf; --line:#2c3560;
+    --c1:#7ea2ff; --c2:#b596ff; --c3:#4fd6a0; --c4:#ffc04d; --c5:#ff7d96; --c6:#4fd0e3;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10152a; --card:#1a2140; --ink:#f2f4fb; --muted:#a7b0cf; --line:#2c3560;
+  --c1:#7ea2ff; --c2:#b596ff; --c3:#4fd6a0; --c4:#ffc04d; --c5:#ff7d96; --c6:#4fd0e3;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Rubik",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding-inline:16px;padding-block:24px 32px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:clamp(22px,3vw,32px);text-wrap:balance}
+h1 .he{font-family:"Noto Sans Hebrew","Rubik",sans-serif;color:var(--muted);font-weight:700;margin-inline-start:.4em}
+button{font:inherit;font-weight:500;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:10px;padding:.5em 1em;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible{outline:3px solid var(--c1);outline-offset:2px}
+
+/* Hub in the middle column, three words on each side (read right column first) */
+.map{direction:rtl;display:grid;grid-template-columns:1fr 1.1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;gap:16px}
+.hub{grid-column:2;grid-row:1 / span 3;background:var(--ink);color:var(--bg);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:6px}
+.hub .q{font-size:clamp(80px,13vw,170px);font-weight:700;line-height:1}
+.hub .he{font-family:"Noto Sans Hebrew",sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.3}
+.hub .en{direction:ltr;font-size:clamp(15px,1.6vw,20px);opacity:.75;letter-spacing:.06em;text-transform:uppercase}
+
+.w{background:var(--card);border:2px solid var(--line);border-top:6px solid var(--c);border-radius:16px;padding:14px 16px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.w .word{font-family:"Noto Sans Hebrew",sans-serif;font-size:clamp(40px,5.4vw,66px);font-weight:800;line-height:1.3;color:var(--c)}
+.w .tr{direction:ltr;font-size:16px;color:var(--muted);font-style:italic}
+.w .en{direction:ltr;font-size:clamp(18px,2vw,24px);font-weight:700}
+.w .ex{direction:rtl;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);width:100%;font-family:"Noto Sans Hebrew",sans-serif;font-size:17px;line-height:1.5}
+.w .ex span{display:block;direction:ltr;font-family:"Rubik",sans-serif;font-size:14px;color:var(--muted)}
+
+.quiz .w .en,.quiz .w .ex span{visibility:hidden}
+.quiz .w{cursor:pointer}
+.quiz .w.show .en,.quiz .w.show .ex span{visibility:visible}
+
+@media (max-width:700px){
+  .map{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-flow:row}
+  .hub{grid-column:1 / -1;grid-row:auto;order:-1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Question Words <span class="he" lang="he">מִלּוֹת שְׁאֵלָה</span></h1>
+    <button id="quizBtn" type="button" aria-pressed="false">Hide English</button>
+  </header>
+
+  <main class="map" id="map">
+    <div class="hub" aria-label="Question words">
+      <div class="q">?</div>
+      <div class="he" lang="he">מִלּוֹת שְׁאֵלָה</div>
+      <div class="en">Question Words</div>
+    </div>
+
+    <div class="w" style="--c:var(--c1)"><div class="word" lang="he">מִי</div><div class="tr">mi</div><div class="en">Who?</div>
+      <div class="ex" lang="he">מִי זֶה?<span>Who is this?</span></div></div>
+    <div class="w" style="--c:var(--c2)"><div class="word" lang="he">מָה</div><div class="tr">ma</div><div class="en">What?</div>
+      <div class="ex" lang="he">מָה זֶה?<span>What is this?</span></div></div>
+    <div class="w" style="--c:var(--c3)"><div class="word" lang="he">אֵיפֹה</div><div class="tr">eifo</div><div class="en">Where?</div>
+      <div class="ex" lang="he">אֵיפֹה הַשֵּׁרוּתִים?<span>Where is the bathroom?</span></div></div>
+    <div class="w" style="--c:var(--c4)"><div class="word" lang="he">מָתַי</div><div class="tr">matai</div><div class="en">When?</div>
+      <div class="ex" lang="he">מָתַי הַשִּׁעוּר?<span>When is the lesson?</span></div></div>
+    <div class="w" style="--c:var(--c5)"><div class="word" lang="he">לָמָּה</div><div class="tr">lama</div><div class="en">Why?</div>
+      <div class="ex" lang="he">לָמָּה אַתָּה עָצוּב?<span>Why are you sad?</span></div></div>
+    <div class="w" style="--c:var(--c6)"><div class="word" lang="he">כַּמָּה</div><div class="tr">kama</div><div class="en">How many? / How much?</div>
+      <div class="ex" lang="he">כַּמָּה זֶה עוֹלֶה?<span>How much does it cost?</span></div></div>
+  </main>
+</div>
+<script>
+const map = document.getElementById('map');
+const btn = document.getElementById('quizBtn');
+btn.addEventListener('click', () => {
+  const on = map.classList.toggle('quiz');
+  btn.setAttribute('aria-pressed', on);
+  btn.textContent = on ? 'Show English' : 'Hide English';
+  map.querySelectorAll('.w.show').forEach(el => el.classList.remove('show'));
+});
+map.addEventListener('click', e => {
+  const card = e.target.closest('.w');
+  if (card && map.classList.contains('quiz')) card.classList.toggle('show');
+});
+</script>
+</body>
+</html>
