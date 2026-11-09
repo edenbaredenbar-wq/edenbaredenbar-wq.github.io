@@ -256,6 +256,40 @@ button.opt:hover:not(:disabled) { border-color: var(--flag); transform: translat
 .answerBox .ico { font-family: var(--emoji); font-size: 3rem; line-height: 1; }
 .answerBox h3 { margin: 0.2rem 0 0; font-family: var(--font-display); font-weight: 400; font-size: 2rem; line-height: 1.05; }
 
+.wai2 { display: flex; flex-direction: column; gap: 0.8rem; width: min(100%, 90rem); margin: auto; }
+.waiTop { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; }
+.waiTop h2 { margin: 0; }
+.waiTop .grow { flex: 1 1 auto; }
+.worthPill { font-family: var(--font-head); font-weight: 800; font-size: 1.3rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--khaki); display: flex; align-items: baseline; gap: 0.5rem; }
+.worthPill b { font-family: var(--font-display); font-weight: 400; font-size: 2.6rem; color: var(--flag); line-height: 1; }
+.clues2 { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+.clues2 .clue { min-height: 0; grid-template-columns: 3.6rem 1fr; padding: 0.45rem 0.8rem; gap: 0.6rem; }
+.clues2 .clue .pts { font-size: 1.25rem; }
+.clues2 .clue p { font-size: clamp(1.15rem, 2.7vh, 1.8rem); }
+.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; }
+.sus {
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 0.7rem; align-items: center;
+  text-align: left; background: var(--panel); border: 3px solid var(--line); border-radius: 0.7rem; padding: 0.5rem 0.8rem; min-width: 0;
+  transition: transform 0.1s, border-color 0.2s, opacity 0.2s;
+}
+.sus .si { grid-row: 1 / 3; font-family: var(--emoji); font-size: 2.3rem; line-height: 1; }
+.sus .sn { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.15rem, 2.6vh, 1.7rem); line-height: 1.05; overflow-wrap: anywhere; }
+.sus .st { font-size: 1rem; color: var(--khaki); line-height: 1.15; }
+.sus .sk { position: absolute; top: 0.3rem; right: 0.45rem; font-family: var(--font-display); font-size: 0.95rem; color: var(--line); }
+.board.pick .sus:not(:disabled) { border-color: var(--flag); cursor: pointer; }
+.board.pick .sus:not(:disabled) .sk { color: var(--flag); }
+.board.pick .sus:not(:disabled):hover { transform: translateY(-2px); background: var(--panel-2); }
+.sus:disabled { cursor: default; }
+.sus.x { opacity: 0.35; border-style: dashed; }
+.sus.x .sn { text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 3px; }
+.sus.x::after { content: "✗"; position: absolute; right: 0.6rem; bottom: 0.2rem; font-family: var(--font-display); font-size: 2rem; color: var(--bad); }
+.sus.win { background: var(--good); border-color: var(--good); color: var(--good-ink); transform: scale(1.03); animation: plop 0.45s cubic-bezier(.3,1.6,.5,1); }
+.sus.win .st { color: var(--good-ink); }
+.sus.dim { opacity: 0.3; }
+.judgeBar { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; justify-content: center; }
+.judgeBar .lead { font-family: var(--font-head); font-weight: 700; }
+@media (max-width: 760px) { .board, .clues2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* ---------- End ---------- */
 .podium { display: flex; align-items: flex-end; justify-content: center; gap: 1rem; width: min(100%, 70rem); }
 .pod { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
@@ -572,37 +606,39 @@ const CONTENT = {
       ex: "I can't come to the party, we're sogrim Shabbat." }
   ],
 
+  /* Who Am I? is a lineup: each mystery shows 8 suspects (the answer + 7 others from this list),
+     each with its icon, short name and tag. Write clues from hardest to easiest. */
   whoami: [
-    { answer: "Oketz, the dog unit", icon: "🐕",
+    { answer: "Oketz, the dog unit", name: "Oketz", tag: "The dog unit", icon: "🐕",
       clues: ["My name means “sting” in Hebrew.", "My best members train for months with one partner.", "They work for treats and praise.", "Woof!"],
       note: "Oketz dogs search for explosives and missing people. Each dog works with one handler." },
-    { answer: "Iron Dome (Kipat Barzel)", icon: "🛡️",
-      clues: ["I first went into action in 2011.", "I belong to the Air Force's Air Defense Array.", "I only fire at threats headed for populated areas.", "I shoot rockets out of the sky."],
-      note: "Each Iron Dome battery has a radar, a control center and launchers." },
-    { answer: "Iron Beam (Magen Or)", icon: "🔦",
-      clues: ["My Hebrew name means “Light Shield.”", "I'm one of the newest air-defense systems in the world.", "Each of my shots costs just a few dollars.", "I use a laser instead of a missile."],
-      note: "Iron Dome interceptors cost tens of thousands of dollars each. A laser shot costs almost nothing." },
-    { answer: "Talpiot", icon: "🧪",
+    { answer: "Iron Dome (Kipat Barzel)", name: "Iron Dome", tag: "Missile air defense", icon: "🛡️",
+      clues: ["I'm not people. I'm a system.", "I first went into action in 2011.", "I only fire at rockets headed for towns.", "In Hebrew I'm called Kipat Barzel."],
+      note: "Each Iron Dome battery has a radar, a control center and launchers. Its interceptors cost tens of thousands of dollars each." },
+    { answer: "Iron Beam (Magen Or)", name: "Iron Beam", tag: "Laser air defense", icon: "🔦",
+      clues: ["I'm not people. I'm a system.", "I'm one of the newest air-defense systems in the world.", "Each of my shots costs just a few dollars.", "My Hebrew name, Magen Or, means “Light Shield.”"],
+      note: "A laser shot costs almost nothing, compared with tens of thousands of dollars for a missile interceptor." },
+    { answer: "Talpiot", name: "Talpiot", tag: "Program for science whiz kids", icon: "🧪",
       clues: ["My name comes from the Song of Songs.", "I'm a program, not a combat unit.", "My cadets study physics and math at Hebrew University in uniform.", "I take only a few dozen top students a year to invent military technology."],
       note: "Talpiot graduates have founded companies and led major defense projects." },
-    { answer: "Unit 669", icon: "🚁",
-      clues: ["I belong to the Air Force.", "My training takes about a year and a half.", "I rescue people, including hurt or lost hikers.", "My name is a number: six, six…"],
-      note: "669 is the Air Force's search-and-rescue unit. Its medics are lowered from hovering helicopters." },
-    { answer: "Shayetet 13", icon: "🌊",
-      clues: ["I'm one of the most secret units in the IDF.", "My symbol is a bat with wings.", "My number is unlucky in America.", "I'm the Navy's commando unit."],
-      note: "Shayetet means flotilla. Its selection is one of the hardest in the IDF." },
-    { answer: "Unit 8200", icon: "💻",
-      clues: ["My name is a four-digit number.", "I'm part of Military Intelligence.", "I work with signals, codes and cyber.", "My veterans founded Wiz, Check Point and many other tech companies."],
-      note: "8200 is one reason Israel is called the “Start-Up Nation.”" },
-    { answer: "The Caracal Battalion", icon: "🐈",
+    { answer: "Unit 669", name: "Unit 669", tag: "Helicopter rescue", icon: "🚁",
+      clues: ["I belong to the Air Force.", "My training takes about a year and a half.", "I rescue people, including lost or hurt hikers.", "My medics are lowered on a rope from a hovering helicopter."],
+      note: "669 is the Air Force's search-and-rescue unit. It rescues soldiers and civilians alike." },
+    { answer: "Shayetet 13", name: "Shayetet 13", tag: "Navy commandos", icon: "🌊",
+      clues: ["I'm one of the most secret units in the IDF.", "My number is considered unlucky in America.", "My soldiers train at sea, under the sea and on land.", "Shayetet means “flotilla”: a group of ships."],
+      note: "Its selection is one of the hardest in the IDF." },
+    { answer: "Unit 8200", name: "Unit 8200", tag: "Intelligence & cyber", icon: "💻",
+      clues: ["I'm part of Military Intelligence.", "I'm the biggest unit in the IDF.", "Many founders of Israeli tech start-ups served in me.", "My name is a four-digit number."],
+      note: "8200 veterans founded Wiz, Check Point and many other companies. It's one reason Israel is called the “Start-Up Nation.”" },
+    { answer: "The Caracal Battalion", name: "Caracal", tag: "Men & women guarding borders", icon: "🐈",
       clues: ["I was founded in 2004.", "I guard the borders with Egypt and Jordan.", "Men and women serve side by side in my combat companies.", "I'm named after a desert wild cat with tufted ears."],
       note: "The caracal is a real cat that lives in the Negev and the Arava." },
-    { answer: "Home Front Command (Pikud HaOref)", icon: "🚨",
-      clues: ["I was created after the 1991 Gulf War.", "I wear an orange beret.", "I run search-and-rescue teams at home and abroad.", "My app tells Israelis when to run to a shelter."],
+    { answer: "Home Front Command (Pikud HaOref)", name: "Home Front Command", tag: "Sirens, shelters & rescue", icon: "🚨",
+      clues: ["I was created after the 1991 Gulf War.", "I wear an orange beret.", "I send rescue teams to earthquakes around the world.", "My app tells Israelis when to run to a shelter."],
       note: "Its alerts give people from about 15 seconds to a few minutes to reach a safe room, depending on where they live." },
-    { answer: "The Paratroopers Brigade", icon: "🪂",
-      clues: ["A famous 1967 photo shows three of my soldiers at the Western Wall.", "My symbol has wings, but I'm not the Air Force.", "My beret is red.", "I jump out of airplanes!"],
-      note: "In Hebrew they're the Tzanchanim. Paratroopers earn their wings after jump school." }
+    { answer: "The Paratroopers Brigade", name: "Paratroopers", tag: "They jump from airplanes", icon: "🪂",
+      clues: ["A famous 1967 photo shows three of my soldiers at the Western Wall.", "My symbol has wings, but I'm not the Air Force.", "My beret is red.", "In Hebrew I'm the Tzanchanim."],
+      note: "Paratroopers earn their wings after jump school." }
   ],
 
   realfake: [
@@ -659,7 +695,7 @@ const CARDS = {
   miluim:   { name: "Miluim",     he: "מילואים",   icon: "🪖", type: "Double points",
               text: "Reinforcements! Your team's next points are doubled." },
   intel:    { name: "8200 Intel", he: "מודיעין",   icon: "📡", type: "Inside info",
-              text: "Trivia: remove 2 wrong answers. Timeline: the earliest event is placed for you. Slang / Real or Fake: your team counts as right. Who Am I: a free clue." },
+              text: "Trivia: remove 2 wrong answers. Timeline: the earliest event is placed for you. Slang / Real or Fake: your team counts as right. Who Am I: cross out 3 wrong suspects." },
   raid:     { name: "Raid",       he: "פשיטה",     icon: "⚡", type: "Steal 100",
               text: "Take 100 points from any team. Watch out for Iron Dome!" },
   dome:     { name: "Iron Dome",  he: "כיפת ברזל", icon: "🛡️", type: "Block a raid",
@@ -708,9 +744,9 @@ const INTRO = {
             "Bonus: use the word correctly in a sentence for extra points."],
     score: "Right: +100 · Good sentence: +50" },
   whoami: { he: "מי אני?", sub: "Mi ani? · who am I?",
-    rules: ["Clues appear one at a time, from hard to easy.",
-            "Know it? Your whole team raises hands. The first team I call answers.",
-            "Wrong? Your team is out for this card. Guess early for more points!"],
+    rules: ["Each mystery has a lineup of 8 suspects: IDF units and systems. Read the board!",
+            "Clues appear one at a time, from hard to easy. Use them to rule suspects out.",
+            "Think you know? Raise your hands and name a suspect. Wrong? It's crossed off, and your team sits out this mystery."],
     score: "Clue 1: 400 · Clue 2: 300 · Clue 3: 200 · Clue 4: 100" },
   realfake: { he: "אמת או בדיה?", sub: "Emet o bdaya? · real or fake?",
     rules: ["A surprising fact about the IDF appears. Real or fake?",
@@ -748,7 +784,7 @@ function freshState() {
     roundIdx: 0, roundStart: [],
     deck: [], used: [], i: 0,
     turn: 0, phase: "", picks: [], removed: [], actor: -1,
-    chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, free: 0,
+    chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, board: [], crossed: [],
     order: [], lockFirst: false,
     drops: [], dropRevealed: false,
     slide: 0, startedAt: null, flash: ""
@@ -855,7 +891,7 @@ function pickFrom(pool, n) {
 }
 function goRound(k) {
   S.roundIdx = k;
-  Object.assign(S, { i: 0, phase: "", picks: [], removed: [], actor: -1, chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, free: 0, order: [], lockFirst: false, slide: 0, used: [] });
+  Object.assign(S, { i: 0, phase: "", picks: [], removed: [], actor: -1, chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, board: [], crossed: [], order: [], lockFirst: false, slide: 0, used: [] });
   S.roundStart = S.teams.map((t) => t.score);
   const id = round().id, n = S.teams.length;
   if (id === "briefing") { S.screen = "play"; return; }
@@ -884,17 +920,22 @@ function timelineSet() {
   set.forEach((e) => S.used.push(keyOf(e)));
   return set;
 }
+/* The suspect board for one mystery: the answer plus 7 others, in random order. */
+function lineup(item) {
+  const others = shuffle(CONTENT.whoami.filter((x) => x.answer !== item.answer)).slice(0, 7);
+  return shuffle([item, ...others]).map((x) => ({ answer: x.answer, name: x.name, tag: x.tag, icon: x.icon }));
+}
 function beginRound() {
   S.screen = "play";
   setupQuestion();
 }
 function setupQuestion() {
   const id = round().id;
-  Object.assign(S, { picks: [], removed: [], chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, free: 0, actor: -1, order: [], lockFirst: false });
+  Object.assign(S, { picks: [], removed: [], chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, board: [], crossed: [], actor: -1, order: [], lockFirst: false });
   if (id === "trivia") { S.phase = "ask"; startTimer(TRIVIA_SECONDS); }
   if (id === "timeline") { S.turn = S.i; S.phase = "order"; startTimer(TIMELINE_SECONDS); }
   if (id === "slang" || id === "realfake") { S.phase = "ask"; startTimer(SHOW_SECONDS); }
-  if (id === "whoami") { S.phase = "clue"; stopTimer(); }
+  if (id === "whoami") { S.phase = "clue"; S.board = lineup(S.deck[S.i]); stopTimer(); }
   if (id === "thinktank") { S.phase = "read"; stopTimer(); }
 }
 function nextQuestion() {
@@ -926,6 +967,7 @@ function hasSpare() {
 }
 
 /* ---------- Power-up cards: when each can be used ---------- */
+function intelTargets() { const ans = S.deck[S.i] && S.deck[S.i].answer; return S.board.map((b, k) => k).filter((k) => S.board[k].answer !== ans && !S.crossed.includes(k)); }
 function stealer() { return (S.turn + 1) % S.teams.length; }
 function canUse(t, card) {
   const team = S.teams[t];
@@ -938,7 +980,7 @@ function canUse(t, card) {
     if (!play) return "Use it during a question.";
     if (id === "trivia") return (S.phase === "ask" && S.turn === t) || (S.phase === "steal" && stealer() === t) ? (S.removed.length ? "Intel was already used on this question." : "") : "Use it on your own trivia turn, before answering.";
     if (id === "timeline") return S.phase === "order" && S.turn === t && !S.lockFirst && !S.order.length ? "" : "Use it on your own timeline turn, before tapping any card.";
-    if (id === "whoami") return S.phase === "clue" && S.shown < 4 ? "" : "Use it while clues are still hidden and nobody is answering.";
+    if (id === "whoami") return S.phase !== "clue" ? "Use it while nobody is answering." : intelTargets().length ? "" : "There are no wrong suspects left to cross out.";
     if (id === "slang" || id === "realfake") return S.phase === "ask" ? (S.intelTeams.includes(t) ? "Already used on this question." : "") : "Use it before the answer is revealed.";
     return "Intel doesn't work in this round.";
   }
@@ -971,7 +1013,7 @@ function useCard(t, idx) {
         S.removed = wrong.slice(0, 2);
       }
       if (id === "timeline") { const set = S.deck[S.i]; let e = 0; set.forEach((x, k) => { if (x.y < set[e].y) e = k; }); S.order = [e]; S.lockFirst = true; }
-      if (id === "whoami") { S.shown++; S.free++; }
+      if (id === "whoami") S.crossed.push(...shuffle(intelTargets()).slice(0, 3));
       if (id === "slang" || id === "realfake") S.intelTeams.push(t);
       toast(`8200 Intel for ${team.name}`, "Inside information!");
     }
@@ -992,6 +1034,13 @@ function doRaid(from, idx, to, intercepted) {
       toast(`${A.name} raided ${B.name}!`, `${take} points stolen`); SFX.raid();
     }
   });
+}
+
+/* Who Am I: a wrong guess locks the team out of this mystery and shows the next clue. */
+function judgeWrong() {
+  S.locked.push(S.actor); S.actor = -1; SFX.no();
+  if (S.locked.length >= S.teams.length) { S.phase = "done"; S.flash = "Nobody got it this time."; }
+  else { S.phase = "clue"; if (S.shown < 4) S.shown++; }
 }
 
 /* ---------- Timer ---------- */
@@ -1266,36 +1315,38 @@ function renderRealFake() {
 }
 
 function renderWhoAmI() {
-  const it = S.deck[S.i], done = S.phase === "done";
-  const value = Math.max(100, 500 - 100 * (S.shown - S.free));
+  const it = S.deck[S.i], done = S.phase === "done", judging = S.phase === "judge";
+  const value = Math.max(100, 500 - 100 * S.shown);
   const clues = it.clues.map((c, k) => {
     const vis = k < S.shown || done;
     return `<li class="clue ${vis ? "" : "hidden"} ${k === S.shown - 1 && !done ? "new" : ""}"><span class="pts">${400 - 100 * k}</span><p>${vis ? esc(c) : "CLASSIFIED"}</p></li>`;
   }).join("");
+  const board = S.board.map((b, k) => {
+    const x = S.crossed.includes(k), win = done && b.answer === it.answer;
+    const cls = win ? "win" : x ? "x" : done ? "dim" : "";
+    return `<button class="sus ${cls}" data-a="suspect" data-k="${k}" ${judging && !x ? "" : "disabled"}><span class="sk">${k + 1}</span><span class="si">${b.icon}</span><span class="sn">${esc(b.name)}</span><span class="st">${esc(b.tag)}</span></button>`;
+  }).join("");
   const teamBtns = S.teams.map((t, i) => {
     const lockd = S.locked.includes(i);
-    return `<button class="teamBtn ${S.actor === i ? "on" : ""} ${lockd ? "out" : ""}" style="--tc:${t.color}" data-a="buzz" data-t="${i}" ${lockd || done ? "disabled" : ""}><span class="n">${i + 1}</span>${esc(t.name)}</button>`;
+    return `<button class="teamBtn small ${lockd ? "out" : ""}" style="--tc:${t.color}" data-a="buzz" data-t="${i}" ${lockd ? "disabled" : ""}><span class="n">${i + 1}</span>${esc(t.name)}</button>`;
   }).join("");
-  let side;
+  let bottom;
   if (done) {
-    side = `<div class="answerBox"><div class="ico">${it.icon}</div><h3>${esc(it.answer)}</h3><p style="margin:0.3rem 0 0;font-weight:700">${esc(S.flash)}</p></div>
-      ${primary("Next card", "next")}`;
-  } else if (S.phase === "judge") {
-    side = `<div class="worth"><span class="eyebrow">${esc(S.teams[S.actor].name)} answers for</span><b>${value}</b></div>
-      <button class="btn ok big" data-a="correct">Correct <kbd>C</kbd></button>
-      <button class="btn no big" data-a="wrong">Wrong <kbd>W</kbd></button>`;
+    bottom = `${noteBox(it.note)}<div class="judgeBar"><span class="tag" style="--tc:var(--good)">${it.icon} ${esc(it.answer)}</span><span class="eyebrow">${esc(S.flash)}</span>${primary("Next mystery", "next")}</div>`;
+  } else if (judging) {
+    bottom = `<div class="judgeBar">${teamTag(S.actor)}<span class="lead">Which suspect? Click the one they name (or press 1–8).</span>
+      <button class="btn no" data-a="wrong">Not on the board / wrong <kbd>W</kbd></button></div>`;
   } else {
-    side = `<div class="worth"><span class="eyebrow">Worth right now</span><b>${value}</b>${S.free ? `<span class="intelTag">Free clue from 8200 Intel</span>` : ""}</div>
-      <button class="btn go" data-a="clue" data-primary ${S.shown >= 4 ? "disabled" : ""}>Next clue <kbd>Space</kbd></button>
-      <button class="btn small" data-a="giveup">Nobody knows · reveal <kbd>R</kbd></button>`;
+    bottom = `<div class="judgeBar"><span class="eyebrow">Hands up! Who was first? <span class="muted">(1–${S.teams.length})</span></span>${teamBtns}</div>
+      <div class="judgeBar"><button class="btn go" data-a="clue" data-primary ${S.shown >= 4 ? "disabled" : ""}>Next clue <kbd>Space</kbd></button>
+      <button class="btn small" data-a="giveup">Nobody knows · reveal <kbd>R</kbd></button></div>`;
   }
-  return `<div class="wai">
-    <div style="display:flex;flex-direction:column;gap:0.9rem;min-width:0">
-      <div class="row" style="justify-content:space-between"><span class="eyebrow">Mystery ${S.i + 1} of ${S.deck.length}</span><h2 class="display h-l" style="margin:0">Who am I?</h2></div>
-      <ul class="clues">${clues}</ul>
-      ${done ? noteBox(it.note) : `<div class="eyebrow" style="text-align:center">Hands up! Who was first? <span class="muted">(press 1–${S.teams.length})</span></div><div class="teamBtns">${teamBtns}</div>`}
-    </div>
-    <div class="side">${side}</div>
+  return `<div class="wai2">
+    <div class="waiTop"><h2 class="display h-l">Who am I?</h2><span class="eyebrow">Mystery ${S.i + 1} of ${S.deck.length}</span><span class="grow"></span>
+      ${done ? "" : `<span class="worthPill">Worth <b>${value}</b></span>`}</div>
+    <ul class="clues2">${clues}</ul>
+    <div class="board ${judging ? "pick" : ""}">${board}</div>
+    ${bottom}
   </div>`;
 }
 
@@ -1442,15 +1493,15 @@ const ACTIONS = {
   }),
   clue: () => { if (S.phase === "clue" && S.shown < 4) act(() => { S.shown++; SFX.tick(); }); },
   buzz: (d) => { const t = +d.t; if (S.phase === "done" || S.locked.includes(t)) return; act(() => { S.actor = t; S.phase = "judge"; SFX.tick(); }); },
-  correct: () => { if (S.phase !== "judge") return; act(() => { const v = Math.max(100, 500 - 100 * (S.shown - S.free)); const got = addPoints(S.actor, v); S.flash = `${S.teams[S.actor].name} +${got}`; S.phase = "done"; SFX.ok(); }); },
-  wrong: () => {
+  suspect: (d) => {
     if (S.phase !== "judge") return;
-    act(() => {
-      S.locked.push(S.actor); S.actor = -1; SFX.no();
-      if (S.locked.length >= S.teams.length) { S.phase = "done"; S.flash = "Nobody got it this time."; }
-      else { S.phase = "clue"; if (S.shown < 4) S.shown++; }
-    });
+    const k = +d.k;
+    if (S.crossed.includes(k)) return;
+    if (S.board[k].answer === S.deck[S.i].answer) return ACTIONS.correct();
+    act(() => { S.crossed.push(k); judgeWrong(); });
   },
+  correct: () => { if (S.phase !== "judge") return; act(() => { const v = Math.max(100, 500 - 100 * S.shown); const got = addPoints(S.actor, v); S.flash = `${S.teams[S.actor].name} +${got}`; S.phase = "done"; SFX.ok(); }); },
+  wrong: () => { if (S.phase === "judge") act(judgeWrong); },
   giveup: () => act(() => { S.phase = "done"; S.actor = -1; S.flash = "Nobody got it this time."; }),
   card: (d) => showCard(+d.t, +d.i),
   useCard: (d) => useCard(+d.t, +d.i),
@@ -1509,6 +1560,7 @@ document.addEventListener("keydown", (e) => {
   if (k === "r") return press("[data-a='reveal']") || press("[data-a='nosteal']") || press("[data-a='giveup']");
   if (k === "c") return press("[data-a='correct']");
   if (k === "w") return press("[data-a='wrong']");
+  if (id === "whoami" && S.phase === "judge" && /^[1-8]$/.test(k)) return press(`[data-a='suspect'][data-k='${+k - 1}']`);
   if (/^[1-6]$/.test(k)) {
     const t = +k - 1;
     if (id === "timeline") return press(`[data-a='tap'][data-k='${t}']`);
@@ -1556,8 +1608,8 @@ function showHelp() {
       <kbd>1–4</kbd><span>Timeline: tap the event cards in the team's order</span>
       <kbd>1–6</kbd><span>Pick a team: who was right, who raised hands first</span>
       <kbd>R</kbd><span>Reveal the answer · no steal · nobody knows</span>
-      <kbd>C</kbd> <span>Who Am I: correct</span>
-      <kbd>W</kbd> <span>Who Am I: wrong (that team is out for the card)</span>
+      <kbd>1–8</kbd><span>Who Am I: after a team raises hands, the suspect they name</span>
+      <kbd>W</kbd> <span>Who Am I: wrong answer that isn't on the board</span>
       <kbd>T</kbd><span>Restart the countdown · Think Tank: start the team talk</span>
       <kbd>U</kbd><span>Undo the last action (press again to keep undoing)</span>
       <kbd>F</kbd><span>Full screen</span>
