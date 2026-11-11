@@ -84,7 +84,7 @@ The clock in the top bar counts the class time and turns red when you're behind 
 
 ## A note on the Think Tank
 
-A printable student handout with all four topics (background, discussion question, "Some say / Others say" and lines for writing) is in `think-tank-handout.pdf`: 2 pages, US Letter, black and white. To change it, edit `think-tank-handout.html` and print it from your browser.
+A printable handout is in `think-tank-handout.pdf`: 4 pages, US Letter, black and white, **one topic per page**, so each team gets its own topic. Each page has the background, the discussion question, "Some say / Others say" where it applies, and space for the team's opinion, any disagreement, and one sentence to share with the class. With more than 4 teams, give the same topic to two teams and let them compare. Hand out the pages, give teams a few minutes to write, then have each team share while you show its topic on the screen (Space moves to the next topic). To change the handout, edit `think-tank-handout.html` and print it from your browser.
 
 The October 7 background is factual and short, and it acknowledges that the war in Gaza caused great loss of life and is debated. Read the four topics before class and choose the ones that fit your students. The text is in `CONTENT.thinktank` if you want to change it.
 
