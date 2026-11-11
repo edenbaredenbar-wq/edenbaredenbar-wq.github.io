@@ -733,13 +733,13 @@ const CARDS = {
   miluim:   { name: "Miluim",     he: "מילואים",   icon: "🪖", type: "Double points",
               text: "Reinforcements! Your team's next points are doubled." },
   intel:    { name: "8200 Intel", he: "מודיעין",   icon: "📡", type: "Inside info",
-              text: "Trivia: remove 2 wrong answers. Timeline: the earliest event is placed for you. Slang / Real or Fake: your team counts as right. Who Am I: cross out 3 wrong suspects." },
+              text: "Trivia: remove 2 wrong answers. Timeline: the earliest event is placed for you. Slang: remove 2 wrong answers. Real or Fake: your team counts as right. Who Am I: cross out 3 wrong suspects." },
   raid:     { name: "Raid",       he: "פשיטה",     icon: "⚡", type: "Steal 100",
               text: "Take 100 points from any team. Watch out for Iron Dome!" },
   dome:     { name: "Iron Dome",  he: "כיפת ברזל", icon: "🛡️", type: "Block a raid",
               text: "When another team raids you, intercept the raid and keep your points." },
   hamshush: { name: "Hamshush",   he: "חמשוש",     icon: "🏖️", type: "Skip",
-              text: "Long weekend! Skip the current question and get a new one. In Trivia and Timeline, only on your own turn." }
+              text: "Long weekend! Skip the current question and get a new one. In Trivia, Slang, Timeline and Who Am I, only on your own turn." }
 };
 const CARD_IDS = Object.keys(CARDS);
 
@@ -777,10 +777,10 @@ const INTRO = {
             "Your captain says the order and I tap the cards. No changing after “lock in”!"],
     score: "+50 for each card in the right place · +100 bonus for all 4" },
   slang: { he: "סלנג צבאי", sub: "Slang tzva'i · army slang",
-    rules: ["An Israeli army slang word appears in Hebrew. Read it out loud together!",
-            "Every team decides quietly. On “SHOW!”, hold up 1, 2, 3 or 4 fingers.",
-            "Bonus: use the word correctly in a sentence for extra points."],
-    score: "Right: +100 · Good sentence: +50" },
+    rules: ["Teams take turns. An Israeli army slang word appears in Hebrew. Read it out loud together!",
+            "The team on duty talks it over, then its captain answers A, B, C or D.",
+            "A wrong answer lets the NEXT team steal."],
+    score: "Correct: +100 · Steal: +50" },
   whoami: { he: "מי אני?", sub: "Mi ani? · who am I?",
     rules: ["Teams take turns. Each mystery has a lineup of 8 suspects: IDF units and systems. Read the board!",
             "Clues appear one at a time, from hard to easy. After each clue, your team guesses or asks for the next clue.",
@@ -943,7 +943,7 @@ function goRound(k) {
     S.turn = 0;
   }
   if (id === "timeline") { S.deck = S.teams.map(() => timelineSet()); S.turn = 0; }
-  if (id === "slang") S.deck = pickFrom(CONTENT.slang, SLANG_PER_GAME).map(mcq);
+  if (id === "slang") { S.deck = pickFrom(CONTENT.slang, Math.min(CONTENT.slang.length, Math.ceil(SLANG_PER_GAME / n) * n)).map(mcq); S.turn = 0; }
   if (id === "whoami") { const per = Math.ceil(WHOAMI_TARGET / n); S.deck = pickFrom(CONTENT.whoami, Math.min(CONTENT.whoami.length, per * n)); }
   if (id === "realfake") {
     /* Half real, half fake, in random order, so teams can't count on a pattern. */
@@ -976,15 +976,15 @@ function beginRound() {
 function setupQuestion() {
   const id = round().id;
   Object.assign(S, { picks: [], removed: [], chosen: [], bonus: [], intelTeams: [], locked: [], shown: 1, board: [], crossed: [], actor: -1, order: [], lockFirst: false });
-  if (id === "trivia") { S.phase = "ask"; startTimer(TRIVIA_SECONDS); }
+  if (id === "trivia" || id === "slang") { S.phase = "ask"; startTimer(TRIVIA_SECONDS); }
   if (id === "timeline") { S.turn = S.i; S.phase = "order"; startTimer(TIMELINE_SECONDS); }
-  if (id === "slang" || id === "realfake") { S.phase = "ask"; startTimer(SHOW_SECONDS); }
+  if (id === "realfake") { S.phase = "ask"; startTimer(SHOW_SECONDS); }
   if (id === "whoami") { S.turn = S.i % S.teams.length; S.phase = "clue"; S.board = lineup(S.deck[S.i]); startTimer(TRIVIA_SECONDS); }
   if (id === "thinktank") { S.phase = "read"; stopTimer(); }
 }
 function nextQuestion() {
   S.i++;
-  if (round().id === "trivia") S.turn = (S.turn + 1) % S.teams.length;
+  if (round().id === "trivia" || round().id === "slang") S.turn = (S.turn + 1) % S.teams.length;
   if (S.i >= S.deck.length) { finishRound(); return; }
   setupQuestion();
 }
@@ -1022,19 +1022,19 @@ function canUse(t, card) {
   if (card === "miluim") return team.double ? "Miluim is already active for this team." : "";
   if (card === "intel") {
     if (!play) return "Use it during a question.";
-    if (id === "trivia") return (S.phase === "ask" && S.turn === t) || (S.phase === "steal" && stealer() === t) ? (S.removed.length ? "Intel was already used on this question." : "") : "Use it on your own trivia turn, before answering.";
+    if (id === "trivia" || id === "slang") return (S.phase === "ask" && S.turn === t) || (S.phase === "steal" && stealer() === t) ? (S.removed.length ? "Intel was already used on this question." : "") : "Use it on your own turn (or when stealing), before answering.";
     if (id === "timeline") return S.phase === "order" && S.turn === t && !S.lockFirst && !S.order.length ? "" : "Use it on your own timeline turn, before tapping any card.";
     if (id === "whoami") return !((S.phase === "clue" && S.turn === t) || (S.phase === "steal" && stealer() === t)) ? "Use it on your own Who Am I turn, or when you're stealing." : intelTargets().length ? "" : "There are no wrong suspects left to cross out.";
-    if (id === "slang" || id === "realfake") return S.phase === "ask" ? (S.intelTeams.includes(t) ? "Already used on this question." : "") : "Use it before the answer is revealed.";
+    if (id === "realfake") return S.phase === "ask" ? (S.intelTeams.includes(t) ? "Already used on this question." : "") : "Use it before the answer is revealed.";
     return "Intel doesn't work in this round.";
   }
   if (card === "hamshush") {
     if (!play) return "Use it during a question.";
     if (!hasSpare()) return "There are no spare questions left in this round.";
-    if (id === "trivia") return S.phase === "ask" && S.turn === t && !S.picks.length ? "" : "Use it on your own trivia turn, before answering.";
+    if (id === "trivia" || id === "slang") return S.phase === "ask" && S.turn === t && !S.picks.length ? "" : "Use it on your own turn, before answering.";
     if (id === "timeline") return S.phase === "order" && S.turn === t ? "" : "Use it on your own timeline turn.";
     if (id === "whoami") return S.phase === "clue" && S.turn === t ? "" : "Use it on your own Who Am I turn, before guessing.";
-    if (id === "slang" || id === "realfake") return S.phase === "ask" ? "" : "Use it before the answer is revealed.";
+    if (id === "realfake") return S.phase === "ask" ? "" : "Use it before the answer is revealed.";
     return "Hamshush doesn't work in this round.";
   }
   return "";
@@ -1051,14 +1051,14 @@ function useCard(t, idx) {
     if (card === "miluim") { team.double = true; toast(`${team.name} called up the Miluim!`, "Next points are doubled"); }
     if (card === "hamshush") { replaceCurrent(); toast(`${team.name} took a Hamshush`, "New question!"); }
     if (card === "intel") {
-      if (id === "trivia") {
+      if (id === "trivia" || id === "slang") {
         const it = S.deck[S.i];
         const wrong = shuffle(it.opts.map((o, k) => k).filter((k) => k !== it.answer && !S.picks.includes(k)));
         S.removed = wrong.slice(0, 2);
       }
       if (id === "timeline") { const set = S.deck[S.i]; let e = 0; set.forEach((x, k) => { if (x.y < set[e].y) e = k; }); S.order = [e]; S.lockFirst = true; }
       if (id === "whoami") S.crossed.push(...shuffle(intelTargets()).slice(0, 3));
-      if (id === "slang" || id === "realfake") S.intelTeams.push(t);
+      if (id === "realfake") S.intelTeams.push(t);
       toast(`8200 Intel for ${team.name}`, "Inside information!");
     }
     SFX.card();
@@ -1138,7 +1138,7 @@ function renderTop() {
 function activeTeam() {
   if (S.screen !== "play") return -1;
   const id = round().id;
-  if (id === "trivia") return S.phase === "steal" ? stealer() : S.turn;
+  if (id === "trivia" || id === "slang") return S.phase === "steal" ? stealer() : S.turn;
   if (id === "timeline") return S.turn;
   if (id === "whoami") return S.phase === "steal" ? stealer() : S.turn;
   return -1;
@@ -1323,28 +1323,38 @@ function renderTimeline() {
   </div>`;
 }
 
-function awardRows(withBonus) {
+function awardRows() {
   const btn = (kind, t, on, locked) => `<button class="teamBtn small ${on ? "on" : ""}" style="--tc:${S.teams[t].color}" data-a="toggleTeam" data-kind="${kind}" data-t="${t}" ${locked ? "disabled" : ""}><span class="n">${t + 1}</span><span>${esc(S.teams[t].name)}${on ? " ✓" : ""}</span></button>`;
   const right = S.teams.map((x, t) => btn("right", t, S.chosen.includes(t) || S.intelTeams.includes(t), S.intelTeams.includes(t))).join("");
-  const bonus = S.teams.map((x, t) => btn("bonus", t, S.bonus.includes(t), false)).join("");
   return `<div class="awardRows">
     <div class="awardRow"><span>Got it right +100</span>${right}</div>
-    ${withBonus ? `<div class="awardRow"><span>Good sentence +50</span>${bonus}</div>` : ""}
   </div>`;
 }
 function renderSlang() {
-  const it = S.deck[S.i], revealed = S.phase === "reveal";
-  const opts = revealed
-    ? `<div class="opt right" style="width:min(100%,72rem)"><span class="key">${it.answer + 1}</span><span>${esc(it.opts[it.answer])}</span></div>`
-    : `<div class="opts">${it.opts.map((o, k) => `<div class="opt"><span class="key">${k + 1}</span><span>${esc(o)}</span></div>`).join("")}</div>`;
+  const it = S.deck[S.i], done = S.phase === "done";
+  let head;
+  if (S.phase === "ask") head = `<div class="row">${teamTag(S.turn)}<span class="eyebrow">your word</span></div>`;
+  else if (S.phase === "steal") head = `<div class="row"><span class="eyebrow" style="color:var(--bad)">Wrong!</span>${teamTag(stealer(), "steal")}<span class="eyebrow">can steal for 50</span></div>`;
+  else head = `<div class="row"><span class="eyebrow">${esc(S.flash)}</span></div>`;
+  const opts = it.opts.map((o, k) => {
+    let cls = "";
+    if (done && k === it.answer) cls = "right";
+    else if (S.picks.includes(k) || S.removed.includes(k)) cls = "wrong";
+    else if (done) cls = "dim";
+    const off = done || S.picks.includes(k) || S.removed.includes(k);
+    return `<button class="opt ${cls}" data-a="pick" data-k="${k}" ${off ? "disabled" : ""}><span class="key">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`;
+  }).join("");
   return `<div class="center" style="gap:0.9rem">
-    <div class="eyebrow">Word ${S.i + 1} of ${S.deck.length} · every team answers${S.intelTeams.length ? ` · <span class="intelTag">Intel: ${S.intelTeams.map((t) => esc(S.teams[t].name)).join(", ")}</span>` : ""}</div>
-    <div class="slangWord"><div class="heb" ${revealed ? `style="font-size:clamp(2.4rem,8vh,5rem)"` : ""}>${esc(it.heb)}</div><div class="tr">${esc(it.tr)}</div></div>
-    ${opts}
-    ${revealed ? `${noteBox(it.note)}<div class="example"><b>Use it</b>${esc(it.ex)}</div>
-      <div class="row">${awardRows(true)}${primary("Award &amp; next", "award", "Space", "go")}</div>`
-    : `${timerHtml("SHOW your fingers!")}
-      <div class="row"><button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button>${primary("Reveal", "reveal", "R")}</div>`}
+    <div class="eyebrow">Word ${S.i + 1} of ${S.deck.length}${S.removed.length ? ` · <span class="intelTag">8200 Intel removed 2 answers</span>` : ""}</div>
+    ${head}
+    <div class="slangWord"><div class="heb" ${done ? `style="font-size:clamp(2.4rem,8vh,5rem)"` : ""}>${esc(it.heb)}</div><div class="tr">${esc(it.tr)}</div></div>
+    <div class="opts">${opts}</div>
+    ${done ? `${noteBox(it.note)}<div class="example"><b>Example</b>${esc(it.ex)}</div>` : timerHtml()}
+    <div class="row">
+      ${S.phase === "steal" ? `<button class="btn" data-a="nosteal">No steal · show answer <kbd>R</kbd></button>` : ""}
+      ${S.phase === "ask" ? `<button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button>` : ""}
+      ${done ? primary("Next word", "next") : ""}
+    </div>
   </div>`;
 }
 function renderRealFake() {
@@ -1354,7 +1364,7 @@ function renderRealFake() {
     <div class="eyebrow">Fact ${S.i + 1} of ${S.deck.length} · every team answers${S.intelTeams.length ? ` · <span class="intelTag">Intel: ${S.intelTeams.map((t) => esc(S.teams[t].name)).join(", ")}</span>` : ""}</div>
     <h2 class="statement">“${esc(it.s)}”</h2>
     <div class="rf"><div class="${cls(true)}"><span class="thumb">👍</span><b>REAL</b></div><div class="${cls(false)}"><span class="thumb">👎</span><b>FAKE</b></div></div>
-    ${revealed ? `${noteBox(it.note)}<div class="row">${awardRows(false)}${primary("Award &amp; next", "award", "Space", "go")}</div>`
+    ${revealed ? `${noteBox(it.note)}<div class="row">${awardRows()}${primary("Award &amp; next", "award", "Space", "go")}</div>`
     : `${timerHtml("SHOW your thumbs!")}
       <div class="row"><button class="btn small" data-a="timer">Restart timer <kbd>T</kbd></button>${primary("Reveal", "reveal", "R")}</div>`}
   </div>`;
@@ -1494,7 +1504,7 @@ const ACTIONS = {
   nosteal: () => act(() => { S.phase = "done"; S.flash = "No steal. Here's the answer:"; stopTimer(); }),
   timer: () => {
     const id = round().id;
-    const sec = id === "trivia" ? (S.phase === "steal" ? STEAL_SECONDS : TRIVIA_SECONDS) : id === "timeline" ? TIMELINE_SECONDS : id === "thinktank" ? TALK_SECONDS : SHOW_SECONDS;
+    const sec = id === "trivia" || id === "slang" ? (S.phase === "steal" ? STEAL_SECONDS : TRIVIA_SECONDS) : id === "timeline" ? TIMELINE_SECONDS : id === "thinktank" ? TALK_SECONDS : SHOW_SECONDS;
     if (id === "thinktank" && S.phase !== "talk") return ACTIONS.talk();
     startTimer(sec); drawTimer();
   },
@@ -1521,7 +1531,7 @@ const ACTIONS = {
   },
   reveal: () => act(() => { S.phase = "reveal"; stopTimer(); SFX.show(); }),
   toggleTeam: (d, el) => {
-    const t = +d.t, list = d.kind === "bonus" ? "bonus" : "chosen";
+    const t = +d.t, list = "chosen";
     const on = !S[list].includes(t);
     S[list] = on ? [...S[list], t] : S[list].filter((x) => x !== t);
     el.classList.toggle("on", on);
@@ -1532,7 +1542,7 @@ const ACTIONS = {
     const right = new Set([...S.chosen, ...S.intelTeams]);
     let any = false;
     S.teams.forEach((t, i) => {
-      const pts = (right.has(i) ? 100 : 0) + (S.bonus.includes(i) ? 50 : 0);
+      const pts = right.has(i) ? 100 : 0;
       if (pts) { addPoints(i, pts); any = true; }
     });
     if (any) SFX.ok();
@@ -1606,7 +1616,7 @@ document.addEventListener("keydown", (e) => {
   if (k === "h" || k === "?") return showHelp();
   if (S.screen !== "play") return;
   const id = round().id;
-  if (id === "trivia" && "abcd".includes(k) && k.length === 1) return press(`[data-a='pick'][data-k='${"abcd".indexOf(k)}']`);
+  if ((id === "trivia" || id === "slang") && "abcd".includes(k) && k.length === 1) return press(`[data-a='pick'][data-k='${"abcd".indexOf(k)}']`);
   if (k === "t") return press("[data-a='talk']") || press("[data-a='timer']");
   if (k === "r") return press("[data-a='reveal']") || press("[data-a='nosteal']") || press("[data-a='pass']");
   if (k === "c") return press("[data-a='correct']");

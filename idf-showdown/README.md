@@ -20,15 +20,15 @@ A projector game for a 45-minute high school Hebrew class (the full plan is 49 m
 | | **Briefing** | 3 min | 5 slides: what Tzahal is, who serves at 18, the three branches, the rank ladder, the power-up cards. | none |
 | 1 | **Boot Camp Trivia** | 9 min | Teams take turns on multiple-choice questions. Click the answer the team's captain says, or press A–D. If they're wrong, the next team can steal. | +100, steal +50 |
 | 2 | **Timeline** | 6 min | Each team gets its own 4 history events (1948 to 2023) with hints. The captain says the order and you tap the cards (or press 1–4), then **Lock in**. | +50 per card in the right place, +100 bonus for all 4 |
-| 3 | **Army Slang** | 8 min | An IDF slang word in Hebrew (jobnik, fashla, hamshush, pazam…). Every team holds up 1–4 fingers on "SHOW!". After the reveal, click the teams that were right, plus any team that uses the word correctly in a sentence. | +100 right, +50 sentence |
+| 3 | **Army Slang** | 8 min | Turn-based, like Trivia. An IDF slang word in Hebrew (jobnik, fashla, hamshush, pazam…) with 4 possible meanings. The team on duty answers A–D; if it's wrong, the next team can steal. About 8 words, rounded up so every team gets the same number of turns (3 teams: 9, 5: 10, 6: 12). | +100, steal +50 |
 | 4 | **Who Am I?** | 9 min | Turn-based, like Trivia. About 8 mysteries, rounded up so every team gets the same number of turns (2 teams: 8, 3: 9, 4: 8, 5: 10, 6: 12). On each turn, the team on duty gets its own mystery: a lineup of 8 "suspects" (units and systems), each with a picture, name and one-line description, plus 4 clues from hard to easy. Students don't need to know any units beforehand; they read the board and use the clues to rule suspects out. After each clue the team on duty either guesses (click the suspect it names, or press 1–8) or asks for the next clue (Space). A wrong guess is crossed off the board, and the next team can steal for half the points. **R** passes to the steal; **W** is a wrong answer that isn't on the board. | 400 / 300 / 200 / 100, steal: half |
 | 5 | **Real or Fake?** | 7 min | A surprising IDF fact. Teams show thumbs up (real) or down (fake). Press **R**, then click the teams that were right. | +100 each |
 | | **Think Tank** | 5 min | Four topics: October 7, the Haredi draft, women in combat, being drafted at 18. Each has a short factual background and a discussion question; two show "Some say / Others say". Press **T** for a 90-second team talk. | none |
 | | **Awards** | 2 min | Podium with ranks, confetti and an exit ticket. | |
 
-Every answer is followed by a **Field Note**, a short fact to read aloud. In Army Slang there's also an example sentence.
+Every answer is followed by a **Field Note**, a short fact to read aloud. In Army Slang there's also an example of the word in a sentence.
 
-Each game draws different questions: Trivia uses 2–5 questions per team, depending on the number of teams, out of 20; Army Slang uses 8 of 13 words; Who Am I? draws its mysteries from 16; Real or Fake? uses 12 of 24 facts, always 6 real and 6 fake; Timeline draws from 16 events.
+Each game draws different questions: Trivia uses 2–5 questions per team, depending on the number of teams, out of 20; Army Slang uses about 8 of 13 words; Who Am I? draws its mysteries from 16; Real or Fake? uses 12 of 24 facts, always 6 real and 6 fake; Timeline draws from 16 events.
 
 ## Ranks
 
@@ -41,10 +41,10 @@ At the end of each scoring round, the team that scored the most points in that r
 | Card | What it does | When |
 |---|---|---|
 | 🪖 **Miluim** (מילואים) | The team's next points are doubled. | Any time |
-| 📡 **8200 Intel** (מודיעין) | Trivia: removes 2 wrong answers. Timeline: places the earliest event. Slang / Real or Fake: the team counts as right. Who Am I: crosses out 3 wrong suspects. | Trivia, Timeline and Who Am I: on your own turn (or when stealing). Others: before the reveal. |
+| 📡 **8200 Intel** (מודיעין) | Trivia: removes 2 wrong answers. Timeline: places the earliest event. Slang: removes 2 wrong answers. Real or Fake: the team counts as right. Who Am I: crosses out 3 wrong suspects. | Trivia, Slang, Timeline and Who Am I: on your own turn (or when stealing). Real or Fake: before the reveal. |
 | ⚡ **Raid** (פשיטה) | Steal up to 100 points from any team. | Any time, including right before the awards |
 | 🛡️ **Iron Dome** (כיפת ברזל) | When another team raids you, the game asks whether you want to intercept. Intercepting cancels the raid and uses up both cards. | Automatic |
-| 🏖️ **Hamshush** (חמשוש) | Skip the current question and get a new one. | Trivia, Timeline and Who Am I: on your own turn. Others: before the reveal. |
+| 🏖️ **Hamshush** (חמשוש) | Skip the current question and get a new one. | Trivia, Slang, Timeline and Who Am I: on your own turn. Real or Fake: before the reveal. |
 
 ## Host keys
 
@@ -53,7 +53,8 @@ At the end of each scoring round, the team that scored the most points in that r
 | **Space** / Enter | The big yellow button: next slide, question, clue, card or round |
 | **A–D** | Trivia: the answer the team chose |
 | **1–4** | Timeline: tap the event cards in the team's order |
-| **1–6** | Slang / Real or Fake: mark the teams that were right |
+| **A–D** | Army Slang: the answer the team chose |
+| **1–6** | Real or Fake: mark the teams that were right |
 | **R** | Reveal the answer · no steal · Who Am I: pass |
 | **1–8** | Who Am I: the suspect the team names |
 | **W** | Who Am I: a wrong answer that isn't on the board |
@@ -74,7 +75,7 @@ The clock in the top bar counts the class time and turns red when you're behind 
 | **0:00–3:00** | Teams + Briefing. | "In Israel, most 18-year-olds go from graduation straight into the army. Today you're the recruits." Point out the card slide: "Win a round, earn a power-up." |
 | **3:00–12:00** | Boot Camp Trivia. | Only the captain's answer counts. Read every Field Note aloud. The first card drop happens at the end. |
 | **12:00–18:00** | Timeline. | Give each team about a minute. After each reveal, ask: "Which of these surprised you?" |
-| **18:00–26:00** | Army Slang. | Have the whole class read each Hebrew word aloud before answering. After the reveal, invite a sentence: "Who can use *fashla* in a sentence?" |
+| **18:00–26:00** | Army Slang. | Have the whole class read each Hebrew word aloud before the team on duty answers. Read the example sentence aloud after each reveal. |
 | **26:00–35:00** | Who Am I? (about 8 mysteries) | On the first mystery, read the 8 suspects aloud together. Then build suspense: "It's worth 400 right now… who's brave?" |
 | **35:00–42:00** | Real or Fake? (12 facts) | Before the reveal, let one team explain its vote. |
 | **42:00–47:00** | Think Tank. | Pick 1–2 of the 4 topics (Space skips a topic). Read the background aloud, press **T**, then take 2–3 short answers. Set the tone: "There's no right answer here, and we listen to each other." |
